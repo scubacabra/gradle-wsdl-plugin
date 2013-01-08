@@ -7,6 +7,8 @@ import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
 import com.jacobo.gradle.plugins.tasks.WsdlNameTask
+import com.jacobo.gradle.plugins.tasks.ParseWsdlTask
+
 /**
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
@@ -42,8 +44,11 @@ class WsdlPlugin implements Plugin<Project> {
      }
    }
 
-   private void configureParseWsdlTask(final Project project) { 
-   
+   private void configureParseWsdlTask(final Project project, WsdlNameTask wnt) { 
+     ParseWsdlTask pwt = project.tasks.add(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdlTask)
+     pwt.description = "parse the wsdl with jaxws and wsimport"
+     pwt.group = WSDL_PLUGIN_TASK_GROUP
+     pwt.dependsOn(wnt)
    }
 
    private WsdlNameTask configureWsdlNameTask(final Project project) { 
