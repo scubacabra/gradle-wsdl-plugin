@@ -7,11 +7,12 @@ import org.gradle.api.Project
  * Created: Tue Dec 04 09:01:34 EST 2012
  */
 class WsdlExtension { 
+
   private Project project
 
-  String wsdlDirectory
+  File wsdlDirectory
   String wsdlFileName
-  String wsdlPath
+  File wsdlPath
 
   //args to the wsimport
   String sourceDestinationDirectory
@@ -22,11 +23,14 @@ class WsdlExtension {
   String target = null
   String wsdlLocation = "FILL_IN_BY_SERVER"
 
-  String episodeDirectory  
+  File episodeDirectory  
   List episodes = []
 
   WsdlExtension(Project project) { 
     this.project = project
   }
 
+  void setWsdlPath() { 
+    this.wsdlPath = new File(wsdlDirectory, wsdlFileName)
+  }
 }

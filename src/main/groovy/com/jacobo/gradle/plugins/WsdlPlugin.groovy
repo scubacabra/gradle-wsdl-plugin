@@ -28,9 +28,9 @@ class WsdlPlugin implements Plugin<Project> {
    private void configureWsdlExtension(final Project project) { 
      extension = project.extensions.create("wsdl", WsdlExtension, project)
      extension.with { 
-       wsdlDirectory = "${project.rootDir}/wsdl"
-       wsdlParseDestinationDirectory = "src/main/java"
-       episodesDirectory = "${project.rootDir}/schema/episodes"
+       wsdlDirectory = new File(project.rootDir, "wsdl")
+       sourceDestinationDirectory = "src/main/java"
+       episodeDirectory = new File(project.rootDir, "schema/episodes")
      }
    }
 
