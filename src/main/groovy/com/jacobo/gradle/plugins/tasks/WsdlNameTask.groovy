@@ -18,15 +18,18 @@ class WsdlNameTask extends DefaultTask {
   static final Logger log = Logging.getLogger(WsdlNameTask.class)
   static final WsdlName wn = new WsdlName()
 
+  final WsdlExtension extension = project.extensions.wsdl
+
   @TaskAction
   void start() { 
     log.info("finding the wsdl name")
     String name = wn.findWsdlFileName(project.name)
     log.debug("checking that the file {} exists at {}")
-    if (!new File(wsdlDirectory, "${name}.wsdl").exists()) { // if file don't exist throw error
-      throw new GradleException("file ${name}.wsdl does not exist at default location of ${project.extensions.wsdl.wsdlDirectory}")
+    if (!new File(extension.wsdlDirectory, "${name}.wsdl").exists()) { // if file don't exist throw error
+      throw new GradleException("file ${name}.wsdl does not exist at default location of ${extension.wsdlDirectory}")
     }
-    project.extensions.wsdl.wsdlFileName = name
+    etension.wsdlFileName = name
+    extension.setWsdlPath()
     log.info("found wsdl Name for this project")
   }
 } 
