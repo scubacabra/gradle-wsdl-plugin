@@ -32,6 +32,11 @@ class WsdlDepedencyResolver {
   def schemaLocationsToParse = []
 
   /**
+   * List of all absolute Path Dependencies to be returned to the caller
+   */
+  def absolutePathDependencies = []
+  
+  /**
    * Utility function that checks if a @List has the value @input
    */
   static boolean isAlreadyInList(List list, File input) { 
@@ -47,6 +52,16 @@ class WsdlDepedencyResolver {
   }
 
   /**
+   * @param file is the absolute file path to add to the @abosluteFileDependencies
+   */
+  def addAbsolutePathDependencies(File file) { 
+    if (!isAlreadyInList( absolutePathDependencies, file)) { 
+      log.debug("added {} to absolute file dependencies  List", file)
+      absolutePathDependencies << file
+    }
+  }
+
+  /**
    * @param it is the import Object taken from the #XmlSlurper
    * addes the schema location of the import/include statement to the schemaLocationToParse list, if it is unique to the list
    * @see #importedNamespaces List
@@ -54,7 +69,7 @@ class WsdlDepedencyResolver {
   def locationClosure = { it ->
     def location = it.@schemaLocation.text()
     def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
-    if (isAlreadyInList( schemaLocationsToParse, absoluteFile)) { 
+    if (!isAlreadyInList( schemaLocationsToParse, absoluteFile)) { 
       log.debug(" schema location is {}, and the parentDirectoryectory (Parent Directory) is {}", absoluteFile, parentDirectory)
       addSchemaLocationToParse(absoluteFile)
     } 
@@ -77,19 +92,28 @@ class WsdlDepedencyResolver {
    * While there are files in
    * @see #schemaLocationsToParse
    * keep slurping documents and gather schema locations for imports/includes
+   * @return List of #absolutePathDependencies
    */
-  def resolveWSDLDependencies() {
-    parentDirectory = wsdlFile.parentFile
+  def List resolveWSDLDependencies() {
     log.info("resolving wsdl dependencies starting at {}", wsdlFile)
-    def xmlDoc = new XmlSlurper().parse(wsdlFile)
-    getDependencies(xmlDoc)
+    parseDocument(wsdlFile)
     while(schemaLocationsToParse) { 
       def document = schemaLocationsToParse.pop()
       log.debug("popping {} from schemaLocationsToParse list", document)
-      xmlDoc = new XmlSlurper().parse(document)
-      parentDirectory = document.parentFile
-      getDependencies(xmlDoc)
+      parseDocument(document)
     }
+  }
+
+  /**
+   * common compute chain for resolving dependencies
+   * @param document is a File to be slurped
+   * set parent, slurp, gather deps, and add to absolute deps
+   */
+  def parseDocument(File document) { 
+    parentDirectory = document.parentFile
+    def xmlDoc = new XmlSlurper().parse(document)
+    getDependencies(xmlDoc)
+    addAbsolutePathDependencies(document)
   }
 
   /**
