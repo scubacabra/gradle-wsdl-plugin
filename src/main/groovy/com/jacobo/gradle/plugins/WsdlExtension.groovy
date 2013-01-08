@@ -11,9 +11,18 @@ class WsdlExtension {
 
   String wsdlDirectory
   String wsdlFileName
-  String wsdlParseDestinationDirectory
-  String episodesDirectory
-  
+  String wsdlPath
+
+  //args to the wsimport
+  String sourceDestinationDirectory
+  boolean verbose = true
+  boolean keep = true
+  boolean xnocompile = true
+  boolean fork = false
+  String target = null
+  String wsdlLocation = "FILL_IN_BY_SERVER"
+
+  String episodeDirectory  
   List episodes = []
 
   WsdlExtension(Project project) { 
