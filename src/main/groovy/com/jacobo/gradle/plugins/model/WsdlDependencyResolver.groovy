@@ -11,7 +11,7 @@ import org.gradle.api.logging.Logger
  * @author Daniel Mijares
  * @version 1.0
  */
-class WsdlDepedencyResolver { 
+class WsdlDependencyResolver { 
 
   private static final Logger log = Logging.getLogger(WsdlDependencyResolver.class)  
 
@@ -47,8 +47,11 @@ class WsdlDepedencyResolver {
    * @param file is the absolute file path to add to the @scheaLocationsToParse list
    */
   def addSchemaLocationToParse(File file) { 
+    if (!isAlreadyInList( schemaLocationsToParse, file)) { 
+      log.debug(" schema location is {}, and the parentDirectoryectory (Parent Directory) is {}", file, parentDirectory)
       log.debug("added {} to schema Location to Parse List", file)
       schemaLocationsToParse << file
+    }
   }
 
   /**
@@ -69,10 +72,7 @@ class WsdlDepedencyResolver {
   def locationClosure = { it ->
     def location = it.@schemaLocation.text()
     def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
-    if (!isAlreadyInList( schemaLocationsToParse, absoluteFile)) { 
-      log.debug(" schema location is {}, and the parentDirectoryectory (Parent Directory) is {}", absoluteFile, parentDirectory)
-      addSchemaLocationToParse(absoluteFile)
-    } 
+    addSchemaLocationToParse(absoluteFile)
   }
 
   /**

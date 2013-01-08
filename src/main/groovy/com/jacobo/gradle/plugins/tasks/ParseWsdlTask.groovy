@@ -1,5 +1,7 @@
 package com.jacobo.gradle.plugins.tasks
 
+import com.jacobo.gradle.plugins.WsdlExtension
+
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
@@ -28,14 +30,15 @@ class ParseWsdlTask extends DefaultTask {
     ant.taskdef (name : 'wsimport', classname: 'com.sun.tools.ws.ant.WsImport', classpath: project.configurations[WsdlPlugin.WSDL_CONFIGURATION_NAME].asPath)
 
     ant.wsimport (
-    wsdl: wsdlPath,
+    wsdl: wsdlPath.absolutePath,
     verbose: extension.verbose,
     sourcedestdir : destinationDirectory,
     keep: extension.keep,
     wsdlLocation : extension.wsdlLocation,
     xnocompile : extension.xnocompile,
-    if(extension.target) { target : extension.target, } //this may not work in the end
-    fork : extension.fork) { 
+    fork : extension.fork,
+    xdebug : extension.xdebug,
+    target : extension.target) {
       episode.each { episode ->
 	binding(dir : extension.episodeDirectory.path, includes : "${episode}.episode")
       }
