@@ -3,6 +3,10 @@ package com.jacobo.gradle.plugins
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 
+import org.gradle.api.logging.Logging
+import org.gradle.api.logging.Logger
+
+import com.jacobo.gradle.plugins.tasks.WsdlNameTask
 /**
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
@@ -42,8 +46,11 @@ class WsdlPlugin implements Plugin<Project> {
    
    }
 
-   private void configureWsdlNameTask(final Project project) { 
-
+   private WsdlNameTask configureWsdlNameTask(final Project project) { 
+     WsdlNameTask wnt = project.tasks.add(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlNameTask)
+     wnt.description = "find the wsdl File name from the web service sub project name, as per the convention"
+     wnt.group = WSDL_PLUGIN_TASK_GROUP
+     return wnt
    }
 
    
