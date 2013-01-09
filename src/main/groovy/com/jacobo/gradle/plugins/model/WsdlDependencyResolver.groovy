@@ -69,21 +69,44 @@ class WsdlDependencyResolver {
    * addes the schema location of the import/include statement to the schemaLocationToParse list, if it is unique to the list
    * @see #importedNamespaces List
    */
-  def locationClosure = { it ->
+  def xsdLocationClosure = { it ->
     def location = it.@schemaLocation.text()
     def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
     addSchemaLocationToParse(absoluteFile)
   }
 
   /**
-   * @param xmlDoc the xml slurped document to gether data from
-   * gathers schema Locations from import/include statments in the schema
+   * @param it is the import Object taken from the #XmlSlurper
+   * addes the schema location of the import/include statement to the schemaLocationToParse list, if it is unique to the list
+   * @see #importedNamespaces List
    */
-  def getDependencies (xmlDoc) { 
-    log.debug("resolving imports")
-    xmlDoc?.import?.each locationClosure
-    log.debug("resolving includes")
-    xmlDoc?.include?.each locationClosure
+  def wsdlLocationClosure = { it ->
+    def location = it.@location.text()
+    def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
+    addSchemaLocationToParse(absoluteFile)
+  }
+
+  /**
+   * @param xmlDoc the xml slurped document to gether data from
+   * gathers schema Locations from import/include statments in the XSD schema
+   */
+  def getXsdDependencies (xmlDoc) { 
+    log.debug("resolving xsd imports")
+    xmlDoc?.import?.each xsdLocationClosure
+    log.debug("resolving xsd includes")
+    xmlDoc?.include?.each xsdLocationClosure
+  }
+  
+  /**
+   * @param wsdlDoc the xml slurped document to gether data from
+   * gathers schema Locations from import/include statments in the wsdl Doc
+   * gathers data from xsd import statments, and from wsdl import statements as well. 
+   */
+  def getWsdlDependencies(wsdlDoc) { 
+    log.debug("resolving wsdl xsd imports")
+    wsdlDoc?.types?.import?.each xsdLocationClosure
+    log.debug("resolving wsdl imports")
+    wsdlDoc?.import?.each wsdlLocationClosure
   }
 
   /**
@@ -102,6 +125,7 @@ class WsdlDependencyResolver {
       log.debug("popping {} from schemaLocationsToParse list", document)
       parseDocument(document)
     }
+    return absolutePathDependencies
   }
 
   /**
@@ -112,7 +136,11 @@ class WsdlDependencyResolver {
   def parseDocument(File document) { 
     parentDirectory = document.parentFile
     def xmlDoc = new XmlSlurper().parse(document)
-    getDependencies(xmlDoc)
+    if(document.name.split("\\.")[-1] == 'xsd') {
+      getXsdDependencies(xmlDoc)	
+    } else {
+      getWsdlDependencies(xmlDoc)
+    }
     addAbsolutePathDependencies(document)
   }
 
