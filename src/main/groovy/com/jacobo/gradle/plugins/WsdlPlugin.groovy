@@ -3,11 +3,15 @@ package com.jacobo.gradle.plugins
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 
+import org.gradle.api.plugins.WarPlugin
+import org.gradle.api.tasks.bundling.War
+
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
 import com.jacobo.gradle.plugins.tasks.WsdlNameTask
 import com.jacobo.gradle.plugins.tasks.ParseWsdlTask
+import com.jacobo.gradle.plugins.tasks.WsdlResolverTask
 
 /**
  * @author djmijares
@@ -17,6 +21,7 @@ class WsdlPlugin implements Plugin<Project> {
   static final String WSDL_PLUGIN_TASK_GROUP = 'parse'
   static final String WSDL_PLUGIN_PARSE_WSDL_TASK = 'parseWsdl'
   static final String WSDL_PLUGIN_WSDL_NAME_TASK = 'wsdlName'
+  static final String WSDL_PLUGIN_WSDL_RESOLVE_TASK = 'wsdlResolve'
   static final String WSDL_CONFIGURATION_NAME = 'jaxws'
 
   static final Logger log = Logging.getLogger(WsdlPlugin.class)
@@ -24,7 +29,13 @@ class WsdlPlugin implements Plugin<Project> {
   private WsdlExtension extension
 
    void apply (Project project) {
-      // add your plugin tasks here.
+     project.plugins.apply(WarPlugin)
+     configureWsdlExtension(project)
+     configureWsdlConfiguration(project)
+     def nameTask = configureWsdlNameTask(project)
+     configureParseWsdlTask(project, nameTask)
+     def resolverTask = configureWsdlResolverTask(project)
+     configureWarTask(project, resolverTask)
    }
 
    private void configureWsdlExtension(final Project project) { 
@@ -58,5 +69,23 @@ class WsdlPlugin implements Plugin<Project> {
      return wnt
    }
 
-   
+   private WsdlResolverTask configureWsdlResolverTask(final Project project) {
+     WsdlResolverTask wrt = project.tasks.add(WSDL_PLUGIN_WSDL_RESOLVE_TASK, WsdlResolverTask)
+     wrt.description = "gather all the wsdl dependencies (xsd's, wsdl's) and create a relative file list to be populated in the war"
+     wrt.group = WSDL_PLUGIN_TASK_GROUP
+     wrt.dependsOn(compile)
+     return wrt
+   }
+
+   private void configureWarTask(final Project project, WsdlResolverTask wrt) {
+     War war = project.tasks.getByName(WarPlugin.WAR_TASK_NAME)
+     war.dependsOn(wrt)
+     war.doLast { project.extensions.wsdl.resolved.each {
+	 from it.from {
+	   into it.into
+	   include it.include
+	 }
+       }
+     }
+   }
 }
