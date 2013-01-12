@@ -27,6 +27,8 @@ class WsdlExtension {
   File episodeDirectory  
   List episodes = []
 
+  List resolved
+
   WsdlExtension(Project project) { 
     this.project = project
   }
