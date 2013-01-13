@@ -6,10 +6,13 @@ import org.gradle.api.Plugin
 import org.gradle.api.plugins.WarPlugin
 import org.gradle.api.tasks.bundling.War
 
+import org.gradle.api.plugins.JavaPlugin
+
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
 import com.jacobo.gradle.plugins.tasks.WsdlNameTask
+import com.jacobo.gradle.plugins.tasks.WsdlWarTask
 import com.jacobo.gradle.plugins.tasks.ParseWsdlTask
 import com.jacobo.gradle.plugins.tasks.WsdlResolverTask
 
@@ -29,12 +32,13 @@ class WsdlPlugin implements Plugin<Project> {
   private WsdlExtension extension
 
    void apply (Project project) {
+     project.plugins.apply(JavaPlugin)
      project.plugins.apply(WarPlugin)
      configureWsdlExtension(project)
      configureWsdlConfiguration(project)
      def nameTask = configureWsdlNameTask(project)
      configureParseWsdlTask(project, nameTask)
-     def resolverTask = configureWsdlResolverTask(project)
+     def resolverTask = configureWsdlResolverTask(project, nameTask)
      configureWarTask(project, resolverTask)
    }
 
@@ -69,23 +73,17 @@ class WsdlPlugin implements Plugin<Project> {
      return wnt
    }
 
-   private WsdlResolverTask configureWsdlResolverTask(final Project project) {
+   private WsdlResolverTask configureWsdlResolverTask(final Project project, WsdlNameTask wnt) {
      WsdlResolverTask wrt = project.tasks.add(WSDL_PLUGIN_WSDL_RESOLVE_TASK, WsdlResolverTask)
      wrt.description = "gather all the wsdl dependencies (xsd's, wsdl's) and create a relative file list to be populated in the war"
      wrt.group = WSDL_PLUGIN_TASK_GROUP
-     wrt.dependsOn(compile)
+     wrt.dependsOn(project.tasks.getByName('classes'))
+     wrt.dependsOn(wnt)
      return wrt
    }
 
    private void configureWarTask(final Project project, WsdlResolverTask wrt) {
-     War war = project.tasks.getByName(WarPlugin.WAR_TASK_NAME)
+     WsdlWarTask war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
      war.dependsOn(wrt)
-     war.doLast { project.extensions.wsdl.resolved.each {
-	 from it.from {
-	   into it.into
-	   include it.include
-	 }
-       }
-     }
    }
 }
