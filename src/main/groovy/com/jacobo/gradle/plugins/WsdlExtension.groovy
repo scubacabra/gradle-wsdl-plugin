@@ -34,6 +34,6 @@ class WsdlExtension {
   }
 
   void setWsdlPath() { 
-    this.wsdlPath = new File(wsdlDirectory, wsdlFileName)
+    this.wsdlPath = new File(wsdlDirectory, wsdlFileName + ".wsdl")
   }
 }
