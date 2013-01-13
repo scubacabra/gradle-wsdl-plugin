@@ -19,14 +19,17 @@ import com.jacobo.gradle.plugins.model.WsdlDependencyResolver
  */
 class WsdlResolverTask extends DefaultTask { 
   static final Logger log = Logging.getLogger(WsdlResolverTask.class)
-  static final WsdlDependencyResolver wdr = new WsdlDependencyResolver()
-  static final WsdlWarRelativePathResolver wrpr = new WsdlWarRelativePathResolver()
 
   final WsdlExtension extension = project.extensions.wsdl
+
+  static final WsdlDependencyResolver wdr = new WsdlDependencyResolver()
+  static final WsdlWarRelativePathResolver wrpr = new WsdlWarRelativePathResolver()
 
   @TaskAction
   void start() { 
     log.info("finding the wsdl dependencies")
+    log.info("wsdl name {}, wsdl path {}", extension.wsdlFileName, extension.wsdlPath)
+    wdr.wsdlFile = extension.wsdlPath
     def dependencyList = wdr.resolveWSDLDependencies()
     log.info("resolving relative paths")
     def resolvedParts = dependencyList.collect { wrpr.resolveRelativePathsToWar(project.rootDir, it)}
