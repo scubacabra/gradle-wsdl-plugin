@@ -25,11 +25,11 @@ class WsdlWarRelativePathResolverSpec extends Specification {
 
   where:
   file                                                         | from              | into              | include
-  this.getClass().getResource("/wsdl/abstract.wsdl")           | "wsdl"            | "wsdl"            | "abstract.wsdl" 
-  this.getClass().getResource("/wsdl/noXsdImport.wsdl")        | "wsdl"            | "wsdl"            | "noXsdImport.wsdl"
-  this.getClass().getResource("/schema/Messages/Messages.xsd") | "schema/Messages" | "schema/Messages" | "Messages.xsd"
-  this.getClass().getResource("/schema/PO/PurchaseOrder.xsd")  | "schema/PO"       | "schema/PO"       | "PurchaseOrder.xsd"
-  this.getClass().getResource("/schema/Include/include.xsd")   | "schema/Include"  | "schema/Include"  | "include.xsd"
+  this.getClass().getResource("/wsdl/abstract.wsdl")           | new File("build/resources/test/wsdl").absoluteFile.path            | "wsdl"            | "abstract.wsdl"
+  this.getClass().getResource("/wsdl/noXsdImport.wsdl")        | new File("build/resources/test/wsdl").absoluteFile.path            | "wsdl"            | "noXsdImport.wsdl"
+  this.getClass().getResource("/schema/Messages/Messages.xsd") | new File("build/resources/test/schema/Messages").absoluteFile.path | "schema/Messages" | "Messages.xsd"
+  this.getClass().getResource("/schema/PO/PurchaseOrder.xsd")  | new File("build/resources/test/schema/PO").absoluteFile.path       | "schema/PO"       | "PurchaseOrder.xsd"
+  this.getClass().getResource("/schema/Include/include.xsd")   | new File("build/resources/test/schema/Include").absoluteFile.path  | "schema/Include"  | "include.xsd"
   
   }
 }
