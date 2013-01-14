@@ -2,6 +2,7 @@ package com.jacobo.gradle.plugins
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Task
 
 import org.gradle.api.plugins.WarPlugin
 import org.gradle.api.tasks.bundling.War
@@ -37,7 +38,7 @@ class WsdlPlugin implements Plugin<Project> {
      configureWsdlExtension(project)
      configureWsdlConfiguration(project)
      def nameTask = configureWsdlNameTask(project)
-     configureParseWsdlTask(project, nameTask)
+     Task pwt = configureParseWsdlTask(project, nameTask)
      def resolverTask = configureWsdlResolverTask(project, nameTask)
      configureWarTask(project, resolverTask)
    }
@@ -59,11 +60,14 @@ class WsdlPlugin implements Plugin<Project> {
      }
    }
 
-   private void configureParseWsdlTask(final Project project, WsdlNameTask wnt) { 
-     ParseWsdlTask pwt = project.tasks.add(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdlTask)
+   private Task configureParseWsdlTask(final Project project, WsdlNameTask wnt) { 
+     Task pwt = project.tasks.add(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdlTask)
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
      pwt.dependsOn(wnt)
+     pwt.destinationDirectory = new File(project.wsdl.sourceDestinationDirectory)
+     return pwt
+
    }
 
    private WsdlNameTask configureWsdlNameTask(final Project project) { 
