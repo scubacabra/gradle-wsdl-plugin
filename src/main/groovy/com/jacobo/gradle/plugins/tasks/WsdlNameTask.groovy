@@ -20,7 +20,7 @@ class WsdlNameTask extends DefaultTask {
   static final Logger log = Logging.getLogger(WsdlNameTask.class)
   static final WsdlName wn = new WsdlName()
 
-  final WsdlExtension extension = project.extensions.wsdl
+  final WsdlExtension extension = project.wsdl
 
   @TaskAction
   void start() { 
@@ -32,7 +32,8 @@ class WsdlNameTask extends DefaultTask {
     }
     extension.wsdlFileName = name
     extension.setWsdlPath()
-    project.extensions.wsdl.wsdlPath = new File(extension.wsdlDirectory, extension.wsdlFileName + ".wsdl")
-    log.info("found wsdl Name for this project")
+    project.wsdl.wsdlPath = new File(extension.wsdlDirectory, extension.wsdlFileName + ".wsdl")
+    log.info("found wsdl Name: {} -- for this project", project.wsdl.wsdlPath)
+    log.info("found wsdl Name: {} -- for this project", extension.wsdlPath)
   }
 } 
