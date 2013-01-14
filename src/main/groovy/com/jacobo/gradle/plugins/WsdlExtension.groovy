@@ -21,7 +21,7 @@ class WsdlExtension {
   boolean xnocompile = true
   boolean fork = false
   boolean xdebug = false
-  String target = "2.2"
+  String target = "2.1"
   String wsdlLocation = "FILL_IN_BY_SERVER"
 
   File episodeDirectory  
