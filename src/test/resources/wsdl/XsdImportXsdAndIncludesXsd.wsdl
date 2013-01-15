@@ -15,17 +15,17 @@
 
   <types>
     <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="urn:ADSBibcodeQuery"> 
+		targetNamespace="urn:ADSBibcodeQuery"> 
+      <xsd:import namespace="http://www.example.org"
+		  schemaLocation= "../schema/Messages/Messages.xsd"/>
+      <xsd:import namespace="http://www.example.org"
+		  schemaLocation= "../schema/Messages/Messages.xsd"/>
+      <xsd:import namespace="http://www.example.org/include"
+		  schemaLocation= "../schema/Include/OrderNumber.xsd"/>
       <element name="bibcode"   type="string" minOccurs="1" maxOccurs="100" />
       <element name="db_key"    type="string" minOccurs="0" />
       <element name="data_type" type="string" minOccurs="0" />
     </xsd:schema>
-    <xsd:import namespace="http://www.example.org"
-	    schemaLocation= "../schema/Messages/Messages.xsd"/>
-    <xsd:import namespace="http://www.example.org"
-	    schemaLocation= "../schema/Messages/Messages.xsd"/>
-    <xsd:import namespace="http://www.example.org/include"
-	    schemaLocation= "../schema/Include/OrderNumber.xsd"/>
   </types>
 
   <message name="getBibcode">
