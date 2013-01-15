@@ -66,6 +66,7 @@ class WsdlPlugin implements Plugin<Project> {
      pwt.group = WSDL_PLUGIN_TASK_GROUP
      pwt.dependsOn(wnt)
      pwt.destinationDirectory = new File(project.wsdl.sourceDestinationDirectory)
+     //     pwt.doLast { wsdl = project.wsdl.wsdlPath }
      return pwt
 
    }

@@ -19,7 +19,10 @@ class ParseWsdlTask extends DefaultTask {
   static final Logger log = Logging.getLogger(ParseWsdlTask.class)
 
   final WsdlExtension extension = project.extensions.wsdl
-  
+
+  // @InputFile
+  // File wsdl
+
   @OutputDirectory
   File destinationDirectory
 
