@@ -70,7 +70,9 @@ class WsdlDependencyResolver {
    * @see #importedNamespaces List
    */
   def xsdLocationClosure = { it ->
+    log.info("the xml slurper element is {}", it)
     def location = it.@schemaLocation.text()
+    log.info("the location is {}", location)
     def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
     addSchemaLocationToParse(absoluteFile)
   }
@@ -81,7 +83,9 @@ class WsdlDependencyResolver {
    * @see #importedNamespaces List
    */
   def wsdlLocationClosure = { it ->
+    log.info("the xml slurper element is {}", it)
     def location = it.@location.text()
+    log.info("the location is {}", location)
     def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
     addSchemaLocationToParse(absoluteFile)
   }
@@ -104,7 +108,7 @@ class WsdlDependencyResolver {
    */
   def getWsdlDependencies(wsdlDoc) { 
     log.debug("resolving wsdl xsd imports")
-    wsdlDoc?.types?.import?.each xsdLocationClosure
+    wsdlDoc?.types?.schema?.import?.each xsdLocationClosure
     log.debug("resolving wsdl imports")
     wsdlDoc?.import?.each wsdlLocationClosure
   }
@@ -134,7 +138,9 @@ class WsdlDependencyResolver {
    * set parent, slurp, gather deps, and add to absolute deps
    */
   def parseDocument(File document) { 
+    log.info("file is {}", document)
     parentDirectory = document.parentFile
+    log.info("parent File is {}", parentDirectory)
     def xmlDoc = new XmlSlurper().parse(document)
     if(document.name.split("\\.")[-1] == 'xsd') {
       getXsdDependencies(xmlDoc)	
