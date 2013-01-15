@@ -8,3 +8,5 @@
 * post some questions on the forums about these issues
 
 * add a more complicated example of a wsdl importing a schema in the schema folder and check that the output of the war is correct
+
+* what happens when an import doesn't have a schema Location?
