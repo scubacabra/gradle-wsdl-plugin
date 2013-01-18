@@ -1,23 +1,30 @@
 buildscript {
   repositories { 
     flatDir dirs: '../build/libs'
+    flatDir dirs: '../../gradle-jaxb/build/libs'
   }
+
   dependencies {
     classpath ':gradle-wsdl'
+    classpath ':gradle-jaxb'
   }
+}
+
+allprojects { 
+
+  repositories { 
+    mavenCentral()
+  }
+
 }
 
 subprojects { project ->
   if(project.name.endsWith("-ws")) { 
     apply plugin: 'wsdl'
     apply plugin: 'java'
-  }
 
-  repositories { 
-    mavenCentral()
-  }
-
-  dependencies { 
-    jaxws 'com.sun.xml.ws:jaxws-tools:2.2.6'
+    dependencies { 
+      jaxws 'com.sun.xml.ws:jaxws-tools:2.2.6'
+    }
   }
 }
