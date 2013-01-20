@@ -5,5 +5,5 @@ dependencies {
 }
 
 wsdl { 
-  episodes = ["urn-helloWorld-sample-ibm-HelloWorld"]
+   episodes = ["urn-helloWorld-sample-ibm-HelloWorld"]
 }
