@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
       xmlns:tns="urn:helloWorld/sample/ibm/com"
-      xmlns:hw="urn:helloWorld/sample/ibm/HelloWorld"
       xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-      xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="HelloWorld"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+      name="HelloWorld"
       targetNamespace="urn:helloWorld/sample/ibm/com">
   <wsdl:types>
-    <xsd:schema>
+    <xsd:schema targetNamespace="urn:helloWorld/sample/ibm/com"
+        xmlns:tns="urn:helloWorld/sample/ibm/com"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:hw="urn:helloWorld/sample/ibm/HelloWorld">
       <xsd:import namespace="urn:helloWorld/sample/ibm/HelloWorld" schemaLocation="../schema/HelloWorld/HelloWorld.xsd"/>
+      <xsd:element name="hello" type="hw:helloType"/>
+      <xsd:element name="helloResponse" type="hw:helloResponseType"/>
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="helloRequestMsg">
-    <wsdl:part element="hw:hello" name="helloParameters" />
+    <wsdl:part element="tns:hello" name="hello" />
   </wsdl:message>
   <wsdl:message name="helloResponseMsg">
-    <wsdl:part element="hw:helloResponse" name="helloResult" />
+    <wsdl:part element="tns:helloResponse" name="helloResult" />
   </wsdl:message>
   <wsdl:portType name="HelloWorld">
     <wsdl:operation name="hello">
