@@ -7,7 +7,8 @@
 ** TODO post some questions on the forums about these issues
 * DONE add a more complicated example of a wsdl importing a schema in the schema folder and check that the output of the war is correct
   CLOSED: [2013-01-15 Tue 09:57]
-* TODO add a wsdl that import an schema file but uses episode binding to avoid regeneration
+* DONE add a wsdl that import an schema file but uses episode binding to avoid regeneration
+  CLOSED: [2013-01-19 Sat 21:03]
 ** create a schema project
 ** use the jaxb plugin I wrote
 ** create an episode directory in the schema folder
