@@ -1,7 +1,6 @@
 buildscript {
   repositories { 
-    flatDir dirs: '../build/libs'
-    flatDir dirs: '../../gradle-jaxb/build/libs'
+    flatDir dirs: "${gradle.gradleHomeDir}/lib/plugins"
   }
 
   dependencies {
@@ -24,7 +23,18 @@ subprojects { project ->
     apply plugin: 'java'
 
     dependencies { 
-      jaxws 'com.sun.xml.ws:jaxws-tools:2.2.6'
+      jaxws 'com.sun.xml.ws:jaxws-tools:2.2.8-promoted-b131'
+      jaxws 'com.sun.xml.ws:jaxws-rt:2.2.8-promoted-b131'
+    }
+  }
+
+  if(project.name.endsWith("-schema")) { 
+    apply plugin: 'jaxb-namespace'
+    apply plugin: 'java'
+
+    dependencies { 
+      jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.7-b41' //jaxws 2.2.6 uses jaxb 2.2.5, but can't dL 2.2.5 from maven the pom is off TODO
+      jaxb 'com.sun.xml.bind:jaxb-impl:2.2.7-b41'
     }
   }
 }
