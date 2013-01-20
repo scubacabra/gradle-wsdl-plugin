@@ -4,17 +4,16 @@ package helloworld.sample.ibm.helloworld;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for helloResponseType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="helloResponseType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -28,13 +27,12 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(name = "helloResponseType", namespace = "urn:helloWorld/sample/ibm/HelloWorld", propOrder = {
     "response"
 })
-@XmlRootElement(name = "helloResponse", namespace = "urn:helloWorld/sample/ibm/HelloWorld")
-public class HelloResponse {
+public class HelloResponseType {
 
-    @XmlElement(required = true, nillable = true)
+    @XmlElement(namespace = "urn:helloWorld/sample/ibm/HelloWorld", required = true, nillable = true)
     protected String response;
 
     /**
