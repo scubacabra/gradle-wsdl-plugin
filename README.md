@@ -40,10 +40,11 @@ The plugin uses an ant jaxws wsimport task to parse the wsdl into java code, and
     String wsdlLocation = "FILL_IN_BY_SERVER"
 
 the **target** is defaulted to **2.1** because in my experience, not many people have updated to Java 7 yet, and I think it is easier to use something like 
-
-    wsdl {
-      	 target = "2.2"
-    }
+```groovy
+wsdl {
+  target = "2.2"
+}
+```
 
 **IF** you happen to be using java 7.  
 
