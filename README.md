@@ -21,23 +21,23 @@ it takes the project name from a hyphenated value to camel case and replaces the
 
 # wsdl plugin conventions #
 
-  wsdlDirectory -- File object to the wsdl Directory
-  wsdlFileName -- The wsdl Name found at the wsdl Directory
-  wsdlPath -- File object of the absolute path to the wsdl File
-  episodeDirectory  -- File object to the default episode File directory (assuming you are generating schemas with the jaxb task (found in another plugin [here](https://github.com/djmijares/gradle-jaxb-namespace-dependency) that you can use
+    wsdlDirectory -- File object to the wsdl Directory
+    wsdlFileName -- The wsdl Name found at the wsdl Directory
+    wsdlPath -- File object of the absolute path to the wsdl File
+    episodeDirectory  -- File object to the default episode File directory (assuming you are generating schemas with the jaxb task (found in another plugin [here](https://github.com/djmijares/gradle-jaxb-namespace-dependency) that you can use
 
 ## jaxws wsimport conventions ##
 
 The plugin uses an ant jaxws wsimport task to parse the wsdl into java code, and the plugin is default configured with these variables and boolean values
 
-      String sourceDestinationDirectory
-      boolean verbose = true
-      boolean keep = true
-      boolean xnocompile = true
-      boolean fork = false
-      boolean xdebug = false
-      String target = "2.1"
-      String wsdlLocation = "FILL_IN_BY_SERVER"
+    String sourceDestinationDirectory
+    boolean verbose = true
+    boolean keep = true
+    boolean xnocompile = true
+    boolean fork = false
+    boolean xdebug = false
+    String target = "2.1"
+    String wsdlLocation = "FILL_IN_BY_SERVER"
 
 the **target** is defaulted to **2.1** because in my experience, not many people have updated to Java 7 yet, and I think it is easier to use something like 
 
