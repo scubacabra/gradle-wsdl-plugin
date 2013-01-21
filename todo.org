@@ -14,3 +14,4 @@
 ** create an episode directory in the schema folder
 * TODO last example is a wsdl that imports schema that imports schema, to make sure the war is correct
 * TODO what happens when an import doesn't have a schema Location?
+* It looks like the episode binding example is putting all of the wsdl's in the wsdl folder in the WAR, need to fix
