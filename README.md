@@ -11,7 +11,7 @@ It is assumed that for a web-service, your project name will be of the form
 
 Here are some possible mappings of project name to wsdl service Straight from the tests
 
-  projectName            | wsdl-name
+>   projectName            | wsdl-name
   "spock-star-trek-ws"   | "SpockStarTrekService" 
   "srv-legend-ws"        | "SrvLegendService" 
   "boy-band-ws"          | "BoyBandService" 
