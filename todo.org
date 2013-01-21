@@ -32,5 +32,19 @@
   - to make sure the war is correct
 * TODO what happens when an import doesn't have a schema Location?
   - it looks like it is failing, because the code doesn't handle an empty location
-* TODO Investigate why multiple wsdls going into war
+* DONE Investigate why multiple wsdls going into war
+  CLOSED: [2013-01-21 Mon 09:50]
   - It looks like the episode binding example is putting all of the wsdl's in the wsdl folder in the WAR
+    - FIXED 2013-01-21 Mon 09:50
+* TODO Investigate why, when running in a subproject, the rest of the projects war tasks are called
+  - This is debug output at the very top for episode-binding-ws project, before episode-binding-ws project tasks are called
+: 09:53:54.402 [DEBUG] [com.jacobo.gradle.plugins.tasks.WsdlWarTask] calling the war task constructor
+: 09:53:54.403 [INFO] [com.jacobo.gradle.plugins.tasks.WsdlWarTask] wsdl name is HelloWorldImportXsdService
+: 09:53:54.403 [INFO] [com.jacobo.gradle.plugins.tasks.WsdlWarTask] wsdl file is /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/wsdl/HelloWorldImportXsdService.wsdl
+: 09:53:54.404 [INFO] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] resolving wsdl dependencies starting at /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/wsdl/HelloWorldImportXsdService.wsdl
+: 09:53:54.404 [INFO] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] file is /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/wsdl/HelloWorldImportXsdService.wsdl
+: 09:53:54.405 [INFO] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] parent File is /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/wsdl
+: 09:53:54.408 [DEBUG] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] resolving wsdl xsd imports
+: 09:53:54.437 [INFO] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] the xml slurper element is 
+: 09:53:54.437 [INFO] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] the location is ../schema/HelloWorld/HelloWorld.xsd
+: 09:53:54.438 [DEBUG] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver]  schema location is /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/schema/HelloWorld/HelloWorld.xsd, and the parentDirectoryectory (Parent Directory) is /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/wsdl

@@ -39,8 +39,8 @@ class WsdlPlugin implements Plugin<Project> {
      configureWsdlConfiguration(project)
      def nameTask = configureWsdlNameTask(project)
      Task pwt = configureParseWsdlTask(project, nameTask)
-     def resolverTask = configureWsdlResolverTask(project, nameTask)
-     configureWarTask(project, resolverTask)
+     //     def resolverTask = configureWsdlResolverTask(project, nameTask)
+     configureWarTask(project)
    }
 
    private void configureWsdlExtension(final Project project) { 
@@ -87,8 +87,7 @@ class WsdlPlugin implements Plugin<Project> {
      return wrt
    }
 
-   private void configureWarTask(final Project project, Task wsdlResolverTask) {
+   private void configureWarTask(final Project project) {
      Task war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
-     war.dependsOn(wsdlResolverTask)
    }
 }

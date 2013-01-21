@@ -44,12 +44,11 @@ class WsdlWarTask extends War {
     def resolved = resolveList.collect { resolvePaths.resolveRelativePathsToWar(project.rootDir, it) }
     resolved.each { resolvee ->
       log.info("from : {}, into : {}, include: {}", resolvee.from, resolvee.into, resolvee.include)
-      getWebInf().into { resolvee.into}  { 
-	from { resolvee.from }
-	include { resolvee.include }
+      getWebInf().from (resolvee.from)  {
+	into  resolvee.into
+	include resolvee.include
       }
     }
-
   }
   
   @TaskAction
