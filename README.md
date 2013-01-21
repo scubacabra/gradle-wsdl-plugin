@@ -70,12 +70,12 @@ This will go and find the file **name-of-episode-file-sans-episode-extension.epi
 You can find some examples in the *examples* directory
 
 # List of available tasks #
-* parseWsdl
-  -- run wsimport ant task on the WSDL file name
-* war
-  -- automatically generates the war like a regular WAR would, but also auto populates the war with the default wsdl directory containing the wsdl the project uses and will auto populate with the correct schema directory and all imported schemas.  
+* `parseWsdl`
+	- run wsimport ant task on the WSDL file name (determined from task `wsdlName`)
+* `war`
+	- automatically generates the war like a regular WAR would, but also auto populates the war with the default `wsdl` directory containing the wsdl the project uses and will auto populate with the correct `schema` directory and all imported schemas.  
 
-The war would look like this (see the *hello-world-episode-binding-ws* example
+The war would look like this (see the *hello-world-episode-binding-ws* example)
 
       drwxr-xr-x         0  20-Jan-2013  21:19:26  META-INF/
       -rw-r--r--        25  20-Jan-2013  21:19:26  META-INF/MANIFEST.MF
