@@ -1,0 +1,9 @@
+version = "0.1"
+
+dependencies { 
+  compile project(":hello-world-import-schema")
+}
+
+wsdl { 
+  episodes = ["urn-helloWorld-sample-ibm-HelloWorldImport", "urn-helloWorld-sample-ibm-TestImport"]
+}
