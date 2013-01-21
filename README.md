@@ -12,8 +12,9 @@ It is assumed that for a web-service, your project name will be of the form
 Here are some possible mappings of project name to wsdl service Straight from the tests
 
 >  "spock-star-trek-ws"   >> "SpockStarTrekService" 
->  "srv-legend-ws"        >> "SrvLegendService" 
 
+>  "srv-legend-ws"        >> "SrvLegendService" 
+   
 >  "boy-band-ws"          >> "BoyBandService" 
 
 it takes the project name from a hyphenated value to camel case and replaces the  **-ws** with **Service**
