@@ -20,25 +20,28 @@ Here are some possible mappings of project name to wsdl service Straight from th
 it takes the project name from a hyphenated value to camel case and replaces the  **-ws** with **Service**
 
 # wsdl plugin conventions #
+```groovy
+wsdlDirectory -- File object to the wsdl Directory
+wsdlFileName -- The wsdl Name found at the wsdl Directory
+wsdlPath -- File object of the absolute path to the wsdl File
+episodeDirectory  -- File object to the default episode File directory
+```
 
-    wsdlDirectory -- File object to the wsdl Directory
-    wsdlFileName -- The wsdl Name found at the wsdl Directory
-    wsdlPath -- File object of the absolute path to the wsdl File
-    episodeDirectory  -- File object to the default episode File directory (assuming you are generating schemas with the jaxb task (found in another plugin [here](https://github.com/djmijares/gradle-jaxb-namespace-dependency) that you can use
+*ASSUMING* you are generating schemas with the jaxb task (found in another plugin I developed [here](https://github.com/djmijares/gradle-jaxb-namespace-dependency) that you can use.  There is also another one found [here](https://github.com/stianh/gradle-jaxb-plugin)
 
 ## jaxws wsimport conventions ##
 
 The plugin uses an ant jaxws wsimport task to parse the wsdl into java code, and the plugin is default configured with these variables and boolean values
-
-    String sourceDestinationDirectory
-    boolean verbose = true
-    boolean keep = true
-    boolean xnocompile = true
-    boolean fork = false
-    boolean xdebug = false
-    String target = "2.1"
-    String wsdlLocation = "FILL_IN_BY_SERVER"
-
+```groovy
+String sourceDestinationDirectory
+boolean verbose = true
+boolean keep = true
+boolean xnocompile = true
+boolean fork = false
+boolean xdebug = false
+String target = "2.1"
+String wsdlLocation = "FILL_IN_BY_SERVER"
+```
 the **target** is defaulted to **2.1** because in my experience, not many people have updated to Java 7 yet, and I think it is easier to use something like 
 ```groovy
 wsdl {
@@ -56,11 +59,11 @@ If you care to not keep your generated files, set *keep* to *false*.  See the av
 you can use the configuration 
     List episodes
 to configure the wsimport task to bind with episode files at the **episodeDirectory** like so:
-
-    wsdl {
-      	 episodes = ["name-of-episode-file-sans-episode-extension"]
-    }
-
+```groovy
+wsdl {
+  episodes = ["name-of-episode-file-sans-episode-extension"]
+}
+```
 This will go and find the file **name-of-episode-file-sans-episode-extension.episode** at **episodeDirectory** even though you didn't include the episode file extension in the property configuration
 
 # Examples #
