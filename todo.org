@@ -2,13 +2,14 @@
 * List of todo's as I've gone through
   
   These are not in any particular order.
-
+  
 *  TODO investigate the WsdlNameTask 
    as to why the Name Task which populates the wsdlPath in the Extension class 
    but doesn't register for the InputFile of the Parse Task (ParseWsdlTask)
 
 
-* TODO Correct the Task level application in the apply method
+* DONE Correct the Task level application in the apply method
+  CLOSED: [2013-01-21 Mon 08:51]
   
   - Move all task definition in the apply method and the plugin class to move to the higher level Task interface 
   - lose the lower level WsdlNameTask class name

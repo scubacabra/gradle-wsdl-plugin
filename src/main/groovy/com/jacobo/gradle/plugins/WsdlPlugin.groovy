@@ -60,35 +60,35 @@ class WsdlPlugin implements Plugin<Project> {
      }
    }
 
-   private Task configureParseWsdlTask(final Project project, WsdlNameTask wnt) { 
+   private Task configureParseWsdlTask(final Project project, Task wsdlNameTask) { 
      Task pwt = project.tasks.add(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdlTask)
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
-     pwt.dependsOn(wnt)
+     pwt.dependsOn(wsdlNameTask)
      pwt.destinationDirectory = new File(project.wsdl.sourceDestinationDirectory)
      //     pwt.doLast { wsdl = project.wsdl.wsdlPath }
      return pwt
 
    }
 
-   private WsdlNameTask configureWsdlNameTask(final Project project) { 
-     WsdlNameTask wnt = project.tasks.add(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlNameTask)
+   private Task configureWsdlNameTask(final Project project) { 
+     Task wnt = project.tasks.add(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlNameTask)
      wnt.description = "find the wsdl File name from the web service sub project name, as per the convention"
      wnt.group = WSDL_PLUGIN_TASK_GROUP
      return wnt
    }
 
-   private WsdlResolverTask configureWsdlResolverTask(final Project project, WsdlNameTask wnt) {
-     WsdlResolverTask wrt = project.tasks.add(WSDL_PLUGIN_WSDL_RESOLVE_TASK, WsdlResolverTask)
+   private Task configureWsdlResolverTask(final Project project, Task wsdlNameTask) {
+     Task wrt = project.tasks.add(WSDL_PLUGIN_WSDL_RESOLVE_TASK, WsdlResolverTask)
      wrt.description = "gather all the wsdl dependencies (xsd's, wsdl's) and create a relative file list to be populated in the war"
      wrt.group = WSDL_PLUGIN_TASK_GROUP
      wrt.dependsOn(project.tasks.getByName('classes'))
-     wrt.dependsOn(wnt)
+     wrt.dependsOn(wsdlNameTask)
      return wrt
    }
 
-   private void configureWarTask(final Project project, WsdlResolverTask wrt) {
-     WsdlWarTask war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
-     war.dependsOn(wrt)
+   private void configureWarTask(final Project project, Task wsdlResolverTask) {
+     Task war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
+     war.dependsOn(wsdlResolverTask)
    }
 }
