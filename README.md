@@ -47,7 +47,48 @@ the **target** is defaulted to **2.1** because in my experience, not many people
 
 **IF** you happen to be using java 7.  
 
-*sourceDestinationDirectory* is defaulted to *src/main/java* where your generated classes will normally go.  Some have different philosophies on if you should save your generated files to your repository.  I have always said that you should, so that if nothing has changed in your schema/wsdl documents, you don't have to run the tasks to parse those documents.  
+configuration **sourceDestinationDirectory** is defaulted to **src/main/java** where your generated classes will normally go.  Some have different philosophies on if you should save your generated files to your repository.  I have always said that you should, so that if nothing has changed in your schema/wsdl documents, you don't have to run the tasks to parse those documents -- and that if something has changed, it will be reflected in your VC diff.
 
 If you care to not keep your generated files, set *keep* to *false*.  See the available jaxws wsimport ant task options [here](http://jax-ws.java.net/2.2.3/docs/wsimportant.html)
 
+## Binding to previously generated schema documents with jaxb episode binding ##
+you can use the configuration 
+    List episodes
+to configure the wsimport task to bind with episode files at the **episodeDirectory** like so:
+
+    wsdl {
+      	 episodes = ["name-of-episode-file-sans-episode-extension"]
+    }
+
+This will go and find the file **name-of-episode-file-sans-episode-extension.episode** at **episodeDirectory** even though you didn't include the episode file extension in the property configuration
+
+# Examples #
+You can find some examples in the *examples* directory
+
+# List of available tasks #
+* parseWsdl
+** run wsimport ant task on the WSDL file name
+* war
+** automatically generates the war like a regular WAR would, but also auto populates the war with the default wsdl directory containing the wsdl the project uses and will auto populate with the correct schema directory and all imported schemas.  
+
+The war would look like this (see the *hello-world-episode-binding-ws* example
+
+      drwxr-xr-x         0  20-Jan-2013  21:19:26  META-INF/
+      -rw-r--r--        25  20-Jan-2013  21:19:26  META-INF/MANIFEST.MF
+      drwxr-xr-x         0  20-Jan-2013  21:19:26  WEB-INF/
+      drwxr-xr-x         0  20-Jan-2013  21:19:26  WEB-INF/classes/
+      drwxr-xr-x         0  19-Jan-2013  21:00:16  WEB-INF/classes/helloworld/
+      drwxr-xr-x         0  19-Jan-2013  21:00:16  WEB-INF/classes/helloworld/sample/
+      drwxr-xr-x         0  19-Jan-2013  21:00:16  WEB-INF/classes/helloworld/sample/ibm/
+      drwxr-xr-x         0  19-Jan-2013  21:00:16  WEB-INF/classes/helloworld/sample/ibm/com/
+      -rw-r--r--       993  19-Jan-2013  21:00:16  WEB-INF/classes/helloworld/sample/ibm/com/HelloWorld.class
+      -rw-r--r--      2194  19-Jan-2013  21:00:16  WEB-INF/classes/helloworld/sample/ibm/com/HelloWorldService.class
+      -rw-r--r--      1837  19-Jan-2013  21:00:16  WEB-INF/classes/helloworld/sample/ibm/com/ObjectFactory.class
+      drwxr-xr-x         0  20-Jan-2013  21:19:26  WEB-INF/lib/
+      -rw-r--r--      2674  19-Jan-2013  21:00:14  WEB-INF/lib/hello-world-schema-0.1.jar
+      drwxr-xr-x         0  20-Jan-2013  21:19:26  WEB-INF/wsdl/
+      -rw-r--r--      2049  19-Jan-2013  20:56:44  WEB-INF/wsdl/HelloWorldEpisodeBindingService.wsdl
+      drwxr-xr-x         0  20-Jan-2013  21:19:26  WEB-INF/schema/
+      drwxr-xr-x         0  20-Jan-2013  21:19:26  WEB-INF/schema/HelloWorld/
+      -rw-r--r--       581  19-Jan-2013  20:56:44  WEB-INF/schema/HelloWorld/HelloWorld.xsd
+      - ----------  --------  -----------  --------  -----------------------------------------------------------------
