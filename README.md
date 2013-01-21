@@ -71,9 +71,9 @@ You can find some examples in the *examples* directory
 
 # List of available tasks #
 * parseWsdl
-    ** run wsimport ant task on the WSDL file name
+  -- run wsimport ant task on the WSDL file name
 * war
-    ** automatically generates the war like a regular WAR would, but also auto populates the war with the default wsdl directory containing the wsdl the project uses and will auto populate with the correct schema directory and all imported schemas.  
+  -- automatically generates the war like a regular WAR would, but also auto populates the war with the default wsdl directory containing the wsdl the project uses and will auto populate with the correct schema directory and all imported schemas.  
 
 The war would look like this (see the *hello-world-episode-binding-ws* example
 
