@@ -30,14 +30,14 @@ it takes the project name from a hyphenated value to camel case and replaces the
 
 The plugin uses an ant jaxws wsimport task to parse the wsdl into java code, and the plugin is default configured with these variables and boolean values
 
-  String sourceDestinationDirectory
-  boolean verbose = true
-  boolean keep = true
-  boolean xnocompile = true
-  boolean fork = false
-  boolean xdebug = false
-  String target = "2.1"
-  String wsdlLocation = "FILL_IN_BY_SERVER"
+      String sourceDestinationDirectory
+      boolean verbose = true
+      boolean keep = true
+      boolean xnocompile = true
+      boolean fork = false
+      boolean xdebug = false
+      String target = "2.1"
+      String wsdlLocation = "FILL_IN_BY_SERVER"
 
 the **target** is defaulted to **2.1** because in my experience, not many people have updated to Java 7 yet, and I think it is easier to use something like 
 
