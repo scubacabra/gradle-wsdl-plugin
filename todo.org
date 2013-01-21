@@ -6,15 +6,14 @@
 *  TODO investigate the WsdlNameTask 
    as to why the Name Task which populates the wsdlPath in the Extension class 
    but doesn't register for the InputFile of the Parse Task (ParseWsdlTask)
-
-
 * DONE Correct the Task level application in the apply method
   CLOSED: [2013-01-21 Mon 08:51]
   
   - Move all task definition in the apply method and the plugin class to move to the higher level Task interface 
   - lose the lower level WsdlNameTask class name
 
-* TODO Remove the wsdl resolver task
+* DONE Remove the wsdl resolver task
+  CLOSED: [2013-01-21 Mon 10:00]
   - because the war is being fussy
   - figure out how to make the war play 
   - post some questions on the forums about this
@@ -28,8 +27,10 @@
   - create a schema project
   - use the jaxb plugin I wrote
   - create an episode directory in the schema folder
-* TODO last example is a wsdl that imports schema that imports schema
+* DONE last example is a wsdl that imports schema that imports schema
+  CLOSED: [2013-01-21 Mon 12:07]
   - to make sure the war is correct
+    - CLOSED 2013-01-21 Mon 12:07
 * TODO what happens when an import doesn't have a schema Location?
   - it looks like it is failing, because the code doesn't handle an empty location
 * DONE Investigate why multiple wsdls going into war

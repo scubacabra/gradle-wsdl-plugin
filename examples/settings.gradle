@@ -1,7 +1,7 @@
 include 'hello-world-ws'
 include 'hello-world-import-xsd-ws'
-include 'hello-world-schema'
-include 'hello-world-episode-binding-ws'
+include 'hello-world-schema', 'hello-world-import-schema'
+include 'hello-world-episode-binding-ws', 'hello-world-dual-episode-binding-ws'
 
 rootProject.children.each { project ->
     project.buildFileName = "${project.name}.gradle"
