@@ -3,6 +3,35 @@ gradle-wsdl-plugin
 
 plugin for gradle that sets up a wsdl task and sets up a convention between the sub project web service name and the wsdl document itself
 
+# using the plugin #
+```groovy
+buildscript {
+ repositories {
+  some-repo-where-this-is
+  dependencies {
+   classpath ':com.jacobo:gradle-wsdl:$version'
+  } 
+ }
+}
+
+apply plugin: 'wsdl'
+```
+# setting up the jaxws configurations #
+You *need* the jaxws configuration to run the `parseWsdl` task, but that is the only task that has an external dependency. Any version of jaxws that you care to use will work.  I prefer to stay with the latest releases.
+
+```groovy
+subprojects { project ->
+  if(project.name.endsWith("-ws")) { 
+    apply plugin: 'wsdl'
+
+    dependencies { 
+      jaxws 'com.sun.xml.ws:jaxws-tools:2.2.8-promoted-b131'
+      jaxws 'com.sun.xml.ws:jaxws-rt:2.2.8-promoted-b131'
+    }
+  }
+}
+```
+
 # Project Name to Wsdl Name Conventions #
 
 It is assumed that for a web-service, your project name will be of the form 
@@ -11,27 +40,33 @@ It is assumed that for a web-service, your project name will be of the form
 
 Here are some possible mappings of project name to wsdl service Straight from the tests
 
+>  project-name           >>  wsdl-name
 >  "spock-star-trek-ws"   >> "SpockStarTrekService" 
-
 >  "srv-legend-ws"        >> "SrvLegendService" 
-   
 >  "boy-band-ws"          >> "BoyBandService" 
 
 it takes the project name from a hyphenated value to camel case and replaces the  **-ws** with **Service**
 
 # wsdl plugin conventions #
-```groovy
-wsdlDirectory -- File object to the wsdl Directory
-wsdlFileName -- The wsdl Name found at the wsdl Directory
-wsdlPath -- File object of the absolute path to the wsdl File
-episodeDirectory  -- File object to the default episode File directory
-```
 
-*ASSUMING* you are generating schemas with the jaxb task (found in another plugin I developed [here](https://github.com/djmijares/gradle-jaxb-namespace-dependency) that you can use.  There is also another one found [here](https://github.com/stianh/gradle-jaxb-plugin)
+    File wsdlDirectory -- File object to the wsdl Directory
+    String wsdlFileName -- The wsdl Name found at the wsdl Directory
+    File wsdlPath -- File object of the absolute path to the wsdl File
+    File episodeDirectory  -- File object to the default episode File directory
+
+## Default wsdl folder conventions ##
+Default convention for `wsdlDirectory` is `${rootDir}/wsdl`, if this is not the case, and the folder is actually `WSDL`, you can change it with
+
+```groovy
+wsdl { 
+ wsdlDirectory = file(new File(project.rootDir, "WSDL"))
+}
+```
 
 ## jaxws wsimport conventions ##
 
 The plugin uses an ant jaxws wsimport task to parse the wsdl into java code, and the plugin is default configured with these variables and boolean values
+
 ```groovy
 String sourceDestinationDirectory
 boolean verbose = true
@@ -42,7 +77,9 @@ boolean xdebug = false
 String target = "2.1"
 String wsdlLocation = "FILL_IN_BY_SERVER"
 ```
+
 the **target** is defaulted to **2.1** because in my experience, not many people have updated to Java 7 yet, and I think it is easier to use something like 
+
 ```groovy
 wsdl {
   target = "2.2"
@@ -58,12 +95,14 @@ If you care to not keep your generated files, set *keep* to *false*.  See the av
 ## Binding to previously generated schema documents with jaxb episode binding ##
 you can use the configuration 
     List episodes
-to configure the wsimport task to bind with episode files at the **episodeDirectory** like so:
+to configure the wsimport task to bind with episode files at the **episodeDirectory** with
+
 ```groovy
 wsdl {
   episodes = ["name-of-episode-file-sans-episode-extension"]
 }
 ```
+
 This will go and find the file **name-of-episode-file-sans-episode-extension.episode** at **episodeDirectory** even though you didn't include the episode file extension in the property configuration
 
 # Examples #
@@ -96,3 +135,58 @@ The war would look like this (see the *hello-world-episode-binding-ws* example)
       drwxr-xr-x         0  20-Jan-2013  21:19:26  WEB-INF/schema/HelloWorld/
       -rw-r--r--       581  19-Jan-2013  20:56:44  WEB-INF/schema/HelloWorld/HelloWorld.xsd
       - ----------  --------  -----------  --------  -----------------------------------------------------------------
+
+# My Philosophy for web service projects #
+
+## I like to keep things DRY ##
+There are two areas where I have seen lots of repetition are
+
+* Code (Re)Generation
+* Schema Document Duplication
+
+### Code Regenration ###
+This happens when the wsimport task has to re-parse the xsd schemas that it imports.  Usually though, there has already been a separate task to generate the code for those *same* xsd's because that code is shared across service projects.  
+
+#### Episode Binding To The Rescue!!! ####
+When you go through your xsd's and generate code for them, you can generate something called an *episode* file.  For more info, check out this java dot net [blog](http://weblogs.java.net/blog/kohsuke/archive/2006/09/separate_compil.html)
+
+* * * * *
+**Caveat**
+* * * * *
+Each `targetNamespace` in your xsd import collection needs to have it's own episode file.  So you can potentially bind with a bunch of episode files.  If you include a package name that isn't imported by your wsdl though, the jaxb parser that wsimport uses for xsd's will explode because it can't find the package to bind with.  
+
+##### jaxb-plugin locations #####
+I developed another plugin for jaxb schema generation and automatic episode file generation on a per `targetNamespace` basis (among some other tidy features) [here](https://github.com/djmijares/gradle-jaxb-namespace-dependency) that is a possibility for use.  There is also another jaxb-plugin found [here](https://github.com/stianh/gradle-jaxb-plugin).
+
+### wsimport artifacts magic low number ###
+That number is **3**.  Yup, if you bind the episode files correctly and write the wsdl in such a way as well, you can have wsimport only generate the **3** classes it generates at a minimum.  
+
+* Service Interface lass for the Endpoint Implementation
+* Object Factory class 
+* Client Service Helper class for clients to get Port access and proxy objects to invoke remotely or locally
+
+see the `examples` folder, and specifically, the `hello-world-dual-episode-binding` project source, and the `examples/wsdl/HelloWorldDualEpisodeBindingService.wsdl` to see how to generate the minimum number of classes.  
+
+#### Why is this awesome??? ####
+This is legit because you aren't going to be repeating yourself generating schemas over and over in different projects.  You could do everything *once* and the parsing is going to go much faster, because it is binding, not re-parsing.  
+
+# Schema Document Duplication #
+I have seen quite a lot of ways to parse documents and include them in the `war` file the correct way.  I have found that keeping things DRY in the easiest manner is to have two folders at the root of the repository.
+
+## Resulting Folder Conventions I like to use ##
+* rootDir
+  * wsdl
+  * schema
+    * episodes
+    * bindings
+
+With this folder layout, any subproject can know where the documents are with `project.rootDir`, and the wsdl and xsd imports/includes (which are usually relative paths) can be written and won't ever have to change.  
+
+### Schema projects ###
+With this `rootDir` convention, you can have 1...N schema projects, generating schema code with a jaxb plugin, populate episode files to `schema/episodes` and jar the classes up as libraries that you can re-use in services projects.  Look at the [examples folder](examples) for more examples of usage.
+
+# Plugin Improvements #
+If you think this plugin could be better, fork it and send me a pull request. :)
+
+In my head, I see a few [possible improvements](possible-improvements.md)
+
