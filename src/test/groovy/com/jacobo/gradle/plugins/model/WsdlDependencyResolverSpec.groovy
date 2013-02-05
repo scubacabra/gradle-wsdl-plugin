@@ -71,10 +71,25 @@ class WsdlDependencyResolverSpec extends Specification {
   where:
   parent             | schemaLocale        | result
   new File("schema") | "../blah/blah/blah" | new File("blah/blah/blah").absoluteFile
-  new File("wsdl")   | "../blah/something"      | new File("blah/something").absoluteFile
+  new File("wsdl")   | "../blah/something" | new File("blah/something").absoluteFile
   new File("nothing")| "../blah/blah/blah" | new File("blah/blah/blah").absoluteFile
   }
 
+
+  def "we have a list of absolute paths and parse Files, the slurper gets a file that is not in the parseFiles list, but is in the absolute paths list, it shouldn't add to the parse Files list, otherwise you get a circular dependency." () { 
+  when: "set up everything"
+    wdr.absolutePathDependencies = absolutePaths
+    def absoluteFile = wdr.getAbsoluteSchemaLocation(location, parentDirectory)
+    wdr.addSchemaLocationToParse(absoluteFile)
+
+  then: "parse list should not change"
+    wdr.schemaLocationsToParse == []
+
+  where: ""
+    absolutePaths             | location        | parentDirectory
+    [new File("build/resources/test/Include/OrderNumber.xsd").absoluteFile] | "OrderNumber.xsd" | new File("build/resources/test/Include").absoluteFile
+
+  }
 
   def "test the full resolver with WSDLs and XSDs" () { 
     

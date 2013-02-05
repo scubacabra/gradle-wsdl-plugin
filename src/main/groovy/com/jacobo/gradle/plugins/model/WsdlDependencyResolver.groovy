@@ -42,12 +42,12 @@ class WsdlDependencyResolver {
   static boolean isAlreadyInList(List list, File input) { 
     return list.contains(input)
   }
-
+ 
   /**
    * @param file is the absolute file path to add to the @scheaLocationsToParse list
    */
   def addSchemaLocationToParse(File file) { 
-    if (!isAlreadyInList( schemaLocationsToParse, file)) { 
+    if (!isAlreadyInList( schemaLocationsToParse, file) && !isAlreadyInList( absolutePathDependencies, file)) { 
       log.debug(" schema location is {}, and the parentDirectoryectory (Parent Directory) is {}", file, parentDirectory)
       log.debug("added {} to schema Location to Parse List", file)
       schemaLocationsToParse << file
