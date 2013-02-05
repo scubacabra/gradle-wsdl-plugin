@@ -141,10 +141,10 @@ The war would look like this (see the *hello-world-episode-binding-ws* example)
 ## I like to keep things DRY ##
 There are two areas where I have seen lots of repetition are
 
-* Code (**Re**)Generation
+* Code **Re**Generation
 * Schema Document **Duplication**
 
-### Code **Re**generation ###
+### Code Regeneration ###
 This happens when the wsimport task has to re-parse the xsd schemas that it imports.  Usually though, there has already been a separate task to generate the code for those *same* xsd's because that code is shared across service projects.  
 
 #### Episode Binding To The Rescue!!! ####
@@ -170,7 +170,7 @@ see the [examples folder](examples), and specifically, the [episode bound hello 
 #### Why is this awesome??? ####
 This is legit because you aren't going to be repeating yourself generating schemas over and over in different projects.  You could do everything *once* and the parsing is going to go much faster, because it is binding, not re-parsing.  
 
-# Schema Document **Duplication** #
+# Schema Document Duplication #
 I have seen quite a lot of ways to parse documents and include them in the `war` file the correct way.  I have found that keeping things DRY in the easiest manner is to have two folders at the root of the repository.
 
 ## Resulting Folder Conventions I like to use ##
