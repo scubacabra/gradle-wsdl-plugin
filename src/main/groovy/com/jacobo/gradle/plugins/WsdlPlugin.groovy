@@ -88,6 +88,9 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private void configureWarTask(final Project project) {
+     Task oldWar = project.tasks.getByName('war')
      Task war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
+     war.group = oldWar.group
+     war.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
    }
 }
