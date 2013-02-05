@@ -106,7 +106,7 @@ wsdl {
 This will go and find the file **name-of-episode-file-sans-episode-extension.episode** at **episodeDirectory** even though you didn't include the episode file extension in the property configuration
 
 # Examples #
-You can find some examples in the *examples* directory
+You can find some examples in the [examples folder](examples)
 
 # List of available tasks #
 * `parseWsdl`
@@ -165,7 +165,7 @@ That number is **3**.  Yup, if you bind the episode files correctly and write th
 * Object Factory class 
 * Client Service Helper class for clients to get Port access and proxy objects to invoke remotely or locally
 
-see the `examples` folder, and specifically, the `hello-world-dual-episode-binding` project source, and the `examples/wsdl/HelloWorldDualEpisodeBindingService.wsdl` to see how to generate the minimum number of classes.  
+see the [examples folder](examples), and specifically, the [episode bound hello world project source](examples/hello-world-dual-episode-binding) to see the minimum number of classes and where they are generated, and the [associated wsdl](examples/wsdl/HelloWorldDualEpisodeBindingService.wsdl) to see how to generate the minimum number of classes.  
 
 #### Why is this awesome??? ####
 This is legit because you aren't going to be repeating yourself generating schemas over and over in different projects.  You could do everything *once* and the parsing is going to go much faster, because it is binding, not re-parsing.  
