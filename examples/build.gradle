@@ -20,7 +20,6 @@ allprojects {
 subprojects { project ->
   if(project.name.endsWith("-ws")) { 
     apply plugin: 'wsdl'
-    apply plugin: 'java'
 
     dependencies { 
       jaxws 'com.sun.xml.ws:jaxws-tools:2.2.8-promoted-b131'
