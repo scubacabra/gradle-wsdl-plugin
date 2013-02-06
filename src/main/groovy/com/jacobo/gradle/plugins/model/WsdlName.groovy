@@ -13,9 +13,10 @@ class WsdlName {
    static final Logger log = Logging.getLogger(WsdlName.class) 
 
    public String findWsdlFileName(String projectName) { 
-    if (!projectName.contains("-ws")) { // if it doesn't contain this, then it is not according to convention
+    if (!projectName.contains("-ws")) {
       throw new GradleException("${projectName} is not conforming to the convention, needs to be suffixed with '-ws' at the end at the very least.  Double check")
     }
+
     def wsdlName = removeSuffix(projectName)
     wsdlName = convertDashedToCamelCase(wsdlName)
     wsdlName = appendService(wsdlName)
@@ -37,9 +38,7 @@ class WsdlName {
   }
 
   private String capitalizeFirstLetter(String name) { 
-    name.replaceFirst(/^./) { 
-      it.toUpperCase()
-    }
+    name.replaceFirst(/^./) { it.toUpperCase() }
   }
 
 }

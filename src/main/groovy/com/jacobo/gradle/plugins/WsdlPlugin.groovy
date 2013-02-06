@@ -75,6 +75,8 @@ class WsdlPlugin implements Plugin<Project> {
      Task wnt = project.tasks.add(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlNameTask)
      wnt.description = "find the wsdl File name from the web service sub project name, as per the convention"
      wnt.group = WSDL_PLUGIN_TASK_GROUP
+     wnt.conventionMapping.projectName = { project.name }
+     wnt.conventionMapping.wsdlDirectory = { project.wsdl.wsdlDirectory }
      return wnt
    }
 
