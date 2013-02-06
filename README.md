@@ -40,10 +40,10 @@ It is assumed that for a web-service, your project name will be of the form
 
 Here are some possible mappings of project name to wsdl service Straight from the tests
 
->  project-name           >>  wsdl-name
->  "spock-star-trek-ws"   >> "SpockStarTrekService" 
->  "srv-legend-ws"        >> "SrvLegendService" 
->  "boy-band-ws"          >> "BoyBandService" 
+    project-name           >>  wsdl-name
+    "spock-star-trek-ws"   >> "SpockStarTrekService" 
+    "srv-legend-ws"        >> "SrvLegendService" 
+    "boy-band-ws"          >> "BoyBandService" 
 
 it takes the project name from a hyphenated value to camel case and replaces the  **-ws** with **Service**
 
@@ -175,10 +175,11 @@ I have seen quite a lot of ways to parse documents and include them in the `war`
 
 ## Resulting Folder Conventions I like to use ##
 * rootDir
-  * wsdl
-  * schema
-    * episodes
-    * bindings
+    * wsdl
+    * schema
+        * episodes
+    	* bindings
+	
 
 With this folder layout, any subproject can know where the documents are with `project.rootDir`, and the wsdl and xsd imports/includes (which are usually relative paths) can be written and won't ever have to change.  
 
