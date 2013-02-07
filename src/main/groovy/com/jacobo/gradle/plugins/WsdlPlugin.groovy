@@ -65,10 +65,19 @@ class WsdlPlugin implements Plugin<Project> {
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
      pwt.dependsOn(wsdlNameTask)
-     pwt.destinationDirectory = new File(project.wsdl.sourceDestinationDirectory)
-     //     pwt.doLast { wsdl = project.wsdl.wsdlPath }
+     pwt.conventionMapping.wsdl         = { project.wsdl.wsdlPath }
+     pwt.conventionMapping.destination  = { project.file(new File(project.projectDir, project.wsdl.sourceDestinationDirectory)) }
+     pwt.conventionMapping.episode      = { project.wsdl.episodeDirectory }
+     pwt.conventionMapping.episodes     = { project.wsdl.episodes }
+     pwt.conventionMapping.target       = { project.wsdl.target }
+     pwt.conventionMapping.wsdlLocation = { project.wsdl.wsdlLocation }
+     pwt.conventionMapping.verbose      = { project.wsdl.verbose }
+     pwt.conventionMapping.keep         = { project.wsdl.keep }
+     pwt.conventionMapping.xnocompile   = { project.wsdl.xnocompile }
+     pwt.conventionMapping.fork         = { project.wsdl.fork }
+     pwt.conventionMapping.xdebug       = { project.wsdl.xdebug }
+     
      return pwt
-
    }
 
    private Task configureWsdlNameTask(final Project project) { 

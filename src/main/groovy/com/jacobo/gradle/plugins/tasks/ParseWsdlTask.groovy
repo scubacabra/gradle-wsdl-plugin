@@ -9,6 +9,8 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 
 /**
@@ -18,35 +20,43 @@ import org.gradle.api.tasks.OutputDirectory
 class ParseWsdlTask extends DefaultTask { 
   static final Logger log = Logging.getLogger(ParseWsdlTask.class)
 
-  final WsdlExtension extension = project.extensions.wsdl
+  @InputFile
+  File wsdl
 
-  // @InputFile
-  // File wsdl
+  @Input
+  boolean verbose, keep, xnocompile, fork, xdebug
+
+  @Input
+  String target, wsdlLocation
+
+  @InputDirectory
+  File episode
+
+  @Input
+  List episodes
 
   @OutputDirectory
-  File destinationDirectory
+  File destination
 
   @TaskAction
   void parseWsdl() { 
-    log.info("parsing wsdl")
-    log.info("wsdl Path is {}", project.extensions.wsdl.wsdlPath)
-    log.info("wsdl path is {}", project.wsdl.wsdlPath)
-    log.info("destination directory is {}", destinationDirectory)
+    log.info("parsing wsdl...\n wsdl path is {} ...\n destination directory is {}", getWsdl(), getDestination())
     
     ant.taskdef (name : 'wsimport', classname: 'com.sun.tools.ws.ant.WsImport', classpath: project.configurations[WsdlPlugin.WSDL_CONFIGURATION_NAME].asPath)
 
     ant.wsimport (
-    wsdl: extension.wsdlPath.path,
-    verbose: extension.verbose,
-    sourcedestdir : destinationDirectory.path,
-    keep: extension.keep,
-    wsdlLocation : extension.wsdlLocation,
-    xnocompile : extension.xnocompile,
-    fork : extension.fork,
-    xdebug : extension.xdebug,
-    target : extension.target) {
-      extension.episodes.each { episode ->
-	binding(dir : extension.episodeDirectory.path, includes : "${episode}.episode")
+    wsdl            : getWsdl().path,
+    verbose         : getVerbose(),
+    sourcedestdir   : getDestination().path,
+    keep            : getKeep(),
+    wsdlLocation    : getWsdlLocation(),
+    xnocompile      : getXnocompile(),
+    fork            : getFork(),
+    xdebug          : getXdebug(),
+    target          : getTarget()) {
+      getEpisodes().each { episode ->
+	log.debug("binding with file {}.episode in path {}", episode, getEpisode().path)
+	binding(dir : getEpisode().path, includes : "${episode}.episode")
       }
     }
   }
