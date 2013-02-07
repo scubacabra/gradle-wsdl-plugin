@@ -59,10 +59,11 @@ class WsdlResolverTask extends DefaultTask {
     log.debug("setting the extension point for war task to use with {}", relativePathWarResolution)
     project.wsdl.resolved = relativePathWarResolution
 
-    log.info("copying all web service dependent documents into {}", resolvedWebServicesDir)
+    log.debug("copying all web service dependent documents into {}", getResolvedWebServicesDir())
     relativePathWarResolution.each { resolved ->
       log.debug("resolving from {} into {} and including these file(s) {}", resolved.from, resolved.into, resolved.resolvedFiles.name)
-      ant.copy(toDir: resolvedWebServicesDir.path + File.separator + resolved.into) {
+      log.debug("copying into {}", getResolvedWebServicesDir().path + File.separator + resolved.into)
+      ant.copy(toDir: getResolvedWebServicesDir().path + File.separator + resolved.into) {
 	fileset(dir: resolved.from) {
 	  resolved.resolvedFiles.each { file ->
 	    include(name: file.name)
