@@ -39,8 +39,8 @@ class WsdlPlugin implements Plugin<Project> {
      configureWsdlConfiguration(project)
      def nameTask = configureWsdlNameTask(project)
      Task pwt = configureParseWsdlTask(project, nameTask)
-     //     def resolverTask = configureWsdlResolverTask(project, nameTask)
-     configureWarTask(project)
+     def resolverTask = configureWsdlResolverTask(project, nameTask)
+     configureWarTask(project, resolverTask)
    }
 
    private void configureWsdlExtension(final Project project) { 
@@ -49,6 +49,11 @@ class WsdlPlugin implements Plugin<Project> {
        wsdlDirectory = new File(project.rootDir, "wsdl")
        sourceDestinationDirectory = "src/main/java"
        episodeDirectory = new File(project.rootDir, "schema/episodes")
+       wsdlWarDir = "wsdl"
+       schemaWarDir = "schema"
+       resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
+       resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "wsdl"))
+       resolvedSchemaDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "schema"))
      }
    }
 
@@ -93,15 +98,23 @@ class WsdlPlugin implements Plugin<Project> {
      Task wrt = project.tasks.add(WSDL_PLUGIN_WSDL_RESOLVE_TASK, WsdlResolverTask)
      wrt.description = "gather all the wsdl dependencies (xsd's, wsdl's) and create a relative file list to be populated in the war"
      wrt.group = WSDL_PLUGIN_TASK_GROUP
-     wrt.dependsOn(project.tasks.getByName('classes'))
      wrt.dependsOn(wsdlNameTask)
+     wrt.conventionMapping.wsdl = { project.wsdl.wsdlPath }
+     wrt.conventionMapping.rootDirectory = { project.rootDir }
      return wrt
    }
 
-   private void configureWarTask(final Project project) {
+
+   private void configureWarTask(final Project project, Task wsdlDependencyResolver) {
      Task oldWar = project.tasks.getByName('war')
-     Task war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
-     war.group = oldWar.group
-     war.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
+    // Task war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
+     Task wsdlWar = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
+     wsdlWar.group = oldWar.group
+     wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
+     wsdlWar.dependsOn(wsdlDependencyResolver)
+     wsdlWar.conventionMapping.wsdlFolder    = { project.wsdl.wsdlWarDir }
+     wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.schemaWarDir }
+     wsdlWar.conventionMapping.wsdl          = { project.wsdl.resolvedWsdlDir }
+     wsdlWar.conventionMapping.schema        = { project.wsdl.resolvedSchemaDir }
    }
 }

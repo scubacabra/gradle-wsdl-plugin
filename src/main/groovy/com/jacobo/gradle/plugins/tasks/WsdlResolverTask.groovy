@@ -6,6 +6,8 @@ import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Input
 import org.gradle.api.DefaultTask
 
 import org.gradle.api.GradleException
@@ -20,20 +22,29 @@ import com.jacobo.gradle.plugins.model.WsdlDependencyResolver
 class WsdlResolverTask extends DefaultTask { 
   static final Logger log = Logging.getLogger(WsdlResolverTask.class)
 
-  final WsdlExtension extension = project.extensions.wsdl
-
   static final WsdlDependencyResolver wdr = new WsdlDependencyResolver()
   static final WsdlWarRelativePathResolver wrpr = new WsdlWarRelativePathResolver()
 
+  @InputFile
+  File wsdl
+  
+  @Input
+  File rootDirectory
+
   @TaskAction
-  void start() { 
-    log.info("finding the wsdl dependencies")
-    log.info("wsdl name {}, wsdl path {}", extension.wsdlFileName, extension.wsdlPath)
-    wdr.wsdlFile = extension.wsdlPath
+  void resolveWsdlDocumentDependencies() { 
+    log.info("finding the wsdl document dependencies")
+    log.debug("wsdl path: {}", getWsdl())
+
+    wdr.wsdlFile = getWsdl()
     def dependencyList = wdr.resolveWSDLDependencies()
-    log.info("resolving relative paths")
-    def resolvedParts = dependencyList.collect { wrpr.resolveRelativePathsToWar(project.rootDir, it)}
-    log.info("setting the extension point for war task to use")
-    extension.resolved = resolvedParts
+
+    log.info("resolving all relative paths")
+
+    def relativePathWarResolution = dependencyList.collect { wrpr.resolveRelativePathsToWar(getRootDirectory(), it)}
+
+    log.info("setting the extension point for war task to use with {}", relativePathWarResolution)
+    project.wsdl.resolved = relativePathWarResolution
+
   }
 } 

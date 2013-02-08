@@ -29,6 +29,15 @@ class WsdlExtension {
 
   List resolved
 
+  //war defaults
+  String wsdlWarDir
+  String schemaWarDir
+
+  //resolved Output Dir
+  File resolvedWebServiceDir
+  File resolvedWsdlDir
+  File resolvedSchemaDir
+
   WsdlExtension(Project project) { 
     this.project = project
   }
