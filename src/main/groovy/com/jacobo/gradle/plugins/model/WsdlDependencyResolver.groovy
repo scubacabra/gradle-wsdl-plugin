@@ -129,6 +129,7 @@ class WsdlDependencyResolver {
       log.debug("popping {} from schemaLocationsToParse list", document)
       parseDocument(document)
     }
+    log.debug("returning file list {}", absolutePathDependencies)
     return absolutePathDependencies
   }
 

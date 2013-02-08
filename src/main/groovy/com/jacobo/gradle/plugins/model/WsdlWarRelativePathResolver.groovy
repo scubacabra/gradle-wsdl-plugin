@@ -7,15 +7,30 @@ class WsdlWarRelativePathResolver {
 
   private static final Logger log = Logging.getLogger(WsdlWarRelativePathResolver.class)
   
-  String from = ""
-  String into = ""
-  String include = ""
+  String into, from
+  List<File> resolvedFiles = []
 
-  static WsdlWarRelativePathResolver resolveRelativePathsToWar(File rootDir, File includeFile) { 
-    def relPath = includeFile.parentFile.path - rootDir.path - "/" 
-    def resolver = new WsdlWarRelativePathResolver(from : includeFile.parentFile.path, into: relPath, include: includeFile.name)
-    log.info("for file {}, from : {}, into: {}, include : {}", includeFile, resolver.from, resolver.into, resolver.include)
-    return resolver
+  static List<WsdlWarRelativePathResolver> resolveRelativePathsToWar(File rootDir, List<File> includeFiles) {
+    def resolvedPaths = []
+    includeFiles.each { resolveFile ->
+      def relPath = resolveFile.parentFile.path - rootDir.path - "/"
+      def resolved = resolvedPaths.find { it.into == relPath }
+      if(resolved) {
+	log.debug("found resolved object {} , into {}, from {}, resolved Files {} for this relative Path {} and resolved File {} already", resolved, resolved.from, resolved.into, resolved.resolvedFiles, relPath, resolveFile)
+	resolved.resolvedFiles << resolveFile
+      } else {
+	log.debug("no resolved object {} for this relative Path {} and resolved file {} yet, adding a new one", resolved, relPath, resolveFile)
+	resolvedPaths << new WsdlWarRelativePathResolver(into: relPath, resolvedFiles: [resolveFile], from: resolveFile.parentFile.path )
+      }
+    }
+    return resolvedPaths
   }
-
+  
+  public String toString() {
+    def out = "from ${from}, into ${into} \n"
+    resolvedFiles.each {
+      out += "${it}:"
+    }
+    return out
+  }
 }

@@ -100,7 +100,10 @@ class WsdlPlugin implements Plugin<Project> {
      wrt.group = WSDL_PLUGIN_TASK_GROUP
      wrt.dependsOn(wsdlNameTask)
      wrt.conventionMapping.wsdl = { project.wsdl.wsdlPath }
-     wrt.conventionMapping.rootDirectory = { project.rootDir }
+     wrt.conventionMapping.rootDir = { project.rootDir }
+     wrt.conventionMapping.resolvedWebServicesDir = { project.wsdl.resolvedWebServiceDir }
+     wrt.conventionMapping.resolvedWsdlDir = { project.wsdl.resolvedWsdlDir }
+     wrt.conventionMapping.resolvedSchemaDir = { project.wsdl.resolvedSchemaDir }
      return wrt
    }
 
