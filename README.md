@@ -52,7 +52,28 @@ it takes the project name from a hyphenated value to camel case and replaces the
     File wsdlDirectory -- File object to the wsdl Directory
     String wsdlFileName -- The wsdl Name found at the wsdl Directory
     File wsdlPath -- File object of the absolute path to the wsdl File
-    File episodeDirectory  -- File object to the default episode File directory
+    File episodeDirectory  -- File object to the default episode File directory     
+    //war defaults
+    String wsdlWarDir -- String of the wsdl folder that will go into the war
+    String schemaWarDir -- schema folder to go into war
+
+    //resolved Output Dir
+    File resolvedWebServiceDir -- resolved web service directory to go into project.buildDir
+    File resolvedWsdlDir -- resolved wsdl dir to go into project.buildDir
+    File resolvedSchemaDir -- resolved schema dir to go into project.buildDir
+
+Default Conventions
+----------
+```groovy
+wsdlDirectory = new File(project.rootDir, "wsdl")
+sourceDestinationDirectory = "src/main/java"
+episodeDirectory = new File(project.rootDir, "schema/episodes")
+wsdlWarDir = "wsdl"
+schemaWarDir = "schema"
+resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
+resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "wsdl"))
+resolvedSchemaDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "schema"))
+```
 
 ## Default wsdl folder conventions ##
 Default convention for `wsdlDirectory` is `${rootDir}/wsdl`, if this is not the case, and the folder is actually `WSDL`, you can change it with
@@ -60,6 +81,8 @@ Default convention for `wsdlDirectory` is `${rootDir}/wsdl`, if this is not the 
 ```groovy
 wsdl { 
  wsdlDirectory = file(new File(project.rootDir, "WSDL"))
+ wsdlWarDir = "WSDL"
+ resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "WSDL"))
 }
 ```
 
