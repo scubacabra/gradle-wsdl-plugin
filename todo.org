@@ -3,7 +3,8 @@
   
   These are not in any particular order.
   
-*  TODO investigate the WsdlNameTask 
+* DONE investigate the WsdlNameTask 
+  CLOSED: [2013-02-12 Tue 01:33]
    as to why the Name Task which populates the wsdlPath in the Extension class 
    but doesn't register for the InputFile of the Parse Task (ParseWsdlTask)
 * DONE Correct the Task level application in the apply method
@@ -37,7 +38,8 @@
   CLOSED: [2013-01-21 Mon 09:50]
   - It looks like the episode binding example is putting all of the wsdl's in the wsdl folder in the WAR
     - FIXED 2013-01-21 Mon 09:50
-* TODO Investigate why, when running in a subproject, the rest of the projects war tasks are called
+* DONE Investigate why, when running in a subproject, the rest of the projects war tasks are called
+  CLOSED: [2013-02-12 Tue 01:33]
   - This is debug output at the very top for episode-binding-ws project, before episode-binding-ws project tasks are called
 : 09:53:54.402 [DEBUG] [com.jacobo.gradle.plugins.tasks.WsdlWarTask] calling the war task constructor
 : 09:53:54.403 [INFO] [com.jacobo.gradle.plugins.tasks.WsdlWarTask] wsdl name is HelloWorldImportXsdService
