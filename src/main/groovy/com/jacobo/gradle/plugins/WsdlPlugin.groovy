@@ -119,5 +119,6 @@ class WsdlPlugin implements Plugin<Project> {
      wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.schemaWarDir }
      wsdlWar.conventionMapping.wsdl          = { project.wsdl.resolvedWsdlDir }
      wsdlWar.conventionMapping.schema        = { project.wsdl.resolvedSchemaDir }
+     project.build.dependsOn(wsdlWar)
    }
 }
