@@ -1,10 +1,13 @@
 buildscript {
   repositories { 
+    ivy { 
+      url 'http://dl.bintray.com/content/djmijares/gradle-plugins'
+    }
     flatDir dirs: "${gradle.gradleHomeDir}/lib/plugins"
   }
 
   dependencies {
-    classpath ':gradle-wsdl'
+    classpath 'com.jacobo.gradle:gradle-wsdl:1.0'
     classpath ':gradle-jaxb'
   }
 }
