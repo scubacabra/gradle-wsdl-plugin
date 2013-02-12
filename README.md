@@ -6,12 +6,15 @@ plugin for gradle that sets up a wsdl task and sets up a convention between the 
 # using the plugin #
 ```groovy
 buildscript {
- repositories {
-  some-repo-where-this-is
+  repositories {
+    ivy {
+      url 'http://dl.bintray.com/content/djmijares/gradle-plugins'
+    }
+   }
+
   dependencies {
-   classpath ':com.jacobo:gradle-wsdl:$version'
-  } 
- }
+    classpath 'com.jacobo.gradle:gradle-wsdl:1.0'
+   }
 }
 
 apply plugin: 'wsdl'
