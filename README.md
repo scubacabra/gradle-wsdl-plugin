@@ -13,7 +13,7 @@ buildscript {
    }
 
   dependencies {
-    classpath 'com.jacobo.gradle:gradle-wsdl:1.0'
+    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.0'
    }
 }
 
