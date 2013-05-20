@@ -14,11 +14,13 @@ class DocumentReaderSpec extends Specification {
 
   then:
   result.class in [clazz]
+  result.currentDir == dir.absoluteFile
+  result.documentName == name
   
   where:
-  url | clazz
-  this.getClass().getResource("/wsdl/noXsdImport.wsdl") | WsdlSlurper
-  this.getClass().getResource("/schema/PO/PurchaseOrder.xsd") | XsdSlurper
+  url | clazz | dir | name
+  this.getClass().getResource("/wsdl/noXsdImport.wsdl") | WsdlSlurper | new File("build/resources/test/wsdl") | "noXsdImport.wsdl"
+  this.getClass().getResource("/schema/PO/PurchaseOrder.xsd") | XsdSlurper | new File("build/resources/test/schema/PO") | "PurchaseOrder.xsd"
 
   }
 }
