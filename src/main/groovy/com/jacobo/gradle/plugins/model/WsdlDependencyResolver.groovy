@@ -1,5 +1,8 @@
 package com.jacobo.gradle.plugins.model
 
+import com.jacobo.gradle.plugins.util.ListUtil
+import com.jacobo.gradle.plugins.reader.DocumentReader
+
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
@@ -16,17 +19,6 @@ class WsdlDependencyResolver {
   private static final Logger log = Logging.getLogger(WsdlDependencyResolver.class)  
 
   /**
-   * Start WSDL File location (absolute Path) 
-   */
-  File wsdlFile
-
-  /**
-   * This is the parent Directory of whatever schema is being slurped
-   * I personally don't think this should be part of this class, but eh.
-   */
-  File parentDirectory
-
-  /**
    * List of any schema locations left to parse and go through, when this is empty, the processing can return
    */
   def schemaLocationsToParse = []
@@ -35,20 +27,53 @@ class WsdlDependencyResolver {
    * List of all absolute Path Dependencies to be returned to the caller
    */
   def absolutePathDependencies = []
-  
+
   /**
-   * Utility function that checks if a @List has the value @input
+   * resolves the wsdl dependencies starting at
+   * @param startingWsdl the absolute path of the starting wsdl to go through and resolve
+   * While there are files in
+   * @see #schemaLocationsToParse
+   * keep slurping documents and gather schema locations for imports/includes
+   * @return List of #absolutePathDependencies
    */
-  static boolean isAlreadyInList(List list, File input) { 
-    return list.contains(input)
+  def List resolveWSDLDependencies(File startingWsdl) {
+    log.info("resolving wsdl dependencies starting at {}", startingWsdl)
+    schemaLocationsToParse << startingWsdl
+    def slurper
+    def relativeSlurpedLocations
+    while(schemaLocationsToParse) { 
+      def document = schemaLocationsToParse.pop()
+      log.debug("popping {} from schemaLocationsToParse list", document)
+      slurper = DocumentReader.slurpDocument(document)
+      log.debug("adding {} to absolute Path List", document)
+      addAbsolutePathDependencies(document)
+      log.debug("gathering Relative locations from slurper {}", slurper.documentName)
+      relativeSlurpedLocations = slurper.gatherAllRelativeLocations() 
+      log.debug("processing relative Locations and adding them to the schema to Parse List")
+      processRelativeLocations(relativeSlurpedLocations, slurper)
+    }
+    log.debug("returning file list {}", absolutePathDependencies)
+    return absolutePathDependencies
   }
- 
+   
+  /**
+   * @param relativeLocations is a List of locations to process into the #schemaLocationsToParse and the #absolutePathDependencies
+   */
+  def processRelativeLocations(List relativeLocations, slurper) { 
+    def currentDir = slurper.currentDir
+    log.debug("current Dir for absolute File reference is {}", currentDir)
+    relativeLocations.each { location ->
+      def absoluteFile = getAbsoluteSchemaLocation(location, currentDir)
+      log.debug("relative location is {}, absolute is {}", location, absoluteFile.path)
+      addSchemaLocationToParse(absoluteFile)
+    }
+  }
+  
   /**
    * @param file is the absolute file path to add to the @scheaLocationsToParse list
    */
   def addSchemaLocationToParse(File file) { 
-    if (!isAlreadyInList( schemaLocationsToParse, file) && !isAlreadyInList( absolutePathDependencies, file)) { 
-      log.debug(" schema location is {}, and the parentDirectoryectory (Parent Directory) is {}", file, parentDirectory)
+    if (!ListUtil.isAlreadyInList(schemaLocationsToParse, file) && !ListUtil.isAlreadyInList( absolutePathDependencies, file)) { 
       log.debug("added {} to schema Location to Parse List", file)
       schemaLocationsToParse << file
     }
@@ -58,97 +83,10 @@ class WsdlDependencyResolver {
    * @param file is the absolute file path to add to the @abosluteFileDependencies
    */
   def addAbsolutePathDependencies(File file) { 
-    if (!isAlreadyInList( absolutePathDependencies, file)) { 
+    if (!ListUtil.isAlreadyInList(absolutePathDependencies, file)) { 
       log.debug("added {} to absolute file dependencies  List", file)
       absolutePathDependencies << file
     }
-  }
-
-  /**
-   * @param it is the import Object taken from the #XmlSlurper
-   * addes the schema location of the import/include statement to the schemaLocationToParse list, if it is unique to the list
-   * @see #importedNamespaces List
-   */
-  def xsdLocationClosure = { it ->
-    log.info("the xml slurper element is {}", it)
-    def location = it.@schemaLocation.text()
-    log.info("the location is {}", location)
-    def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
-    addSchemaLocationToParse(absoluteFile)
-  }
-
-  /**
-   * @param it is the import Object taken from the #XmlSlurper
-   * addes the schema location of the import/include statement to the schemaLocationToParse list, if it is unique to the list
-   * @see #importedNamespaces List
-   */
-  def wsdlLocationClosure = { it ->
-    log.info("the xml slurper element is {}", it)
-    def location = it.@location.text()
-    log.info("the location is {}", location)
-    def absoluteFile = getAbsoluteSchemaLocation(location, parentDirectory) 
-    addSchemaLocationToParse(absoluteFile)
-  }
-
-  /**
-   * @param xmlDoc the xml slurped document to gether data from
-   * gathers schema Locations from import/include statments in the XSD schema
-   */
-  def getXsdDependencies (xmlDoc) { 
-    log.debug("resolving xsd imports")
-    xmlDoc?.import?.each xsdLocationClosure
-    log.debug("resolving xsd includes")
-    xmlDoc?.include?.each xsdLocationClosure
-  }
-  
-  /**
-   * @param wsdlDoc the xml slurped document to gether data from
-   * gathers schema Locations from import/include statments in the wsdl Doc
-   * gathers data from xsd import statments, and from wsdl import statements as well. 
-   */
-  def getWsdlDependencies(wsdlDoc) { 
-    log.debug("resolving wsdl xsd imports")
-    wsdlDoc?.types?.schema?.import?.each xsdLocationClosure
-    log.debug("resolving wsdl imports")
-    wsdlDoc?.import?.each wsdlLocationClosure
-  }
-
-  /**
-   * resolves the wsdl dependencies starting at
-   * @see #wsdlFile
-   * While there are files in
-   * @see #schemaLocationsToParse
-   * keep slurping documents and gather schema locations for imports/includes
-   * @return List of #absolutePathDependencies
-   */
-  def List resolveWSDLDependencies() {
-    log.info("resolving wsdl dependencies starting at {}", wsdlFile)
-    parseDocument(wsdlFile)
-    while(schemaLocationsToParse) { 
-      def document = schemaLocationsToParse.pop()
-      log.debug("popping {} from schemaLocationsToParse list", document)
-      parseDocument(document)
-    }
-    log.debug("returning file list {}", absolutePathDependencies)
-    return absolutePathDependencies
-  }
-
-  /**
-   * common compute chain for resolving dependencies
-   * @param document is a File to be slurped
-   * set parent, slurp, gather deps, and add to absolute deps
-   */
-  def parseDocument(File document) { 
-    log.info("file is {}", document)
-    parentDirectory = document.parentFile
-    log.info("parent File is {}", parentDirectory)
-    def xmlDoc = new XmlSlurper().parse(document)
-    if(document.name.split("\\.")[-1] == 'xsd') {
-      getXsdDependencies(xmlDoc)	
-    } else {
-      getWsdlDependencies(xmlDoc)
-    }
-    addAbsolutePathDependencies(document)
   }
 
   /**

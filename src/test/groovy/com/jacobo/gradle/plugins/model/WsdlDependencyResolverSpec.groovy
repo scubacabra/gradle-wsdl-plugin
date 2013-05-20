@@ -13,22 +13,6 @@ class WsdlDependencyResolverSpec extends Specification {
 
   def WsdlDependencyResolver wdr = new WsdlDependencyResolver()
 
-  def "is Already in List works out well" () { 
-
-  when:
-  def list = [new File("schema.xsd"), new File("test.wsdl")]
-
-  then:
-  result == wdr.isAlreadyInList(list, file)
-
-  where:
-  file                | result
-  new File("schema.xsd")  | true
-  new File("test.wsdl")   | true
-  new File("nothing.xsd") | false
-
-  }
-
   def "add schema to Parse to list"() {   
   
   when:
@@ -94,10 +78,10 @@ class WsdlDependencyResolverSpec extends Specification {
   def "test the full resolver with WSDLs and XSDs" () { 
     
   when:
-  wdr.wsdlFile = new File(url.toURI())
+  def wsdlFile = new File(url.toURI())
 
   then:
-  result*.absoluteFile == wdr.resolveWSDLDependencies()
+  result*.absoluteFile == wdr.resolveWSDLDependencies(wsdlFile)
   //TODO this expectation result could be a little more dynamic, in other words the list should HAVE to be in order, just contain the same elements.  see what you can do later
   where:
   url | result
