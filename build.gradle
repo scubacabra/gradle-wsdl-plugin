@@ -19,6 +19,21 @@ targetCompatibility = 1.6
 
 group = 'com.jacobo.gradle'
 
+sourceSets {
+  integTest {
+     compileClasspath += main.output + test.output
+     runtimeClasspath += main.output + test.output
+    groovy {
+      srcDir 'src/integTest/groovy'
+    }
+  }
+}
+
+configurations { 
+  integTestCompile.extendsFrom testCompile
+  integTestRuntime.extendsFrom testRuntime
+}
+
 dependencies {
   compile gradleApi()
   groovy localGroovy()
@@ -28,6 +43,13 @@ dependencies {
 cobertura {
     coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
 }
+
+task integTest(type: Test, dependsOn: 'test') {
+  testClassesDir = sourceSets.integTest.output.classesDir
+  classpath = sourceSets.integTest.runtimeClasspath
+}
+
+check.dependsOn(integTest)
 
 task('unversionedJar', type: Jar, dependsOn: 'jar') {
   version = null
