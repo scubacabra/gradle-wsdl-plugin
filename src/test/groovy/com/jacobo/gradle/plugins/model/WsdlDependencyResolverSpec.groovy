@@ -75,21 +75,18 @@ class WsdlDependencyResolverSpec extends Specification {
 
   }
 
-  def "test the full resolver with WSDLs and XSDs" () { 
-    
+  def "process a list of relative locations from a slurper class" () { 
+  setup:
+  def slurper = [currentDir: file]
+  
   when:
-  def wsdlFile = new File(url.toURI())
+  wdr.processRelativeLocations(locations, slurper)
 
   then:
-  result*.absoluteFile == wdr.resolveWSDLDependencies(wsdlFile)
-  //TODO this expectation result could be a little more dynamic, in other words the list should HAVE to be in order, just contain the same elements.  see what you can do later
-  where:
-  url | result
-  this.getClass().getResource("/wsdl/noXsdImport.wsdl") | [new File("build/resources/test/wsdl/noXsdImport.wsdl")]
-  this.getClass().getResource("/wsdl/OneXsdImport.wsdl") | [new File("build/resources/test/wsdl/OneXsdImport.wsdl"), new File("build/resources/test/schema/Messages/Messages.xsd")]
-  this.getClass().getResource("/wsdl/TwoXsdImports.wsdl") | [new File("build/resources/test/wsdl/TwoXsdImports.wsdl"), new File("build/resources/test/schema/PO/PurchaseOrder.xsd"), new File("build/resources/test/schema/Messages/Messages.xsd")]
-  this.getClass().getResource("/wsdl/XsdImportXsdAndIncludesXsd.wsdl") | [new File("build/resources/test/wsdl/XsdImportXsdAndIncludesXsd.wsdl"), new File("build/resources/test/schema/Include/OrderNumber.xsd"), new File("build/resources/test/schema/Include/include2.xsd"), new File("build/resources/test/schema/Include/include.xsd"), new File("build/resources/test/schema/Include/Product.xsd"), new File("build/resources/test/schema/Messages/Messages.xsd")]
-  this.getClass().getResource("/wsdl/ImportsAnotherWsdl.wsdl") | [new File("build/resources/test/wsdl/ImportsAnotherWsdl.wsdl"), new File("build/resources/test/wsdl/abstract.wsdl"), new File("build/resources/test/schema/Messages/Messages.xsd")] 
-  }
+  wdr.schemaLocationsToParse == locations.collect{ new File(new File(file, it).canonicalPath) }
 
+  where:
+  file | locations
+  new File("./build/test/resources/wsdl").absoluteFile | ["abstract.wsdl", "../xsd/schema.xsd", "./importWsdl.wsdl"]
+  }
 }
