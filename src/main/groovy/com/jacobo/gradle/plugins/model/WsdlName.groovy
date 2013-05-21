@@ -12,15 +12,17 @@ import org.gradle.api.GradleException
 class WsdlName { 
    static final Logger log = Logging.getLogger(WsdlName.class) 
 
-   public String findWsdlFileName(String projectName) { 
+   def wsdlName
+
+   public String findWsdlFileName(String projectName) throws GradleException { 
     if (!projectName.contains("-ws")) {
       throw new GradleException("${projectName} is not conforming to the convention, needs to be suffixed with '-ws' at the end at the very least.  Double check")
     }
-
-    def wsdlName = removeSuffix(projectName)
+    wsdlName = removeSuffix(projectName)
     wsdlName = convertDashedToCamelCase(wsdlName)
     wsdlName = appendService(wsdlName)
-    return capitalizeFirstLetter(wsdlName)
+    wsdlName = capitalizeFirstLetter(wsdlName)
+    return wsdlName
   }
   
   private String removeSuffix(String projectName) { 

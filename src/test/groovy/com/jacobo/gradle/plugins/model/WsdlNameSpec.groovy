@@ -61,6 +61,7 @@ class WsdlNameSpec extends Specification {
   def "test full cycle, including errors" () { //TODO put some none ending -ws projectName to throw error
   expect:
   result == wn.findWsdlFileName(projectName)
+  wn.wsdlName == result
 
   where:
   projectName            | result
