@@ -14,6 +14,7 @@ import org.gradle.api.GradleException
 import com.jacobo.gradle.plugins.model.WsdlName
 
 /**
+ * Process the name of this project and generates the corresponding wsdl file name and directory
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */

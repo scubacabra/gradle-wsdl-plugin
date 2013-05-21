@@ -29,11 +29,10 @@ class WsdlDependencyResolver {
   def absolutePathDependencies = []
 
   /**
-   * resolves the wsdl dependencies starting at
+   * resolves the wsdl dependencies starting at #startingWsdl . While there are files in
+   * @see #schemaLocationsToParse,
+   * keep slurping documents and gather dependencies for wsdl/xsd files
    * @param startingWsdl the absolute path of the starting wsdl to go through and resolve
-   * While there are files in
-   * @see #schemaLocationsToParse
-   * keep slurping documents and gather schema locations for imports/includes
    * @return List of #absolutePathDependencies
    */
   def List resolveWSDLDependencies(File startingWsdl) {
@@ -57,6 +56,8 @@ class WsdlDependencyResolver {
   }
    
   /**
+   * Takes a #XsdSlurper or #WsdlSurper class and process that classes relativeLocations relative to the current directory of that file.
+   * add to #schemaLocationsToParse
    * @param relativeLocations is a List of locations to process into the #schemaLocationsToParse and the #absolutePathDependencies
    */
   def processRelativeLocations(List relativeLocations, slurper) { 
@@ -70,6 +71,7 @@ class WsdlDependencyResolver {
   }
   
   /**
+   * Add file to #schemaLocationsToParse
    * @param file is the absolute file path to add to the @scheaLocationsToParse list
    */
   def addSchemaLocationToParse(File file) { 
@@ -80,6 +82,7 @@ class WsdlDependencyResolver {
   }
 
   /**
+   * Add file to #absolutePathDependencies
    * @param file is the absolute file path to add to the @abosluteFileDependencies
    */
   def addAbsolutePathDependencies(File file) { 
@@ -90,6 +93,7 @@ class WsdlDependencyResolver {
   }
 
   /**
+   * Figure out the ABSOLUTE schema location of the String relative to the parent/current directory
    * @param schemaLocation is the relative path of the schema location being called in eith the xsd:import or xsd:includes call
    * @param parentDir is the parent directory of the schema file that is currently being Xml Slurped
    * @return File absolute File path to schema Location

@@ -13,41 +13,43 @@ import org.gradle.api.logging.Logger
 
 /**
  * Assembles a WAR archive for the wsdl plugin, adds extra functionality to war
+ * Populates the WAR with the wsdl folder defined in the build directory
+ * Populates the WAR with the schema folder defined in the build directory
  *
- * @author Daniel Mijares
+ * @author djmijares
  */
-class WsdlWarTask extends War { 
+class WsdlWarTask extends War {
 
-  static final Logger log = Logging.getLogger(WsdlWarTask.class)
+    static final Logger log = Logging.getLogger(WsdlWarTask.class)
 
-  @Input
-  String wsdlFolder
+    @Input
+    String wsdlFolder
 
-  @Input
-  String schemaFolder
+    @Input
+    String schemaFolder
 
-  @InputDirectory
-  File wsdl
+    @InputDirectory
+    File wsdl
 
-  @InputDirectory
-  File schema
+    @InputDirectory
+    File schema
 
-  WsdlWarTask() { 
-    super()
-    log.debug("Calling war constructor")
+    WsdlWarTask() {
+        super()
+        log.debug("Calling war constructor")
 
-    webInf.into({ getWsdlFolder() }) { 
-      from { 
-	getWsdl()
-      }
+        webInf.into({ getWsdlFolder() }) {
+            from {
+                getWsdl()
+            }
+        }
+
+        webInf.into({ getSchemaFolder() }) {
+            from {
+                getSchema()
+            }
+        }
     }
 
-    webInf.into({ getSchemaFolder() }) { 
-      from { 
-	getSchema()
-      }
-    }
-  }
-  
-  
+
 }

@@ -17,60 +17,61 @@ import com.jacobo.gradle.plugins.model.WsdlWarRelativePathResolver
 import com.jacobo.gradle.plugins.model.WsdlDependencyResolver
 
 /**
+ * Resolve all wsdl dependencies, copy dependencies into build directory
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class WsdlResolverTask extends DefaultTask { 
-  static final Logger log = Logging.getLogger(WsdlResolverTask.class)
+class WsdlResolverTask extends DefaultTask {
+    static final Logger log = Logging.getLogger(WsdlResolverTask.class)
 
-  final WsdlDependencyResolver wdr = new WsdlDependencyResolver()
-  final WsdlWarRelativePathResolver wrpr = new WsdlWarRelativePathResolver()
+    final WsdlDependencyResolver wdr = new WsdlDependencyResolver()
+    final WsdlWarRelativePathResolver wrpr = new WsdlWarRelativePathResolver()
 
-  @InputFile
-  File wsdl
-  
-  @Input
-  File rootDir
+    @InputFile
+    File wsdl
 
-  @OutputDirectory
-  File resolvedWsdlDir
+    @Input
+    File rootDir
 
-  @OutputDirectory
-  File resolvedSchemaDir
+    @OutputDirectory
+    File resolvedWsdlDir
 
-  @OutputDirectory
-  File resolvedWebServicesDir
+    @OutputDirectory
+    File resolvedSchemaDir
 
-  @TaskAction
-  void resolveWsdlDocumentDependencies() { 
-    log.info("finding the wsdl document dependencies")
-    log.debug("wsdl path: {}", getWsdl())
+    @OutputDirectory
+    File resolvedWebServicesDir
 
-    wdr.wsdlFile = getWsdl()
-    def dependencyList = wdr.resolveWSDLDependencies()
-    log.debug("dependency list for this wsdl is {}", dependencyList)
+    @TaskAction
+    void resolveWsdlDocumentDependencies() {
+        log.info("finding the wsdl document dependencies")
+        log.debug("wsdl path: {}", getWsdl())
 
-    log.info("resolving all relative paths")
+        wdr.wsdlFile = getWsdl()
+        def dependencyList = wdr.resolveWSDLDependencies()
+        log.debug("dependency list for this wsdl is {}", dependencyList)
 
-    def relativePathWarResolution = wrpr.resolveRelativePathsToWar(getRootDir(), dependencyList)
+        log.info("resolving all relative paths")
 
-    log.debug("relativePathWarResolution list has a size of {} and contains {}", relativePathWarResolution.size(), relativePathWarResolution)
+        def relativePathWarResolution = wrpr.resolveRelativePathsToWar(getRootDir(), dependencyList)
 
-    log.debug("setting the extension point for war task to use with {}", relativePathWarResolution)
-    project.wsdl.resolved = relativePathWarResolution
+        log.debug("relativePathWarResolution list has a size of {} and contains {}", relativePathWarResolution.size(), relativePathWarResolution)
 
-    log.debug("copying all web service dependent documents into {}", getResolvedWebServicesDir())
-    relativePathWarResolution.each { resolved ->
-      log.debug("resolving from {} into {} and including these file(s) {}", resolved.from, resolved.into, resolved.resolvedFiles.name)
-      log.debug("copying into {}", getResolvedWebServicesDir().path + File.separator + resolved.into)
-      ant.copy(toDir: getResolvedWebServicesDir().path + File.separator + resolved.into) {
-	fileset(dir: resolved.from) {
-	  resolved.resolvedFiles.each { file ->
-	    include(name: file.name)
-	  }
-	}
-      }
+        log.debug("setting the extension point for war task to use with {}", relativePathWarResolution)
+        project.wsdl.resolved = relativePathWarResolution
+
+        log.debug("copying all web service dependent documents into {}", getResolvedWebServicesDir())
+        relativePathWarResolution.each { resolved ->
+            log.debug("resolving from {} into {} and including these file(s) {}", resolved.from, resolved.into, resolved.resolvedFiles.name)
+            log.debug("copying into {}", getResolvedWebServicesDir().path + File.separator + resolved.into)
+            ant.copy(toDir: getResolvedWebServicesDir().path + File.separator + resolved.into) {
+                fileset(dir: resolved.from) {
+                    resolved.resolvedFiles.each { file ->
+                        include(name: file.name)
+                    }
+                }
+            }
+        }
     }
-  }
 
 } 

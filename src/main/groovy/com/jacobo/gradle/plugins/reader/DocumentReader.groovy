@@ -6,14 +6,18 @@ import com.jacobo.gradle.plugins.model.XsdSlurper
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
+/**
+ * Slurps a file object with @see XmlSlurper
+ * @author djmijares
+ */
 class DocumentReader {
   private static final Logger log = Logging.getLogger(DocumentReader.class)  
 
   /**
-   * @param document is a File to be slurped by #XmlSlurper
-   * Slurp document, return a slurper
-   * @return #WsdlSlurper
-   * @return #XsdSlurper
+   * @param document is a File to be slurped by @see XmlSlurper
+   * Slurp document
+   * @return @see WsdlSlurper
+   * @return @see XsdSlurper
    */
   static slurpDocument(File document) { 
     log.debug("file is {}", document)
