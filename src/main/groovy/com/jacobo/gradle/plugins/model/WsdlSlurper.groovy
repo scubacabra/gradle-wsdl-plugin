@@ -65,9 +65,7 @@ class WsdlSlurper extends XsdSlurper {
    * @return List of all locations from fields #xsdImports and #xsdIncludes
    */
   def gatherAllRelativeLocations() { 
-    def returnList = []
-    returnList.addAll(xsdImports)
-    returnList.addAll(xsdIncludes)
+    def returnList = super.gatherAllRelativeLocations()
     returnList.addAll(wsdlImports)
     return returnList
   }
