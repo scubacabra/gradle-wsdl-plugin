@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:1.1.2"
+    }
+}
+
+apply plugin: 'cobertura'
 apply plugin: 'groovy'
 
 repositories { 
@@ -13,6 +23,10 @@ dependencies {
   compile gradleApi()
   groovy localGroovy()
   testCompile "org.spockframework:spock-core:0.6-groovy-1.8" 
+}
+
+cobertura {
+    coverageSourceDirs << project.sourceSets.main.groovy.srcDirs
 }
 
 task('unversionedJar', type: Jar, dependsOn: 'jar') {
