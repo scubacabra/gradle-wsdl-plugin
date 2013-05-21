@@ -5,6 +5,8 @@ import org.gradle.api.logging.Logger
 
 import spock.lang.Specification
 
+import org.gradle.api.GradleException
+
 /**
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
@@ -65,5 +67,18 @@ class WsdlNameSpec extends Specification {
   "spock-star-trek-ws"   | "SpockStarTrekService" 
   "srv-legend-ws"        | "SrvLegendService" 
   "boy-band-ws"          | "BoyBandService" 
+  }
+
+  def "project name is lacking -ws suffix" () { 
+  when:
+  wn.findWsdlFileName(projectName)
+
+  then:
+  def ex =  thrown(GradleException)
+  ex.message == "${projectName} is not conforming to the convention, needs to be suffixed with '-ws' at the end at the very least.  Double check"
+  
+  where:
+  projectName << ["spock-star-trek", "srv-legend", "boy-band"]
+
   }
 }
