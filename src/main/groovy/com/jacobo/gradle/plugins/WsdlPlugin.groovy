@@ -18,6 +18,7 @@ import com.jacobo.gradle.plugins.tasks.WsdlNameTask
 import com.jacobo.gradle.plugins.tasks.WsdlWarTask
 import com.jacobo.gradle.plugins.tasks.ParseWsdlTask
 import com.jacobo.gradle.plugins.tasks.WsdlResolverTask
+import com.jacobo.gradle.plugins.tasks.ResolveWsdlDependenciesTask
 
 /**
  * @author djmijares
@@ -27,6 +28,7 @@ class WsdlPlugin implements Plugin<Project> {
   static final String WSDL_PLUGIN_TASK_GROUP = 'parse'
   static final String WSDL_PLUGIN_PARSE_WSDL_TASK = 'parseWsdl'
   static final String WSDL_PLUGIN_WSDL_NAME_TASK = 'wsdlName'
+  static final String WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK = 'resolveWsdlDependencies'
   static final String WSDL_PLUGIN_WSDL_RESOLVE_TASK = 'wsdlResolve'
   static final String WSDL_CONFIGURATION_NAME = 'jaxws'
 
@@ -41,7 +43,8 @@ class WsdlPlugin implements Plugin<Project> {
      configureWsdlConfiguration(project)
      def nameTask = configureWsdlNameTask(project)
      Task pwt = configureParseWsdlTask(project, nameTask)
-     def resolverTask = configureWsdlResolverTask(project, nameTask)
+     def dependenciesTask = configureResolveWsdlDependenciesTask(project, nameTask)
+     def resolverTask = configureWsdlResolverTask(project, dependenciesTask)
      configureWarTask(project, resolverTask)
    }
 
@@ -82,8 +85,7 @@ class WsdlPlugin implements Plugin<Project> {
      pwt.conventionMapping.keep         = { project.wsdl.wsImport.keep }
      pwt.conventionMapping.xnocompile   = { project.wsdl.wsImport.xnocompile }
      pwt.conventionMapping.fork         = { project.wsdl.wsImport.fork }
-     pwt.conventionMapping.xdebug       = { project.wsdl.wsImport.xdebug }
-     
+     pwt.conventionMapping.xdebug       = { project.wsdl.wsImport.xdebug }     
      return pwt
    }
 
@@ -96,12 +98,20 @@ class WsdlPlugin implements Plugin<Project> {
      return wnt
    }
 
-   private Task configureWsdlResolverTask(final Project project, Task wsdlNameTask) {
+   private Task configureResolveWsdlDependenciesTask(final Project project, Task wsdlNameTask) { 
+     Task resolveDeps = project.tasks.add(WSDL_PLUGIN_RESOLVE_WDSL_DEPENDENCIES_TASK, ResolveWsdlDependenciesTask)
+     resolveDeps.description = "determine all the wsdl dependencies, expected via, import/include statements"
+     resolveDeps.group = WSDL_PLUGIN_TASK_GROUP
+     resolveDeps.dependsOn(wsdlNameTask)
+     resolveDeps.conventionMapping.wsdl = { project.wsdl.wsdlPath }
+     return resolveDeps
+   }
+
+   private Task configureWsdlResolverTask(final Project project, Task resolveWsdlDependenciesTask) {
      Task wrt = project.tasks.add(WSDL_PLUGIN_WSDL_RESOLVE_TASK, WsdlResolverTask)
      wrt.description = "gather all the wsdl dependencies (xsd's, wsdl's) and create a relative file list to be populated in the war"
      wrt.group = WSDL_PLUGIN_TASK_GROUP
-     wrt.dependsOn(wsdlNameTask)
-     wrt.conventionMapping.wsdl = { project.wsdl.wsdlPath }
+     wrt.dependsOn(resolveWsdlDependenciesTask)
      wrt.conventionMapping.rootDir = { project.rootDir }
      wrt.conventionMapping.resolvedWebServicesDir = { project.wsdl.wsdlWar.resolvedWebServiceDir }
      wrt.conventionMapping.resolvedWsdlDir = { project.wsdl.wsdlWar.resolvedWsdlDir }
@@ -112,7 +122,6 @@ class WsdlPlugin implements Plugin<Project> {
 
    private void configureWarTask(final Project project, Task wsdlDependencyResolver) {
      Task oldWar = project.tasks.getByName('war')
-    // Task war = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
      Task wsdlWar = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
      wsdlWar.group = oldWar.group
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
