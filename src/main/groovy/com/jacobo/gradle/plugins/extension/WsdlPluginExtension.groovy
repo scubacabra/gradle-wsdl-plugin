@@ -42,6 +42,12 @@ class WsdlPluginExtension {
    */
   List wsdlDependencies
 
+  /**
+   * War files grouped by common folder
+   * @note again, at the minimum, this has at least one object, the web service must depend on it's WSDL
+   */
+  List<GroupedWsdlWarFiles> warFiles
+
   WsdlPluginExtension(Project project) {
     this.project = project
   }
