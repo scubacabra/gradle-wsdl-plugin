@@ -10,8 +10,8 @@ import org.gradle.api.GradleException
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class WsdlName { 
-   static final Logger log = Logging.getLogger(WsdlName.class) 
+class WsdlNameHelper {
+   static final Logger log = Logging.getLogger(WsdlNameHelper.class)
 
     /**
      * wsdl file name

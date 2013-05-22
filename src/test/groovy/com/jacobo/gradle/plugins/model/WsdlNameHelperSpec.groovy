@@ -11,8 +11,8 @@ import org.gradle.api.GradleException
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class WsdlNameSpec extends Specification { 
-  def WsdlName wn = new WsdlName()
+class WsdlNameHelperSpec extends Specification {
+  def WsdlNameHelper wn = new WsdlNameHelper()
 
   def "append 'Service' to the already CamelCased String" () { 
   expect:

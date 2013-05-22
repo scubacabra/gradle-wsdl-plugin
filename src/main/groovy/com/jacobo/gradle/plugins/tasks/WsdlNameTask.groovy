@@ -11,7 +11,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 
-import com.jacobo.gradle.plugins.model.WsdlName
+import com.jacobo.gradle.plugins.model.WsdlNameHelper
 
 /**
  * Process the name of this project and generates the corresponding wsdl file name and directory
@@ -20,7 +20,7 @@ import com.jacobo.gradle.plugins.model.WsdlName
  */
 class WsdlNameTask extends DefaultTask { 
   static final Logger log = Logging.getLogger(WsdlNameTask.class)
-  static final WsdlName wn = new WsdlName()
+  static final WsdlNameHelper wn = new WsdlNameHelper()
 
   final WsdlPluginExtension extension = project.wsdl
   
