@@ -20,7 +20,6 @@ import com.jacobo.gradle.plugins.util.WsdlNameHelper
  */
 class WsdlNameTask extends DefaultTask { 
   static final Logger log = Logging.getLogger(WsdlNameTask.class)
-  static final WsdlNameHelper wn = new WsdlNameHelper()
 
   final WsdlPluginExtension extension = project.wsdl
   
@@ -36,7 +35,7 @@ class WsdlNameTask extends DefaultTask {
   void findWsdlName() { 
     log.debug("finding the wsdl name")
 
-    wsdlName = wn.findWsdlFileName(getProjectName())
+    wsdlName = WsdlNameHelper.generateWsdlName(getProjectName())
 
     log.debug("checking that the file {} exists at {}", wsdlName, getWsdlDirectory())
 

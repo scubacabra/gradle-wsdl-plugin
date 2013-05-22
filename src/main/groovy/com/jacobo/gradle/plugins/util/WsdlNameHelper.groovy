@@ -14,21 +14,16 @@ class WsdlNameHelper {
    static final Logger log = Logging.getLogger(WsdlNameHelper.class)
 
     /**
-     * wsdl file name
-     */
-   def wsdlName
-
-    /**
      * converts the #projectName into the #wsdlName
      * @param projectName  String of the web service project name to convert
      * @return #wsdlName
      * @throws GradleException
      */
-   public String findWsdlFileName(String projectName) throws GradleException { 
+   public static String generateWsdlName(String projectName) throws GradleException { 
     if (!projectName.contains("-ws")) {
       throw new GradleException("${projectName} is not conforming to the convention, needs to be suffixed with '-ws' at the end at the very least.  Double check")
     }
-    wsdlName = removeSuffix(projectName)
+    def wsdlName = removeSuffix(projectName)
     wsdlName = convertDashedToCamelCase(wsdlName)
     wsdlName = appendService(wsdlName)
     wsdlName = capitalizeFirstLetter(wsdlName)
@@ -38,9 +33,9 @@ class WsdlNameHelper {
     /**
      * Removes the '-ws' suffix on the project
      * @param projectName
-     * @return
+     * @return procject name sans -ws suffix
      */
-  private String removeSuffix(String projectName) { 
+  private static String removeSuffix(String projectName) { 
     return projectName.replaceFirst(/-ws/, "")
   }
 
@@ -50,7 +45,7 @@ class WsdlNameHelper {
      * @param dashedName
      * @return
      */
-  private String convertDashedToCamelCase(String dashedName) { 
+  private static String convertDashedToCamelCase(String dashedName) { 
     dashedName.replaceAll(/-(\w)/) { fullMatch, firstCharacter -> 
       firstCharacter.toUpperCase()
     }
@@ -62,7 +57,7 @@ class WsdlNameHelper {
      * @param name
      * @return
      */
-  private String appendService(String name) { 
+  private static String appendService(String name) { 
     return name + "Service"
   }
 
@@ -72,7 +67,7 @@ class WsdlNameHelper {
      * @param name
      * @return
      */
-  private String capitalizeFirstLetter(String name) { 
+  private static String capitalizeFirstLetter(String name) { 
     name.replaceFirst(/^./) { it.toUpperCase() }
   }
 

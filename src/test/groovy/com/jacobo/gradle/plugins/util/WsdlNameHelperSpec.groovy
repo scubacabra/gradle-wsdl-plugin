@@ -12,11 +12,10 @@ import org.gradle.api.GradleException
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
 class WsdlNameHelperSpec extends Specification {
-  def WsdlNameHelper wn = new WsdlNameHelper()
 
   def "append 'Service' to the already CamelCased String" () { 
   expect:
-  result == wn.appendService(camelCase)
+  result == WsdlNameHelper.appendService(camelCase)
 
   where:
   camelCase       | result
@@ -27,7 +26,7 @@ class WsdlNameHelperSpec extends Specification {
 
   def "convert dashed string to appropriate camel case" () { 
   expect:
-  result == wn.convertDashedToCamelCase(dashed)
+  result == WsdlNameHelper.convertDashedToCamelCase(dashed)
 
   where:
   dashed            | result
@@ -38,7 +37,7 @@ class WsdlNameHelperSpec extends Specification {
 
   def "remove ws suffix at the end of the project name" () { 
   expect:
-  result == wn.removeSuffix(projectName)
+  result == WsdlNameHelper.removeSuffix(projectName)
 
   where:
   projectName            | result
@@ -49,7 +48,7 @@ class WsdlNameHelperSpec extends Specification {
 
   def "capitalize First Letter of Name" () { 
   expect:
-  result == wn.capitalizeFirstLetter(capitalize)
+  result == WsdlNameHelper.capitalizeFirstLetter(capitalize)
 
   where:
   capitalize            | result
@@ -60,8 +59,7 @@ class WsdlNameHelperSpec extends Specification {
 
   def "test full cycle, including errors" () { //TODO put some none ending -ws projectName to throw error
   expect:
-  result == wn.findWsdlFileName(projectName)
-  wn.wsdlName == result
+  result == WsdlNameHelper.generateWsdlName(projectName)
 
   where:
   projectName            | result
@@ -72,7 +70,7 @@ class WsdlNameHelperSpec extends Specification {
 
   def "project name is lacking -ws suffix" () { 
   when:
-  wn.findWsdlFileName(projectName)
+  result = WsdlNameHelper.generateWsdlName(projectName)
 
   then:
   def ex =  thrown(GradleException)
