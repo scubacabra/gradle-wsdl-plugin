@@ -16,7 +16,7 @@ import org.gradle.api.logging.Logger
  * Time: 10:56 AM
  */
 class ResolveWsdlDependenciesTask extends DefaultTask {
-    static final Logger log = Logging.getLogger(WsdlResolverTask.class)
+    static final Logger log = Logging.getLogger(ResolveWsdlDependenciesTask.class)
 
     final WsdlDependencyResolver wdr = new WsdlDependencyResolver()
 
