@@ -1,6 +1,6 @@
 package com.jacobo.gradle.plugins.tasks
 
-import com.jacobo.gradle.plugins.WsdlExtension
+import com.jacobo.gradle.plugins.WsdlPluginExtension
 
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
@@ -22,7 +22,7 @@ class WsdlNameTask extends DefaultTask {
   static final Logger log = Logging.getLogger(WsdlNameTask.class)
   static final WsdlName wn = new WsdlName()
 
-  final WsdlExtension extension = project.wsdl
+  final WsdlPluginExtension extension = project.wsdl
   
   @Input
   String projectName

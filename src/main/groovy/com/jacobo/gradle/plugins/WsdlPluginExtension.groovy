@@ -7,7 +7,7 @@ import org.gradle.api.Project
  * @author djmijares
  * Created: Tue Dec 04 09:01:34 EST 2012
  */
-class WsdlExtension { 
+class WsdlPluginExtension {
 
   private Project project
 
@@ -36,7 +36,7 @@ class WsdlExtension {
      */
   File wsdlPath
 
-  WsdlExtension(Project project) { 
+    WsdlPluginExtension(Project project) {
     this.project = project
   }
 

@@ -30,7 +30,7 @@ class WsdlPlugin implements Plugin<Project> {
 
   static final Logger log = Logging.getLogger(WsdlPlugin.class)
 
-  private WsdlExtension extension
+  private WsdlPluginExtension extension
 
    void apply (Project project) {
      project.plugins.apply(JavaPlugin)
@@ -44,7 +44,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private void configureWsdlExtension(final Project project) { 
-     extension = project.extensions.create("wsdl", WsdlExtension, project)
+     extension = project.extensions.create("wsdl", WsdlPluginExtension, project)
      extension.with { 
        wsdlDirectory = new File(project.rootDir, "wsdl")
        wsImport.sourceDestinationDirectory = "src/main/java"

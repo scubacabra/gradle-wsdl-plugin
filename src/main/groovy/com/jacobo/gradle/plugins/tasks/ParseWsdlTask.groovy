@@ -1,6 +1,5 @@
 package com.jacobo.gradle.plugins.tasks
 
-import com.jacobo.gradle.plugins.WsdlExtension
 import com.jacobo.gradle.plugins.WsdlPlugin
 
 import org.gradle.api.logging.Logging
