@@ -21,17 +21,18 @@ class WsdlWarFileGrouper {
      * @param includeFiles a list of absolute File paths that are to be included in the WAR artifact
      * @return List<GroupedWsdlWarFiles>
      */
-    static List<GroupedWsdlWarFiles> resolveRelativePathsToWar(File rootDir, List<File> includeFiles) {
+    static List<GroupedWsdlWarFiles> groupFilesWithCommonParentDirs(List<File> includeFiles) {
         def resolvedPaths = []
         includeFiles.each { resolveFile ->
-            def relPath = resolveFile.parentFile.path - rootDir.path - "/"
-            def resolved = resolvedPaths.find { it.into == relPath }
+            def resolved = resolvedPaths.find { it.groupedFolder == resolveFile.parentFile }
             if (resolved) {
-                log.debug("found resolved object {} , into {}, from {}, resolved Files {} for this relative Path {} and resolved File {} already", resolved, resolved.from, resolved.into, resolved.resolvedFiles, relPath, resolveFile)
-                resolved.resolvedFiles << resolveFile
+                log.debug("found resolved object {} , grouped Folder {}, groupedFiles {}", resolved, resolved.groupedFolder, resolved.groupedFiles)
+                resolved.groupedFiles << resolveFile.name
             } else {
-                log.debug("no resolved object {} for this relative Path {} and resolved file {} yet, adding a new one", resolved, relPath, resolveFile)
-                resolvedPaths << new GroupedWsdlWarFiles(into: relPath, resolvedFiles: [resolveFile], from: resolveFile.parentFile.path)
+                log.debug("no resolved object {} for this folder {} and  file {} yet, adding a new one", resolved, resolveFile.parentFile, resolveFile.name)
+                def grouping = new GroupedWsdlWarFiles(groupedFolder: resolveFile.parentFile)
+		grouping.groupedFiles << resolveFile.name
+		resolvedPaths << grouping
             }
         }
         return resolvedPaths
