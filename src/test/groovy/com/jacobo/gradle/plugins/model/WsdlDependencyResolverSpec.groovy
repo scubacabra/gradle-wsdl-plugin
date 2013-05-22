@@ -65,11 +65,15 @@ class WsdlDependencyResolverSpec extends Specification {
   }
 
   def "process a list of relative locations from a slurper class" () { 
-  setup:
-  def slurper = [currentDir: file]
+  given:
+  def slurper = new WsdlSlurper()
+  slurper.currentDir = file
   
+  and: "Partially mock the gatherAllRelativeLocations"
+  slurper.metaClass.gatherAllRelativeLocations = { locations }
+
   when:
-  wdr.processRelativeLocations(locations, slurper)
+  wdr.processRelativeLocations(slurper)
 
   then:
   wdr.schemaLocationsToParse == locations.collect{ new File(new File(file, it).canonicalPath) }
