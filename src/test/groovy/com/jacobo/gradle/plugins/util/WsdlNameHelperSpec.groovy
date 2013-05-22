@@ -1,4 +1,4 @@
-package com.jacobo.gradle.plugins.model
+package com.jacobo.gradle.plugins.util
 
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger

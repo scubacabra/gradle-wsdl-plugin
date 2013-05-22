@@ -11,7 +11,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 
-import com.jacobo.gradle.plugins.model.WsdlNameHelper
+import com.jacobo.gradle.plugins.util.WsdlNameHelper
 
 /**
  * Process the name of this project and generates the corresponding wsdl file name and directory
