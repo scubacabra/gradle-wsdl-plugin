@@ -15,7 +15,14 @@ import com.jacobo.gradle.plugins.model.WsdlWarRelativePathResolver
 import com.jacobo.gradle.plugins.model.WsdlDependencyResolver
 
 /**
- * Resolve all wsdl dependencies, copy dependencies into build directory
+ * Uses resolved WSDL dependencies to figure out relative paths between the dependent files and their path relative to the Gradle root directory.
+ * Keeps track of duplicate relative paths and stores their files in them, then copies these files to the build directory in a structure
+ * <pre>
+ *      build/
+ *          web-services/
+ *              wsdl/
+ *              schema/
+ * </pre>
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
@@ -27,6 +34,9 @@ class WsdlResolverTask extends DefaultTask {
     @Input
     File rootDir
 
+    @Input
+    List wsdlDependencies
+
     @OutputDirectory
     File resolvedWsdlDir
 
@@ -37,7 +47,7 @@ class WsdlResolverTask extends DefaultTask {
     File resolvedWebServicesDir
 
     @TaskAction
-    void resolveWsdlDocumentDependencies() {
+    void resolveRelativeWarFiles() {
 
         log.info("resolving all relative paths")
 
@@ -61,5 +71,13 @@ class WsdlResolverTask extends DefaultTask {
             }
         }
     }
+
+    void resolveWsdlWarFilesToRelativePaths() { 
+      
+    }
+
+  void copyWsdlWarFilesToOutputDirectory() {
+
+  }
 
 } 
