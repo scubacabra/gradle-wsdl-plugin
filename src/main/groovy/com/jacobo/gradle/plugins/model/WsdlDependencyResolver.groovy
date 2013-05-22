@@ -76,9 +76,8 @@ class WsdlDependencyResolver {
    * @param file is the absolute file path to add to the @scheaLocationsToParse list
    */
   def addSchemaLocationToParse(File file) { 
-    if (!ListHelper.isAlreadyInList(schemaLocationsToParse, file) && !ListHelper.isAlreadyInList( absolutePathDependencies, file)) {
-      log.debug("added {} to schema Location to Parse List", file)
-      schemaLocationsToParse << file
+    if (!ListHelper.isAlreadyInList(absolutePathDependencies, file)) {
+      ListHelper.addElementToList(schemaLocationsToParse, file)
     }
   }
 
@@ -87,10 +86,7 @@ class WsdlDependencyResolver {
    * @param file is the absolute file path to add to the @abosluteFileDependencies
    */
   def addAbsolutePathDependencies(File file) { 
-    if (!ListHelper.isAlreadyInList(absolutePathDependencies, file)) {
-      log.debug("added {} to absolute file dependencies  List", file)
-      absolutePathDependencies << file
-    }
+    ListHelper.addElementToList(absolutePathDependencies, file)
   }
 }
 
