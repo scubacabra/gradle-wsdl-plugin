@@ -20,8 +20,8 @@ import org.gradle.api.GradleException
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class WsdlResolverTask extends DefaultTask {
-    static final Logger log = Logging.getLogger(WsdlResolverTask.class)
+class CopyWsdlWarFilesTask extends DefaultTask {
+    static final Logger log = Logging.getLogger(CopyWsdlWarFilesTask.class)
 
     @Input
     File rootDir
@@ -41,13 +41,13 @@ class WsdlResolverTask extends DefaultTask {
     @TaskAction
     void resolveRelativeWarFiles() {
         log.debug("copying all web service dependent documents into {}", getResolvedWebServicesDir())
-        warFiles.each { warFile ->
-            log.debug("resolving from {} and including these file(s) {}", warFile.groupedFolder, warFile.groupedFiles)
-	    
+        getWarFiles().each { warFile ->
+            log.debug("copying from {} and including these file(s) {}", warFile.groupedFolder, warFile.groupedFiles)
+
             log.debug("copying into {}", getResolvedWebServicesDir().path + File.separator + warFile.into)
             ant.copy(toDir: getResolvedWebServicesDir().path + File.separator + warFile.into) { //copy to
-	      fileset(dir: warFile.groupedFolder.canonicalPath) { // from
-		warFile.groupedFiles.each { fileName -> //include files
+                fileset(dir: warFile.groupedFolder.canonicalPath) { // from
+                    warFile.groupedFiles.each { fileName -> //include files
                         include(name: fileName)
                     }
                 }
