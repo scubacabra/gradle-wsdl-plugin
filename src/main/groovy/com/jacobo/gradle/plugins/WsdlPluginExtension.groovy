@@ -36,7 +36,7 @@ class WsdlPluginExtension {
      */
   File wsdlPath
 
-    WsdlPluginExtension(Project project) {
+  WsdlPluginExtension(Project project) {
     this.project = project
   }
 
