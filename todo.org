@@ -51,3 +51,13 @@
 : 09:53:54.437 [INFO] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] the xml slurper element is 
 : 09:53:54.437 [INFO] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver] the location is ../schema/HelloWorld/HelloWorld.xsd
 : 09:53:54.438 [DEBUG] [com.jacobo.gradle.plugins.model.WsdlDependencyResolver]  schema location is /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/schema/HelloWorld/HelloWorld.xsd, and the parentDirectoryectory (Parent Directory) is /Users/djmijares/dev/gradle/gradle-plugins/gradle-wsdl/examples/wsdl
+
+* TODO Break up resolver task into pieces
+
+** DONE Resolve Wsdl Dependencies
+   CLOSED: [2013-05-22 Wed 16:02]
+
+** DONE Group War Files with Common Directories
+   CLOSED: [2013-05-22 Wed 16:02]
+
+** TODO Copy War Files to Output directory (build dir)
