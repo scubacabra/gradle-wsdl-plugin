@@ -58,7 +58,7 @@ class WsdlNameSpec extends Specification {
   "boyBand"             | "BoyBand"
   }
 
-  def "test full cycle, including errors" () { //TODO put some none ending -ws projectName to throw error
+  def "test full cycle, including errors" () {
   expect:
   result == wn.findWsdlFileName(projectName)
   wn.wsdlName == result
@@ -80,6 +80,17 @@ class WsdlNameSpec extends Specification {
   
   where:
   projectName << ["spock-star-trek", "srv-legend", "boy-band"]
+  }
 
+  def "test special abbreviation designations" () { //TODO put some none ending -ws projectName to throw error
+  expect:
+  result == wn.findWsdlFileName(projectName)
+
+  where:
+  abbreviation  | projectName            | result
+  "dm" | "spock-star-trek-dm-ws"   | "SpockStarTrekDataManagementService" 
+  "tj" | "srv-legend-tj-ws"        | "SrvLegendTraderJoesService" 
+  "wf" | "boy-band-wf-ws"          | "BoyBandWholeFoodsService"
+  ""   | "boy-band-ws"             | "BoyBandService"
   }
 }
