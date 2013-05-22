@@ -1,19 +1,17 @@
-package com.jacobo.gradle.plugins.model
+package com.jacobo.gradle.plugins.util
+
+import com.jacobo.gradle.plugins.model.GroupedWsdlWarFiles
 
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
 /**
- *  Process the relative paths of all dependent files to go into the war, takes a list of wsdl dependencies (absolute paths) --
- *  @see WsdlDependencyResolver#absolutePathDependencies
- *
+ * User: djmijares
+ * Date: 5/22/13
+ * Time: 1:10 PM
  */
-class WsdlWarRelativePathResolver {
-
-    private static final Logger log = Logging.getLogger(WsdlWarRelativePathResolver.class)
-
-    String into, from
-    List<File> resolvedFiles = []
+class WsdlWarFileGrouper {
+    private static final Logger log = Logging.getLogger(WsdlWarFileGrouper.class)
 
     /**
      * Takes a root directory and a list of absolute file dependencies @see WsdlDependencyResolver#absolutePathDependencies
@@ -21,9 +19,9 @@ class WsdlWarRelativePathResolver {
      * This handles the 'into' and 'from' and the 'included' files to go into copied WAR diretory in the build folder*
      * @param rootDir root Directory of the project (multi-build or not)
      * @param includeFiles a list of absolute File paths that are to be included in the WAR artifact
-     * @return List<WsdlWarRelativePathResolver>
+     * @return List<GroupedWsdlWarFiles>
      */
-    static List<WsdlWarRelativePathResolver> resolveRelativePathsToWar(File rootDir, List<File> includeFiles) {
+    static List<GroupedWsdlWarFiles> resolveRelativePathsToWar(File rootDir, List<File> includeFiles) {
         def resolvedPaths = []
         includeFiles.each { resolveFile ->
             def relPath = resolveFile.parentFile.path - rootDir.path - "/"
@@ -33,21 +31,10 @@ class WsdlWarRelativePathResolver {
                 resolved.resolvedFiles << resolveFile
             } else {
                 log.debug("no resolved object {} for this relative Path {} and resolved file {} yet, adding a new one", resolved, relPath, resolveFile)
-                resolvedPaths << new WsdlWarRelativePathResolver(into: relPath, resolvedFiles: [resolveFile], from: resolveFile.parentFile.path)
+                resolvedPaths << new GroupedWsdlWarFiles(into: relPath, resolvedFiles: [resolveFile], from: resolveFile.parentFile.path)
             }
         }
         return resolvedPaths
     }
 
-    /**
-     * String representation of this class
-     * @return
-     */
-    public String toString() {
-        def out = "from ${from}, into ${into} \n"
-        resolvedFiles.each {
-            out += "${it}:"
-        }
-        return out
-    }
 }
