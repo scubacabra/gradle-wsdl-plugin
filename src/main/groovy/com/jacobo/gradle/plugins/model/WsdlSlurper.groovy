@@ -1,6 +1,6 @@
 package com.jacobo.gradle.plugins.model
 
-import com.jacobo.gradle.plugins.util.ListUtil
+import com.jacobo.gradle.plugins.util.ListHelper
 
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
@@ -68,7 +68,7 @@ class WsdlSlurper extends XsdSlurper {
             log.debug("the XML slurper element is {}", wsdlElement.name())
             def wsdlImportLocation = wsdlElement.@location.text()
             log.debug("the location is {}", wsdlImportLocation)
-            ListUtil.addElementToList(wsdlImports, wsdlImportLocation)
+            ListHelper.addElementToList(wsdlImports, wsdlImportLocation)
         }
     }
 

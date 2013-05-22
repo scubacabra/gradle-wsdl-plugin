@@ -1,6 +1,6 @@
 package com.jacobo.gradle.plugins.model
 
-import com.jacobo.gradle.plugins.util.ListUtil
+import com.jacobo.gradle.plugins.util.ListHelper
 import com.jacobo.gradle.plugins.reader.DocumentReader
 
 import org.gradle.api.logging.Logging
@@ -75,7 +75,7 @@ class WsdlDependencyResolver {
    * @param file is the absolute file path to add to the @scheaLocationsToParse list
    */
   def addSchemaLocationToParse(File file) { 
-    if (!ListUtil.isAlreadyInList(schemaLocationsToParse, file) && !ListUtil.isAlreadyInList( absolutePathDependencies, file)) { 
+    if (!ListHelper.isAlreadyInList(schemaLocationsToParse, file) && !ListHelper.isAlreadyInList( absolutePathDependencies, file)) {
       log.debug("added {} to schema Location to Parse List", file)
       schemaLocationsToParse << file
     }
@@ -86,7 +86,7 @@ class WsdlDependencyResolver {
    * @param file is the absolute file path to add to the @abosluteFileDependencies
    */
   def addAbsolutePathDependencies(File file) { 
-    if (!ListUtil.isAlreadyInList(absolutePathDependencies, file)) { 
+    if (!ListHelper.isAlreadyInList(absolutePathDependencies, file)) {
       log.debug("added {} to absolute file dependencies  List", file)
       absolutePathDependencies << file
     }
