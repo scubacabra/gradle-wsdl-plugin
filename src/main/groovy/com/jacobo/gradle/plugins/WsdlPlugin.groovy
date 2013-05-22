@@ -59,8 +59,8 @@ class WsdlPlugin implements Plugin<Project> {
        wsdlWar.wsdlWarDir = "wsdl"
        wsdlWar.schemaWarDir = "schema"
        wsdlWar.resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
-       wsdlWar.resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "wsdl"))
-       wsdlWar.resolvedSchemaDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "schema"))
+       wsdlWar.resolvedWsdlDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "wsdl"))
+       wsdlWar.resolvedSchemaDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "schema"))
      }
    }
 
@@ -101,7 +101,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureResolveWsdlDependenciesTask(final Project project, Task wsdlNameTask) { 
-     Task resolveDeps = project.tasks.add(WSDL_PLUGIN_RESOLVE_WDSL_DEPENDENCIES_TASK, ResolveWsdlDependenciesTask)
+     Task resolveDeps = project.tasks.add(WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK, ResolveWsdlDependenciesTask)
      resolveDeps.description = "determine all the wsdl dependencies, expected via import/include statements"
      resolveDeps.group = WSDL_PLUGIN_TASK_GROUP
      resolveDeps.dependsOn(wsdlNameTask)
@@ -119,12 +119,12 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureCopyWsdlWarFilesTask(final Project project, Task groupWsdlWarFilesTask) {
-     Task cwwf = project.tasks.add(WSDL_PLUGIN_WSDL_RESOLVE_TASK, CopyWsdlWarFilesTask)
+     Task cwwf = project.tasks.add(WSDL_PLUGIN_COPY_WSDL_WAR_FILES_TASK, CopyWsdlWarFilesTask)
      cwwf.description = "copies all WSDL war files into the build directory for packaging use in the war task"
      cwwf.group = WSDL_PLUGIN_TASK_GROUP
      cwwf.dependsOn(groupWsdlWarFilesTask)
      cwwf.conventionMapping.rootDir = { project.rootDir }
-     cwwf.conventionMapping.wsdlDependencies = { project.wsdl.warFiles }
+     cwwf.conventionMapping.warFiles = { project.wsdl.warFiles }
      cwwf.conventionMapping.resolvedWebServicesDir = { project.wsdl.wsdlWar.resolvedWebServiceDir }
      cwwf.conventionMapping.resolvedWsdlDir = { project.wsdl.wsdlWar.resolvedWsdlDir }
      cwwf.conventionMapping.resolvedSchemaDir = { project.wsdl.wsdlWar.resolvedSchemaDir }

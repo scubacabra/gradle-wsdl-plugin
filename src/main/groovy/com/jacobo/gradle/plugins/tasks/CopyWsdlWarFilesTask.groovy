@@ -8,6 +8,7 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 
+import com.google.common.annotations.VisibleForTesting
 /**
  * Uses resolved WSDL dependencies to figure out relative paths between the dependent files and their path relative to the Gradle root directory.
  * Keeps track of duplicate relative paths and stores their files in them, then copies these files to the build directory in a structure
@@ -40,12 +41,21 @@ class CopyWsdlWarFilesTask extends DefaultTask {
 
     @TaskAction
     void resolveRelativeWarFiles() {
+      copyWarFilesToOutputDir()
+    }
+
+    @VisibleForTesting
+    void copyWarFilesToOutputDir() { 
         log.debug("copying all web service dependent documents into {}", getResolvedWebServicesDir())
         getWarFiles().each { warFile ->
             log.debug("copying from {} and including these file(s) {}", warFile.groupedFolder, warFile.groupedFiles)
-
-            log.debug("copying into {}", getResolvedWebServicesDir().path + File.separator + warFile.into)
-            ant.copy(toDir: getResolvedWebServicesDir().path + File.separator + warFile.into) { //copy to
+	    log.debug("root directory is {}", getRootDir().canonicalPath)
+	    log.debug("war File canonical Path is {}", warFile.groupedFolder.canonicalPath)
+	    def fileRelativeToRoot = warFile.groupedFolder.canonicalPath - (getRootDir().canonicalPath + File.separator)
+	    log.debug("file relative to root is {}", fileRelativeToRoot)
+	    def outDir = getResolvedWebServicesDir().path + File.separator + fileRelativeToRoot
+            log.debug("copying into {}", outDir)
+            ant.copy(toDir: outDir) { //copy to
                 fileset(dir: warFile.groupedFolder.canonicalPath) { // from
                     warFile.groupedFiles.each { fileName -> //include files
                         include(name: fileName)
