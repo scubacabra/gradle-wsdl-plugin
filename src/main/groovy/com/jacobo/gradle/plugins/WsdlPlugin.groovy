@@ -47,13 +47,13 @@ class WsdlPlugin implements Plugin<Project> {
      extension = project.extensions.create("wsdl", WsdlExtension, project)
      extension.with { 
        wsdlDirectory = new File(project.rootDir, "wsdl")
-       sourceDestinationDirectory = "src/main/java"
-       episodeDirectory = new File(project.rootDir, "schema/episodes")
-       wsdlWarDir = "wsdl"
-       schemaWarDir = "schema"
-       resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
-       resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "wsdl"))
-       resolvedSchemaDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "schema"))
+       wsImport.sourceDestinationDirectory = "src/main/java"
+       wsImport.episodeDirectory = new File(project.rootDir, "schema/episodes")
+       wsdlWar.wsdlWarDir = "wsdl"
+       wsdlWar.schemaWarDir = "schema"
+       wsdlWar.resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
+       wsdlWar.resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "wsdl"))
+       wsdlWar.resolvedSchemaDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "schema"))
      }
    }
 
@@ -71,16 +71,16 @@ class WsdlPlugin implements Plugin<Project> {
      pwt.group = WSDL_PLUGIN_TASK_GROUP
      pwt.dependsOn(wsdlNameTask)
      pwt.conventionMapping.wsdl         = { project.wsdl.wsdlPath }
-     pwt.conventionMapping.destination  = { project.file(new File(project.projectDir, project.wsdl.sourceDestinationDirectory)) }
-     pwt.conventionMapping.episode      = { project.wsdl.episodeDirectory }
-     pwt.conventionMapping.episodes     = { project.wsdl.episodes }
-     pwt.conventionMapping.target       = { project.wsdl.target }
-     pwt.conventionMapping.wsdlLocation = { project.wsdl.wsdlLocation }
-     pwt.conventionMapping.verbose      = { project.wsdl.verbose }
-     pwt.conventionMapping.keep         = { project.wsdl.keep }
-     pwt.conventionMapping.xnocompile   = { project.wsdl.xnocompile }
-     pwt.conventionMapping.fork         = { project.wsdl.fork }
-     pwt.conventionMapping.xdebug       = { project.wsdl.xdebug }
+     pwt.conventionMapping.destination  = { project.file(new File(project.projectDir, project.wsdl.wsImport.sourceDestinationDirectory)) }
+     pwt.conventionMapping.episode      = { project.wsdl.wsImport.episodeDirectory }
+     pwt.conventionMapping.episodes     = { project.wsdl.wsImport.episodes }
+     pwt.conventionMapping.target       = { project.wsdl.wsImport.target }
+     pwt.conventionMapping.wsdlLocation = { project.wsdl.wsImport.wsdlLocation }
+     pwt.conventionMapping.verbose      = { project.wsdl.wsImport.verbose }
+     pwt.conventionMapping.keep         = { project.wsdl.wsImport.keep }
+     pwt.conventionMapping.xnocompile   = { project.wsdl.wsImport.xnocompile }
+     pwt.conventionMapping.fork         = { project.wsdl.wsImport.fork }
+     pwt.conventionMapping.xdebug       = { project.wsdl.wsImport.xdebug }
      
      return pwt
    }
@@ -101,9 +101,9 @@ class WsdlPlugin implements Plugin<Project> {
      wrt.dependsOn(wsdlNameTask)
      wrt.conventionMapping.wsdl = { project.wsdl.wsdlPath }
      wrt.conventionMapping.rootDir = { project.rootDir }
-     wrt.conventionMapping.resolvedWebServicesDir = { project.wsdl.resolvedWebServiceDir }
-     wrt.conventionMapping.resolvedWsdlDir = { project.wsdl.resolvedWsdlDir }
-     wrt.conventionMapping.resolvedSchemaDir = { project.wsdl.resolvedSchemaDir }
+     wrt.conventionMapping.resolvedWebServicesDir = { project.wsdl.wsdlWar.resolvedWebServiceDir }
+     wrt.conventionMapping.resolvedWsdlDir = { project.wsdl.wsdlWar.resolvedWsdlDir }
+     wrt.conventionMapping.resolvedSchemaDir = { project.wsdl.wsdlWar.resolvedSchemaDir }
      return wrt
    }
 
@@ -115,10 +115,10 @@ class WsdlPlugin implements Plugin<Project> {
      wsdlWar.group = oldWar.group
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
      wsdlWar.dependsOn(wsdlDependencyResolver)
-     wsdlWar.conventionMapping.wsdlFolder    = { project.wsdl.wsdlWarDir }
-     wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.schemaWarDir }
-     wsdlWar.conventionMapping.wsdl          = { project.wsdl.resolvedWsdlDir }
-     wsdlWar.conventionMapping.schema        = { project.wsdl.resolvedSchemaDir }
+     wsdlWar.conventionMapping.wsdlFolder    = { project.wsdl.wsdlWar.wsdlWarDir }
+     wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.wsdlWar.schemaWarDir }
+     wsdlWar.conventionMapping.wsdl          = { project.wsdl.wsdlWar.resolvedWsdlDir }
+     wsdlWar.conventionMapping.schema        = { project.wsdl.wsdlWar.resolvedSchemaDir }
      project.build.dependsOn(wsdlWar)
    }
 }
