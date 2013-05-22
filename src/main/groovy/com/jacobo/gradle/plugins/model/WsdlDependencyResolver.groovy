@@ -1,13 +1,14 @@
 package com.jacobo.gradle.plugins.model
 
 import com.jacobo.gradle.plugins.util.ListHelper
+import com.jacobo.gradle.plugins.util.FileHelper
 import com.jacobo.gradle.plugins.reader.DocumentReader
 
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
 /**
- * This class resolves all WSDL dependencies, gathering a list of all files the main wsdl entry point includes/imports. including other WSDLS and XSDs
+ * This class resolves all WSDL dependencies, gathering a list of all files (Absolute Paths) that the main wsdl entry point includes/imports. including other WSDLS and XSDs
  *
  * Basically, starts at the top, gets all the imports/includes, then recursively goes through that unprocessed imports/includes until there are no more and you end up with a List of all the absolute Files that this particular WSDL depends on
  *
@@ -64,7 +65,7 @@ class WsdlDependencyResolver {
     def currentDir = slurper.currentDir
     log.debug("current Dir for absolute File reference is {}", currentDir)
     relativeLocations.each { location ->
-      def absoluteFile = getAbsoluteSchemaLocation(location, currentDir)
+      def absoluteFile = FileHelper.getAbsoluteSchemaLocation(location, currentDir)
       log.debug("relative location is {}, absolute is {}", location, absoluteFile.path)
       addSchemaLocationToParse(absoluteFile)
     }
@@ -91,17 +92,5 @@ class WsdlDependencyResolver {
       absolutePathDependencies << file
     }
   }
-
-  /**
-   * Figure out the ABSOLUTE schema location of the String relative to the parent/current directory
-   * @param schemaLocation is the relative path of the schema location being called in eith the xsd:import or xsd:includes call
-   * @param parentDir is the parent directory of the schema file that is currently being Xml Slurped
-   * @return File absolute File path to schema Location
-   */
-  File getAbsoluteSchemaLocation(String schemaLocation, File parentDir) { 
-    def relPath = new File(parentDir, schemaLocation)
-    return new File(relPath.canonicalPath)
-  }
-
 }
 
