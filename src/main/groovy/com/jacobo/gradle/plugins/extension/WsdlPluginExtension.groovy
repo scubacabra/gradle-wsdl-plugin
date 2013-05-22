@@ -1,5 +1,7 @@
 package com.jacobo.gradle.plugins.extension
 
+import com.jacobo.gradle.plugins.model.GroupedWsdlWarFiles
+
 import org.gradle.api.Project
 
 /**
