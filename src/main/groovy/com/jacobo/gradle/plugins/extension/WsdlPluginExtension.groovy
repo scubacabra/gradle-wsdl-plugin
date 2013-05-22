@@ -36,6 +36,12 @@ class WsdlPluginExtension {
      */
   File wsdlPath
 
+  /**
+   * Absolute Files of all wsdl dependencies
+   * @note even having a wsdl with no dependencies, the Web Service is still dependnent on it's sole WSDL
+   */
+  List wsdlDependencies
+
   WsdlPluginExtension(Project project) {
     this.project = project
   }
