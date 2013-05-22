@@ -39,18 +39,15 @@ class WsdlDependencyResolver {
   def List resolveWSDLDependencies(File startingWsdl) {
     log.info("resolving wsdl dependencies starting at {}", startingWsdl)
     schemaLocationsToParse << startingWsdl
-    def slurper
-    def relativeSlurpedLocations
+    def slurped
     while(schemaLocationsToParse) { 
       def document = schemaLocationsToParse.pop()
       log.debug("popping {} from schemaLocationsToParse list", document)
-      slurper = DocumentReader.slurpDocument(document)
+      slurped = DocumentReader.slurpDocument(document)
       log.debug("adding {} to absolute Path List", document)
       addAbsolutePathDependencies(document)
-      log.debug("gathering Relative locations from slurper {}", slurper.documentName)
-      relativeSlurpedLocations = slurper.gatherAllRelativeLocations() 
       log.debug("processing relative Locations and adding them to the schema to Parse List")
-      processRelativeLocations(relativeSlurpedLocations, slurper)
+      processRelativeLocations(slurped)
     }
     log.debug("returning file list {}", absolutePathDependencies)
     return absolutePathDependencies
@@ -59,11 +56,13 @@ class WsdlDependencyResolver {
   /**
    * Takes a #XsdSlurper or #WsdlSurper class and process that classes relativeLocations relative to the current directory of that file.
    * add to #schemaLocationsToParse
-   * @param relativeLocations is a List of locations to process into the #schemaLocationsToParse and the #absolutePathDependencies
+   * @param slurped is the slurped class to process relative locations from
    */
-  def processRelativeLocations(List relativeLocations, slurper) { 
-    def currentDir = slurper.currentDir
+  def processRelativeLocations(slurped) { 
+    def currentDir = slurped.currentDir
     log.debug("current Dir for absolute File reference is {}", currentDir)
+    log.debug("gathering Relative locations from slurped {}", slurped.documentName)
+    def relativeLocations = slurped.gatherAllRelativeLocations() 
     relativeLocations.each { location ->
       def absoluteFile = FileHelper.getAbsoluteSchemaLocation(location, currentDir)
       log.debug("relative location is {}, absolute is {}", location, absoluteFile.path)
