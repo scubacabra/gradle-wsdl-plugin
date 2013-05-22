@@ -11,8 +11,7 @@ import org.gradle.api.DefaultTask
 
 import org.gradle.api.GradleException
 
-import com.jacobo.gradle.plugins.model.WsdlWarRelativePathResolver
-import com.jacobo.gradle.plugins.model.WsdlDependencyResolver
+import com.jacobo.gradle.plugins.model.GroupedWsdlWarFiles
 
 /**
  * Uses resolved WSDL dependencies to figure out relative paths between the dependent files and their path relative to the Gradle root directory.
@@ -29,7 +28,7 @@ import com.jacobo.gradle.plugins.model.WsdlDependencyResolver
 class WsdlResolverTask extends DefaultTask {
     static final Logger log = Logging.getLogger(WsdlResolverTask.class)
 
-    final WsdlWarRelativePathResolver wrpr = new WsdlWarRelativePathResolver()
+    final GroupedWsdlWarFiles wrpr = new GroupedWsdlWarFiles()
 
     @Input
     File rootDir

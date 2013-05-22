@@ -9,7 +9,7 @@ import org.gradle.api.Project
  */
 class WsdlWarExtension {
     /**
-     * contains a list of @see WsdlWarRelativePathResolver to populate the build directory with schema and wsdl for the WAR task to use
+     * contains a list of @see GroupedWsdlWarFiles to populate the build directory with schema and wsdl for the WAR task to use
      */
   List resolved
 
