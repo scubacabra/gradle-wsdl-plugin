@@ -14,7 +14,7 @@ import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 
 /**
- * Parse the wsdl file with wsimport ant task.
+ * Parses the wsdl file with wsimport ant task, version 2.1, implementation 2.1.5
  * Can access jaxb episode binding folders and user listed episode bindings bound at task execution time
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
