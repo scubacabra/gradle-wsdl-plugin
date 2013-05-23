@@ -24,9 +24,9 @@ class WsdlPluginExtension {
   WsdlWarExtension wsdlWar = new WsdlWarExtension()
 
     /**
-     *  Directory where to find Wsdl files with .wsdl extensions
+     *  wsdl folder name, under root Directory
      */
-  File wsdlDirectory
+  String wsdlFolder
 
     /**
      *  wsdl file name, no path
@@ -67,6 +67,6 @@ class WsdlPluginExtension {
    * set wsdl Path
    */
   void setWsdlPath() { 
-    this.wsdlPath = new File(wsdlDirectory, wsdlFileName + ".wsdl")
+    this.wsdlPath = new File(project.rootDir, wsdlFolder + File.separator + wsdlFileName + ".wsdl")
   }
 }

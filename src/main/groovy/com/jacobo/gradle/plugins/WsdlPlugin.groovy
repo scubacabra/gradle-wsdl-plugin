@@ -53,7 +53,7 @@ class WsdlPlugin implements Plugin<Project> {
    private void configureWsdlExtension(final Project project) { 
      extension = project.extensions.create("wsdl", WsdlPluginExtension, project)
      extension.with { 
-       wsdlDirectory = new File(project.rootDir, "wsdl")
+       wsdlFolder = "wsdl"
        wsImport.sourceDestinationDirectory = "src/main/java"
        wsImport.episodeDirectory = new File(project.rootDir, "schema/episodes")
        wsdlWar.wsdlWarDir = "wsdl"
@@ -96,7 +96,7 @@ class WsdlPlugin implements Plugin<Project> {
      wnt.description = "find the wsdl File name from the web service sub project name, as per the convention"
      wnt.group = WSDL_PLUGIN_TASK_GROUP
      wnt.conventionMapping.projectName = { project.name }
-     wnt.conventionMapping.wsdlDirectory = { project.wsdl.wsdlDirectory }
+     wnt.conventionMapping.wsdlDirectory = { project.file(new File(project.rootDir, project.wsdl.wsdlFolder)) }
      return wnt
    }
 
