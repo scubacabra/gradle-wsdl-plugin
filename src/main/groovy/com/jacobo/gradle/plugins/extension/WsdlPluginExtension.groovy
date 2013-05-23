@@ -50,10 +50,22 @@ class WsdlPluginExtension {
    */
   List<GroupedWsdlWarFiles> warFiles
 
+  /**
+   * Name rules to convert project name to an appropriate wsdl name
+   * For example, "-dm" -> "DataManagement", in project-dm-name, becomes "ProjectDataManagementName"
+   */
+  Map<String, String> nameRules
+
+  /**
+   * Constructor
+   */
   WsdlPluginExtension(Project project) {
     this.project = project
   }
 
+  /**
+   * set wsdl Path
+   */
   void setWsdlPath() { 
     this.wsdlPath = new File(wsdlDirectory, wsdlFileName + ".wsdl")
   }

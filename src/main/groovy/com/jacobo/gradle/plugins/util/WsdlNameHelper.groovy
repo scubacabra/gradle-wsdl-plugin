@@ -16,17 +16,22 @@ class WsdlNameHelper {
     /**
      * converts the #projectName into the #wsdlName
      * @param projectName  String of the web service project name to convert
+     * @param nameRules map of name rules with keys present in project name that are transformed into values, @note default is null
      * @return #wsdlName
      * @throws GradleException
      */
-   public static String generateWsdlName(String projectName) throws GradleException { 
+   public static String generateWsdlName(String projectName, Map nameRules = null) throws GradleException { 
     if (!projectName.contains("-ws")) {
       throw new GradleException("${projectName} is not conforming to the convention, needs to be suffixed with '-ws' at the end at the very least.  Double check")
     }
     def wsdlName = removeSuffix(projectName)
+    if(nameRules) { 
+      wsdlName = applyNameRules(wsdlName, nameRules)
+    }
     wsdlName = convertDashedToCamelCase(wsdlName)
     wsdlName = appendService(wsdlName)
     wsdlName = capitalizeFirstLetter(wsdlName)
+
     return wsdlName
   }
 
@@ -71,4 +76,18 @@ class WsdlNameHelper {
     name.replaceFirst(/^./) { it.toUpperCase() }
   }
 
+    /**
+     * apply Name rules to the wsdlName
+     * @param wsdlName Name that the nameRules are applied to
+     * @param nameRules rules to apply to the wsdl name
+     * @return new rule transformed string
+     */
+  private static String applyNameRules(String wsdlName,Map nameRules) { 
+    nameRules.each { abbrev, expansion ->
+      log.debug("applying rule {} -> {} on {}", abbrev, expansion, wsdlName)
+      wsdlName = wsdlName.replace(abbrev, expansion)
+      log.debug("applying rule generates {}", wsdlName)
+    }
+    return wsdlName
+  }
 }

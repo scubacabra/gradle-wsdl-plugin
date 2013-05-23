@@ -80,15 +80,44 @@ class WsdlNameHelperSpec extends Specification {
   projectName << ["spock-star-trek", "srv-legend", "boy-band"]
   }
 
-  def "test special abbreviation designations" () { //TODO put some none ending -ws projectName to throw error
+  def "test apply Name Rules" () {
+  given:
+  def rules = [(abbreviation) : expansion]
+
   expect:
-  result == wn.findWsdlFileName(projectName)
+  result == WsdlNameHelper.applyNameRules(projectName, rules)
 
   where:
-  abbreviation  | projectName            | result
-  "dm" | "spock-star-trek-dm-ws"   | "SpockStarTrekDataManagementService" 
-  "tj" | "srv-legend-tj-ws"        | "SrvLegendTraderJoesService" 
-  "wf" | "boy-band-wf-ws"          | "BoyBandWholeFoodsService"
-  ""   | "boy-band-ws"             | "BoyBandService"
+  abbreviation | expansion  | projectName            | result
+  "-dm" | "DataManagement"	| "spock-star-trek-dm-ws"   | "spock-star-trekDataManagement-ws"
+  "-tj" | "TraderJoes"	| "srv-legend-tj-ws"        |  "srv-legendTraderJoes-ws"
+  "-wf" | "WholeFoods"	| "boy-band-wf-ws"          | "boy-bandWholeFoods-ws"
   }
+
+  def "generate WSDL name and apply one name rule" () {
+  given:
+  def rules = [(abbreviation) : expansion]
+
+  expect:
+  result == WsdlNameHelper.generateWsdlName(projectName, rules)
+
+  where:
+  abbreviation | expansion  | projectName            | result
+  "-dm" | "DataManagement"	| "spock-star-trek-dm-ws"   | "SpockStarTrekDataManagementService" 
+  "-tj" | "TraderJoes"	| "srv-legend-tj-ws"        | "SrvLegendTraderJoesService" 
+  "-wf" | "WholeFoods"	| "boy-band-wf-ws"          | "BoyBandWholeFoodsService"
+  }
+
+  def "generate WSDL name and apply two name rules" () {
+  given:
+  def rules = ["-dm": "DataManagement", "-tj" : "TraderJoes", "-wf" : "WholeFoods"]
+
+  expect:
+  result == WsdlNameHelper.generateWsdlName(projectName, rules)
+
+  where:
+  projectName		    | result
+  "spock-tj-star-trek-dm-wf-ws"   | "SpockTraderJoesStarTrekDataManagementWholeFoodsService" 
+  }
+
 }
