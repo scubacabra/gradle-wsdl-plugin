@@ -27,8 +27,7 @@ class ResolveWsdlDependenciesTask extends DefaultTask {
     void resolveWsdlDependencies() {
        log.info("finding the wsdl document dependencies")
        log.debug("wsdl path: {}", getWsdl())
-       wdr.wsdlFile = getWsdl()
-       def dependencyList = wdr.resolveWSDLDependencies()
+       def dependencyList = wdr.resolveWSDLDependencies(getWsdl())
        log.debug("dependency list for this wsdl is {}", dependencyList)
        project.wsdl.wsdlDependencies = dependencyList
     }

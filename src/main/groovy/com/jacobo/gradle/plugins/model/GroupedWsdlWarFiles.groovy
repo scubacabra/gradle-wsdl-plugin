@@ -18,7 +18,7 @@ import org.gradle.api.logging.Logger
  *      groupedFiles = [one.xsd, test.xsd]
  *  </code>
  */
-class GroupedWsdlWarFiles {
+class GroupedWsdlWarFiles implements Serializable {
 
     private static final Logger log = Logging.getLogger(GroupedWsdlWarFiles.class)
 
