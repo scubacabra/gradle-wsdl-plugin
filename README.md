@@ -1,7 +1,13 @@
 gradle-wsdl-plugin
 ==================
 
-plugin for gradle that sets up a wsdl task and sets up a convention between the sub project web service name and the wsdl document itself
+Gradle plugin that defines some conventions for web service Projects.  
+Eases the manual configuration of web service project by: 
+
+      * Hooking in ant tasks to parse the wsdl with wsimport
+      * Defining a convention to generate a correct WSDL name for the project, by parsing the project-name itself
+      * Automatically finding web Service dependencies in the WSDL and associated schema it imports/includes
+      * Populating a WAR file with all dependent Web Service Files (WSDL, XSD).
 
 # using the plugin #
 ```groovy
@@ -19,8 +25,60 @@ buildscript {
 
 apply plugin: 'wsdl'
 ```
+
 # setting up the jaxws configurations #
 You *need* the jaxws configuration to run the `parseWsdl` task, but that is the only task that has an external dependency. Any version of jaxws that you care to use will work.  I prefer to stay with the latest releases.
+
+```groovy
+    dependencies { 
+      jaxws 'com.sun.xml.ws:jaxws-tools:2.2.8-promoted-b131'
+      jaxws 'com.sun.xml.ws:jaxws-rt:2.2.8-promoted-b131'
+    }
+```
+
+# List of available tasks #
+* `parseWsdl`
+	- run wsimport ant task on the WSDL file name.
+* `war`
+	- automatically generates the war like a regular WAR would, but also auto populates the war with the default `wsdl` directory containing the wsdl the project uses and will auto populate with the correct `schema` directory and all imported schemas that the wsdl depends on.
+ 
+# Where to put all your WSDLs and schemas for big (or not so big) web service projects? #
+I have run into a few different methods of organizing your schema documents for web service projects.
+
+The best method I have found (and one that also keeps things DRY) is to have a folder for WSDL files and a folder for XSD files as direct children elements at the root of the project build.  
+
+It really keeps things organized, and no matter where you are in the project structure, you know that the files for your service project are at rootDir/wsdl or rootDir/schema.
+
+Different names can exists, but the Convention, that for now *can't* be unchanged, is that these *two* folders need to be at the root of the gradle project.  
+
+Additionally, I also put XJC generated "episode" files in an "episodes" folder at rootDir/schema/episodes.  This can be used later by this plugins wsimport task.
+
+# WSDL Naming Conventions #
+For a WS project, there must be at least one WSDL that the project depends on.  The convention for this plugin is that the WSDL name must:
+
+    * Begin with a capitalized letter
+    * Use camel case (every word has their first letter capitalized)
+    * End with "Service"
+    * Have a .wsdl extension
+
+i.e.
+	SomeFileIGotService.wsdl
+
+# Project Naming Conventions #
+Given the WSDL naming conventions, the project name must also follow similar conventions for the plugin to be able to locate the
+appropriate WSDL file name.
+
+It is assumed that for a web-service, your project name will follow these conventions:
+
+    * project name is all lower case
+    * every word in project name has a '-' (hyphen) to divide the words
+    * must end in '-ws' (signifying that this is a web-service project)
+
+i.e.
+	some-particular-service-ws
+
+## tidying up the build ##
+With this project naming convention, it is nicely localized in the build to apply this plugin to *only* these folders with
 
 ```groovy
 subprojects { project ->
@@ -35,118 +93,63 @@ subprojects { project ->
 }
 ```
 
-# Project Name to Wsdl Name Conventions #
+# Plugin Conventions #
 
-It is assumed that for a web-service, your project name will be of the form 
+This plugin has three separate conventions with sensible defaults that a user can override if he so chooses
 
-*some-particular-service-ws* where the *-ws* is **REQUIRED**
+## Wsdl Plugin Convention defaults ##
+    wsdlDirectory -- File object to the wsdl Directory
+    nameRules -- a map of naming rules to convert in the project name (more on this later)
 
-Here are some possible mappings of project name to wsdl service Straight from the tests
+## wsimport Conventions ##
+Several boolean sensible defaults are defined to be passed into the wsimport task
+    verbose
+    keep
+    xnocompile
+    fork
+    xdebug
+ 
+And a few other String defaults
+    sourceDestionationDirectory
+    target
+    wsdlLocation
 
-    project-name           >>  wsdl-name
-    "spock-star-trek-ws"   >> "SpockStarTrekService" 
-    "srv-legend-ws"        >> "SrvLegendService" 
-    "boy-band-ws"          >> "BoyBandService" 
+Read more about these [conventions](docs/wsimport.md)
 
-it takes the project name from a hyphenated value to camel case and replaces the  **-ws** with **Service**
+## wsdl WAR conventions ##
+String defaults
+    * wsdlWarDir
+    * schemaWarDir
 
-# wsdl plugin conventions #
-
-    File wsdlDirectory -- File object to the wsdl Directory
-    String wsdlFileName -- The wsdl Name found at the wsdl Directory
-    File wsdlPath -- File object of the absolute path to the wsdl File
-    File episodeDirectory  -- File object to the default episode File directory     
-    //war defaults
-    String wsdlWarDir -- String of the wsdl folder that will go into the war
-    String schemaWarDir -- schema folder to go into war
-
-    //resolved Output Dir
-    File resolvedWebServiceDir -- resolved web service directory to go into project.buildDir
-    File resolvedWsdlDir -- resolved wsdl dir to go into project.buildDir
-    File resolvedSchemaDir -- resolved schema dir to go into project.buildDir
-
+File defaults
+    * resolvedWebServiceDir
+    * resolvedWsdlDir
+    * resolvedSchemaDir
+   
 Default Conventions
 ----------
-```groovy
-wsdlDirectory = new File(project.rootDir, "wsdl")
-sourceDestinationDirectory = "src/main/java"
-episodeDirectory = new File(project.rootDir, "schema/episodes")
-wsdlWarDir = "wsdl"
-schemaWarDir = "schema"
-resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
-resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "wsdl"))
-resolvedSchemaDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "schema"))
-```
-
-## Changing default wsdl folder conventions ##
-Default convention for `wsdlDirectory` is `${rootDir}/wsdl`, if this is not the case, and the folder is actually `WSDL`, you can change it.  Be to sure to change the other properties to reflect this change
-
-```groovy
-wsdl { 
- wsdlDirectory = file(new File(project.rootDir, "WSDL"))
- wsdlWarDir = "WSDL"
- resolvedWsdlDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "WSDL"))
-}
-```
-
-## Changing Default schema War folder conventions ##
-Default conventions for schema folder in this plugin is `schema` at `project.rootDir`, if this is different, say `XMLSchema` then you should change these properties to reflect that.
-
-```groovy
-schemaWarDir = "XMLSchema"
-resolvedSchemaDir = project.file(new File(project.wsdl.resolvedWebServiceDir, "XMLSchema"))
-```
-
-## jaxws wsimport conventions ##
-
-The plugin uses an ant jaxws wsimport task to parse the wsdl into java code, and the plugin is default configured with these variables and boolean values
-
-```groovy
-String sourceDestinationDirectory
-boolean verbose = true
-boolean keep = true
-boolean xnocompile = true
-boolean fork = false
-boolean xdebug = false
-String target = "2.1"
-String wsdlLocation = "FILL_IN_BY_SERVER"
-```
-
-the **target** is defaulted to **2.1** because in my experience, not many people have updated to Java 7 yet, and I think it is easier to use something like 
+These are the current default conventions
 
 ```groovy
 wsdl {
-  target = "2.2"
+     wsdlDirectory = new File(project.rootDir, "wsdl")
+     wsimport {
+     	      sourceDestinationDirectory = "src/main/java"
+	      episodeDirectory = new File(project.rootDir, "schema/episodes")
+     }
+     wsdlWar {
+     	     wsdlWarDir = "wsdl"
+	     schemaWarDir = "schema"
+	     resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
+	     resolvedWsdlDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "wsdl"))
+	     resolvedSchemaDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "schema"))
+     }
 }
 ```
-
-**IF** you happen to be using java 7.  
-
-configuration **sourceDestinationDirectory** is defaulted to **src/main/java** where your generated classes will normally go.  Some have different philosophies on if you should save your generated files to your repository.  I have always said that you should, so that if nothing has changed in your schema/wsdl documents, you don't have to run the tasks to parse those documents -- and that if something has changed, it will be reflected in your VC diff.
-
-If you care to not keep your generated files, set *keep* to *false*.  See the available jaxws wsimport ant task options [here](http://jax-ws.java.net/2.2.3/docs/wsimportant.html)
-
-## Binding to previously generated schema documents with jaxb episode binding ##
-you can use the configuration 
-    List episodes
-to configure the wsimport task to bind with episode files at the **episodeDirectory** with
-
-```groovy
-wsdl {
-  episodes = ["name-of-episode-file-sans-episode-extension"]
-}
-```
-
-This will go and find the file **name-of-episode-file-sans-episode-extension.episode** at **episodeDirectory** even though you didn't include the episode file extension in the property configuration
+If you need to override some defaults, check out a few [possible examples](docs/override-examples.md)
 
 # Examples #
 You can find some examples in the [examples folder](examples)
-
-# List of available tasks #
-* `parseWsdl`
-	- run wsimport ant task on the WSDL file name (determined from task `wsdlName`)
-* `war`
-	- automatically generates the war like a regular WAR would, but also auto populates the war with the default `wsdl` directory containing the wsdl the project uses and will auto populate with the correct `schema` directory and all imported schemas.  
 
 The war would look like this (see the *hello-world-episode-binding-ws* example)
 
