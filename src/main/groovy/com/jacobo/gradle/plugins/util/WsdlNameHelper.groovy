@@ -1,4 +1,4 @@
-package com.jacobo.gradle.plugins.model
+package com.jacobo.gradle.plugins.util
 
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
@@ -10,13 +10,8 @@ import org.gradle.api.GradleException
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class WsdlName { 
-   static final Logger log = Logging.getLogger(WsdlName.class) 
-
-    /**
-     * wsdl file name
-     */
-   def wsdlName
+class WsdlNameHelper {
+   static final Logger log = Logging.getLogger(WsdlNameHelper.class)
 
     /**
      * converts the #projectName into the #wsdlName
@@ -24,11 +19,11 @@ class WsdlName {
      * @return #wsdlName
      * @throws GradleException
      */
-   public String findWsdlFileName(String projectName) throws GradleException { 
+   public static String generateWsdlName(String projectName) throws GradleException { 
     if (!projectName.contains("-ws")) {
       throw new GradleException("${projectName} is not conforming to the convention, needs to be suffixed with '-ws' at the end at the very least.  Double check")
     }
-    wsdlName = removeSuffix(projectName)
+    def wsdlName = removeSuffix(projectName)
     wsdlName = convertDashedToCamelCase(wsdlName)
     wsdlName = appendService(wsdlName)
     wsdlName = capitalizeFirstLetter(wsdlName)
@@ -38,9 +33,9 @@ class WsdlName {
     /**
      * Removes the '-ws' suffix on the project
      * @param projectName
-     * @return
+     * @return procject name sans -ws suffix
      */
-  private String removeSuffix(String projectName) { 
+  private static String removeSuffix(String projectName) { 
     return projectName.replaceFirst(/-ws/, "")
   }
 
@@ -50,7 +45,7 @@ class WsdlName {
      * @param dashedName
      * @return
      */
-  private String convertDashedToCamelCase(String dashedName) { 
+  private static String convertDashedToCamelCase(String dashedName) { 
     dashedName.replaceAll(/-(\w)/) { fullMatch, firstCharacter -> 
       firstCharacter.toUpperCase()
     }
@@ -62,7 +57,7 @@ class WsdlName {
      * @param name
      * @return
      */
-  private String appendService(String name) { 
+  private static String appendService(String name) { 
     return name + "Service"
   }
 
@@ -72,7 +67,7 @@ class WsdlName {
      * @param name
      * @return
      */
-  private String capitalizeFirstLetter(String name) { 
+  private static String capitalizeFirstLetter(String name) { 
     name.replaceFirst(/^./) { it.toUpperCase() }
   }
 

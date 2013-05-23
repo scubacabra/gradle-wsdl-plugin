@@ -2,7 +2,7 @@ package com.jacobo.gradle.plugins.util
 
 import spock.lang.Specification
 
-class ListUtilSpec extends Specification {
+class ListHelperSpec extends Specification {
   
   def "is Already in List works out well" () { 
 
@@ -10,7 +10,7 @@ class ListUtilSpec extends Specification {
   def list = [new File("schema.xsd"), new File("test.wsdl")]
 
   then:
-  result == ListUtil.isAlreadyInList(list, file)
+  result == ListHelper.isAlreadyInList(list, file)
 
   where:
   file                | result
@@ -25,7 +25,7 @@ class ListUtilSpec extends Specification {
   def list = [new File("schema.xsd"), new File("test.wsdl")]
 
   when:
-  ListUtil.addElementToList(list, file)
+  ListHelper.addElementToList(list, file)
 
   then:
   result == list

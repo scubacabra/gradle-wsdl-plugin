@@ -7,9 +7,9 @@ import org.gradle.api.logging.Logger
  * Utility class that operates on list elements passed in to it.
  * @author djmijares
  */
-class ListUtil {
+class ListHelper {
   
-  private static final Logger log = Logging.getLogger(ListUtil.class)  
+  private static final Logger log = Logging.getLogger(ListHelper.class)
 
   /**
    * Utility function that checks if a @List has the value @input

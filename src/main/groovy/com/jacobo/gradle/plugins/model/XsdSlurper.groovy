@@ -1,6 +1,6 @@
 package com.jacobo.gradle.plugins.model
 
-import com.jacobo.gradle.plugins.util.ListUtil
+import com.jacobo.gradle.plugins.util.ListHelper
 
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
@@ -75,9 +75,9 @@ class XsdSlurper {
             def dependentSchemaLocation = xsdElement.@schemaLocation.text()
             log.debug("the dependeny schema location is at {}", dependentSchemaLocation)
             if (dependencyType == "import") { //either going to be import or include
-                ListUtil.addElementToList(xsdImports, dependentSchemaLocation)
+                ListHelper.addElementToList(xsdImports, dependentSchemaLocation)
             } else {
-                ListUtil.addElementToList(xsdIncludes, dependentSchemaLocation)
+                ListHelper.addElementToList(xsdIncludes, dependentSchemaLocation)
             }
         }
     }
