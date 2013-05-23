@@ -25,26 +25,6 @@ jar {
 }
 ```
 
-# wsdl project name to wsdl name add-ins #
-This could be anything, but say you have an additional name convention in your project that `-dm` in a project name denotes a Data Management Service type, and your wsdl name should reflect this is `SomeThingDataManagementService.wsdl`.  
-
-**Currently** the mapping would be 
->  "spock-star-trek-dm-ws"   >> "SpockStarTrekDmService" 
-
-But this additional feature would be configured something like
-
-```groovy
-wsdl {
-  nameRule = ["-dm":"DataManagement"]
-}
-```
-
-and you would then get a mapping of 
->  "spock-star-trek-dm-ws"   >> "SpockStarTrekDataManagementService" 
-
-## Going cryptic on ya ##
-With the map variable convention, you could have as many name conventions as you want per project if you want to get super cryptic.
-
 # Automatic Episode name finding #
 This would couple conventions between this plugin and the jaxb plugin I [wrote](https://github.com/djmijares/gradle-jaxb-namespace-dependency).  But in the parsing of wsdl with wsimport it would be possible to resolve the wsdl dependencies, find the targetNamespace of all the xsd's imported and convert the targetNamespace to an episode file name the same way the other plugin does.  Then you would not have to know which episode files to bind.  It would bind them all. 
 
