@@ -48,9 +48,8 @@ class CopyWsdlWarFilesTask extends DefaultTask {
 
     @VisibleForTesting
     void copyWarFilesToOutputDir() { 
-        log.debug("copying all web service dependent documents into {}", getResolvedWebServicesDir())
-	def warfiles = getWarFiles()
-        warFiles.each { warFile ->
+        log.info("copying all web service dependent documents into {}", getResolvedWebServicesDir())
+        getWarFiles().each { warFile ->
             log.debug("copying from {} and including these file(s) {}", warFile.groupedFolder, warFile.groupedFiles)
 	    log.debug("root directory is {}", getRootDir().canonicalPath)
 	    log.debug("war File canonical Path is {}", warFile.groupedFolder.canonicalPath)
