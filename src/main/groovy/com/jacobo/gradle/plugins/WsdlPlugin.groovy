@@ -1,6 +1,8 @@
 package com.jacobo.gradle.plugins
 
 import com.jacobo.gradle.plugins.extension.WsdlPluginExtension
+import com.jacobo.gradle.plugins.extension.WsImportExtension
+
 import org.gradle.api.Project
 import org.gradle.api.Plugin
 import org.gradle.api.Task
@@ -56,13 +58,8 @@ class WsdlPlugin implements Plugin<Project> {
        wsdlFolder = "wsdl"
        schemaFolder = "schema"
        episodeFolder = "schema/episodes"
-       wsImport.sourceDestinationDirectory = "src/main/java"
-       wsImport.episodeDirectory = new File(project.rootDir, "schema/episodes")
-       wsdlWar.wsdlWarDir = "wsdl"
-       wsdlWar.schemaWarDir = "schema"
-       wsdlWar.resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
-       wsdlWar.resolvedWsdlDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "wsdl"))
-       wsdlWar.resolvedSchemaDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "schema"))
+       webServiceCopyDir = "web-service"
+     }
      def wsimportExtension = project.wsdl.extensions.create("wsimport", WsImportExtension)
      wsimportExtension.with { 
        sourceDestinationDirectory = "src/main/java"
@@ -137,9 +134,9 @@ class WsdlPlugin implements Plugin<Project> {
      cwwf.dependsOn(groupWsdlWarFilesTask)
      cwwf.conventionMapping.rootDir = { project.rootDir }
      cwwf.conventionMapping.warFiles = { project.wsdl.warFiles }
-     cwwf.conventionMapping.resolvedWebServicesDir = { project.wsdl.wsdlWar.resolvedWebServiceDir }
-     cwwf.conventionMapping.resolvedWsdlDir = { project.wsdl.wsdlWar.resolvedWsdlDir }
-     cwwf.conventionMapping.resolvedSchemaDir = { project.wsdl.wsdlWar.resolvedSchemaDir }
+     cwwf.conventionMapping.resolvedWebServicesDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir)) }
+     cwwf.conventionMapping.resolvedWsdlDir   = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.wsdlFolder)) }
+     cwwf.conventionMapping.resolvedSchemaDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.schemaFolder)) }
      return cwwf
    }
 
@@ -152,8 +149,8 @@ class WsdlPlugin implements Plugin<Project> {
      wsdlWar.dependsOn(copyWsdlWarFilesTask)
      wsdlWar.conventionMapping.wsdlFolder    = { project.wsdl.wsdlFolder }
      wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.schemaFolder }
-     wsdlWar.conventionMapping.wsdl          = { project.wsdl.wsdlWar.resolvedWsdlDir }
-     wsdlWar.conventionMapping.schema        = { project.wsdl.wsdlWar.resolvedSchemaDir }
+     wsdlWar.conventionMapping.wsdl          = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.wsdlFolder)) }
+     wsdlWar.conventionMapping.schema        = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.schemaFolder)) }
      project.build.dependsOn(wsdlWar)
    }
 }

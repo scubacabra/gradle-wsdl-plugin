@@ -18,11 +18,6 @@ class WsdlPluginExtension {
    */
   WsImportExtension wsImport = new WsImportExtension()
 
-  /**
-   * wsdl War default settings for now
-   */
-  WsdlWarExtension wsdlWar = new WsdlWarExtension()
-
     /**
      *  wsdl folder name, under root Directory
      */
@@ -37,6 +32,11 @@ class WsdlPluginExtension {
      *  episodes folder name, under root Directory
      */
   String episodeFolder
+
+    /**
+     * Output dir, in build directory for wsdl and schema dependencies to be copied to
+     */
+  String webServiceCopyDir
 
     /**
      *  wsdl file name, no path
