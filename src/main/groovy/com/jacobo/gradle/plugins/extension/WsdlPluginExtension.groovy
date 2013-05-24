@@ -29,6 +29,16 @@ class WsdlPluginExtension {
   String wsdlFolder
 
     /**
+     *  schema folder name, under root Directory
+     */
+  String schemaFolder
+
+    /**
+     *  episodes folder name, under root Directory
+     */
+  String episodeFolder
+
+    /**
      *  wsdl file name, no path
      */
   String wsdlFileName

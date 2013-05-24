@@ -55,6 +55,7 @@ class WsdlPlugin implements Plugin<Project> {
      extension.with { 
        wsdlFolder = "wsdl"
        schemaFolder = "schema"
+       episodeFolder = "schema/episodes"
        wsImport.sourceDestinationDirectory = "src/main/java"
        wsImport.episodeDirectory = new File(project.rootDir, "schema/episodes")
        wsdlWar.wsdlWarDir = "wsdl"
