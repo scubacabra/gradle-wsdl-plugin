@@ -1,5 +1,7 @@
 package com.jacobo.gradle.plugins.tasks
 
+import com.jacobo.gradle.plugins.model.GroupedWsdlWarFiles
+
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.Input
@@ -28,7 +30,7 @@ class CopyWsdlWarFilesTask extends DefaultTask {
     File rootDir
 
     @Input
-    List warFiles
+    List<GroupedWsdlWarFiles> warFiles
 
     @OutputDirectory
     File resolvedWsdlDir
@@ -47,7 +49,8 @@ class CopyWsdlWarFilesTask extends DefaultTask {
     @VisibleForTesting
     void copyWarFilesToOutputDir() { 
         log.debug("copying all web service dependent documents into {}", getResolvedWebServicesDir())
-        getWarFiles().each { warFile ->
+	def warfiles = getWarFiles()
+        warFiles.each { warFile ->
             log.debug("copying from {} and including these file(s) {}", warFile.groupedFolder, warFile.groupedFiles)
 	    log.debug("root directory is {}", getRootDir().canonicalPath)
 	    log.debug("war File canonical Path is {}", warFile.groupedFolder.canonicalPath)

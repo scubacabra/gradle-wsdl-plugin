@@ -54,6 +54,7 @@ class WsdlPlugin implements Plugin<Project> {
      extension = project.extensions.create("wsdl", WsdlPluginExtension, project)
      extension.with { 
        wsdlFolder = "wsdl"
+       schemaFolder = "schema"
        wsImport.sourceDestinationDirectory = "src/main/java"
        wsImport.episodeDirectory = new File(project.rootDir, "schema/episodes")
        wsdlWar.wsdlWarDir = "wsdl"
@@ -138,8 +139,8 @@ class WsdlPlugin implements Plugin<Project> {
      wsdlWar.group = oldWar.group
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
      wsdlWar.dependsOn(copyWsdlWarFilesTask)
-     wsdlWar.conventionMapping.wsdlFolder    = { project.wsdl.wsdlWar.wsdlWarDir }
-     wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.wsdlWar.schemaWarDir }
+     wsdlWar.conventionMapping.wsdlFolder    = { project.wsdl.wsdlFolder }
+     wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.schemaFolder }
      wsdlWar.conventionMapping.wsdl          = { project.wsdl.wsdlWar.resolvedWsdlDir }
      wsdlWar.conventionMapping.schema        = { project.wsdl.wsdlWar.resolvedSchemaDir }
      project.build.dependsOn(wsdlWar)
