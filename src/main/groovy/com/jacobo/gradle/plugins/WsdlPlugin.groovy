@@ -63,6 +63,16 @@ class WsdlPlugin implements Plugin<Project> {
        wsdlWar.resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
        wsdlWar.resolvedWsdlDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "wsdl"))
        wsdlWar.resolvedSchemaDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "schema"))
+     def wsimportExtension = project.wsdl.extensions.create("wsimport", WsImportExtension)
+     wsimportExtension.with { 
+       sourceDestinationDirectory = "src/main/java"
+       verbose = true
+       keep = true
+       xnocompile = true
+       fork = false
+       xdebug = false
+       target = "2.1"
+       wsdlLocation = "FILL_IN_BY_SERVER"
      }
    }
 

@@ -18,38 +18,38 @@ class WsImportExtension {
      * Boolean argument for wsimport ant task in @see ParseWsdlTask
      * @see <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>
      */
-  boolean verbose = true
+  boolean verbose
 
     /**
      * Boolean argument for wsimport ant task in @see ParseWsdlTask
      */
-  boolean keep = true
+  boolean keep
 
     /**
      * Boolean argument for wsimport ant task in @see ParseWsdlTask
      */
-  boolean xnocompile = true
+  boolean xnocompile
 
     /**
      * Boolean argument for wsimport ant task in @see ParseWsdlTask
      */
-  boolean fork = false
+  boolean fork
 
     /**
      * Boolean argument for wsimport ant task in @see ParseWsdlTask
      */
-  boolean xdebug = false
+  boolean xdebug
 
     /**
      * argument for wsimport ant task, defines the specification version to generate code against.
      * specifically, "2.0" will generate version 2.0 compliant code. Will default to 2.2 when Java 7 is in more use
      */
-  String target = "2.1"
+  String target
 
     /**
      * argument for wsimport ant task, this value is populated in the generated code from wsimport.
      */
-  String wsdlLocation = "FILL_IN_BY_SERVER"
+  String wsdlLocation
 
     /**
      * argument for wsimport ant task, contains the directory in the project structure where to find episode files
