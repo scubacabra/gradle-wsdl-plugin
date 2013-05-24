@@ -5,5 +5,7 @@ dependencies {
 }
 
 wsdl { 
-   episodes = ["urn-helloWorld-sample-ibm-HelloWorld"]
+  wsimport { 
+    episodes = ["urn-helloWorld-sample-ibm-HelloWorld"]
+  }
 }
