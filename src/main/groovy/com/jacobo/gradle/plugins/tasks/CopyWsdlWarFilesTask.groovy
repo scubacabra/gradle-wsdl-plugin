@@ -33,9 +33,6 @@ class CopyWsdlWarFilesTask extends DefaultTask {
     List<GroupedWsdlWarFiles> warFiles
 
     @OutputDirectory
-    File resolvedWsdlDir
-
-    @OutputDirectory
     File resolvedSchemaDir
 
     @OutputDirectory

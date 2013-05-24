@@ -135,7 +135,6 @@ class WsdlPlugin implements Plugin<Project> {
      cwwf.conventionMapping.rootDir = { project.rootDir }
      cwwf.conventionMapping.warFiles = { project.wsdl.warFiles }
      cwwf.conventionMapping.resolvedWebServicesDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir)) }
-     cwwf.conventionMapping.resolvedWsdlDir   = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.wsdlFolder)) }
      cwwf.conventionMapping.resolvedSchemaDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.schemaFolder)) }
      return cwwf
    }
