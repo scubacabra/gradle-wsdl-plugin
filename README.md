@@ -1,5 +1,6 @@
 gradle-wsdl-plugin
 ==================
+[![Build Status](https://drone.io/github.com/djmijares/gradle-wsdl-plugin/status.png)](https://drone.io/github.com/djmijares/gradle-wsdl-plugin/latest)
 
 Gradle plugin that defines some conventions for web service Projects.  
 Eases the manual configuration of web service project by: 
