@@ -14,13 +14,13 @@ Eases the manual configuration of web service project by:
 ```groovy
 buildscript {
   repositories {
-    ivy {
-      url 'http://dl.bintray.com/content/djmijares/gradle-plugins'
+    maven { 
+      url 'http://dl.bintray.com/content/djmijares/gradle-plugins/'
     }
    }
 
   dependencies {
-    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.0'
+    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.5'
    }
 }
 
@@ -135,10 +135,12 @@ subprojects { project ->
 This plugin has three separate conventions with sensible defaults that a user can override if he so chooses
 
 ## Wsdl Plugin Convention defaults ##
-There is are only two overridable defaults for the WSDL plugin
+There is are 4 overridable defaults for the wsdl plugin
 
-        * wsdlDirectory -- File object to the wsdl Directory
-     	* nameRules -- a map of naming rules to convert in the project name (more on this later)
+        * wsdlFolder -- (relative to root) Where to find the wsdl folder, i.e. "wsdl" or "WSDL", or "web-services" etc.
+     	* schemaFolder -- (relative to root) Where to find the schema folder, i.e "schema", "XMLSchema", "XSD"
+	* episodeFolder -- (relative to root) Where to find the episode folder, i.e. "episodes", "schema/episodes", "xsd/episodes"
+	* webServiceCopyDir -- (relative to build directory) what directory to copy web service dependent files to, i.e. "web-services", "ws"
 
 ## wsimport Conventions ##
 Several boolean sensible defaults are defined to be passed into the wsimport task
@@ -156,18 +158,6 @@ And a few other String defaults
 	* wsdlLocation
 
 Read more about these [conventions](docs/wsimport.md)
-
-## wsdl WAR conventions ##
-String defaults
-
-	* wsdlWarDir
-	* schemaWarDir
-
-File defaults
-
-	* resolvedWebServiceDir
-	* resolvedWsdlDir
-	* resolvedSchemaDir
    
 Default Conventions
 ----------
@@ -175,18 +165,20 @@ These are the current default conventions
 
 ```groovy
 wsdl {
-     wsdlDirectory = new File(project.rootDir, "wsdl")
-     wsimport {
-     	      sourceDestinationDirectory = "src/main/java"
-	      episodeDirectory = new File(project.rootDir, "schema/episodes")
-     }
-     wsdlWar {
-     	     wsdlWarDir = "wsdl"
-	     schemaWarDir = "schema"
-	     resolvedWebServiceDir = project.file(new File(project.buildDir, "web-service"))
-	     resolvedWsdlDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "wsdl"))
-	     resolvedSchemaDir = project.file(new File(project.wsdl.wsdlWar.resolvedWebServiceDir, "schema"))
-     }
+  wsdlFolder = "wsdl"
+  schemaFolder = "schema"
+  episodeFolder = "schema/episodes"
+  webServicesCopyDir = "web-services"     
+  wsimport {
+    sourceDestinationDirectory = "src/main/java"
+    verbose = true
+    keep = true	
+    xnocompile = true
+    fork = false
+    xdebug = false
+    target = "2.1"
+    wsdlLocation = "FILL_IN_BY_SERVER"
+  }
 }
 ```
 If you need to override some defaults, check out a few [possible examples](docs/override-examples.md)
