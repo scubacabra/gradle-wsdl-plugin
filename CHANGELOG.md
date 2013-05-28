@@ -2,6 +2,14 @@
 
 ## 1.5
 
+### New Features
+
+#### Name Rules
+- Name Rules feature is added to turn abbreviations in the project name and substitute their meaning to find the appropriate WSDL name.  See the [readme](README.md)
+
+#### Nested Extensions
+Extensions broken up into `WsdlPluginExtension` and `WsImportExtension` to separate the wsimport defaults from cluttering up.  The [readme](README.md) shows how to configure.
+
 ### Tasks
 - The plugin now has 5 distinct tasks to
   - Parse WSDL
@@ -24,13 +32,14 @@
 - Gradle WAR task is overriden with added functionality to include the files in the output directory of the `copyWsdlWarFiles` task
   - see the `webServiceCopyDir` extension property
 
-### New Features
+### Deployed to bintray
+Bintray deploy used to be an ivy repository, now is deploying to a maven repository.
 
-#### Name Rules
-- Name Rules feature is added to turn abbreviations in the project name and substitute their meaning to find the appropriate WSDL name.  See the [readme](README.md)
+- url : `http://dl.bintray.com/content/djmijares/gradle-plugins/`
+- group: `com.jacobo.gradle`
+- package : `gradle-wsdl-plugin`
+- version : `1.5`
 
-#### Nested Extensions
-Extensions broken up into `WsdlPluginExtension` and `WsImportExtension` to separate the wsimport defaults from cluttering up.  The [readme](README.md) shows how to configure.
 
 ### new script plugins
 The build script was broken up into 
@@ -77,3 +86,4 @@ Alot of the code was refactored, I thought some of the methods did too much, and
 - `WsdlName` -> `WsdlNameHelper`
 - `WsdlNameSpec` -> `WsdlNameHelperSpec`
 - `WsdlWarRelativePathResolverSpec` -> `GroupWsdlWarFilesTask`
+
