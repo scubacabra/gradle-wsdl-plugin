@@ -1,5 +1,10 @@
 # Gradle WSDL Plugin Changelog
 
+## 1.6
+
+- Fixed deprecation warnings gradle 1.6 for Task.add and Configuration.add
+- gradle wrapper to version 1.6
+
 ## 1.5
 
 ### New Features
