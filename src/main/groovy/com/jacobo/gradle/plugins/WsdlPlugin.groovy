@@ -74,7 +74,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private void configureWsdlConfiguration(final Project project) { 
-     project.configurations.add(WSDL_CONFIGURATION_NAME) { 
+     project.configurations.create(WSDL_CONFIGURATION_NAME) { 
        visible = true
        transitive = true
        description = "The JAXWS libraries to be used for parsing the WSDL"
@@ -82,7 +82,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private configureParseWsdlTask(final Project project, Task wsdlNameTask) { 
-     Task pwt = project.tasks.add(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdlTask)
+     Task pwt = project.tasks.create(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdlTask)
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
      pwt.dependsOn(wsdlNameTask)
@@ -100,7 +100,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureWsdlNameTask(final Project project) { 
-     Task wnt = project.tasks.add(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlNameTask)
+     Task wnt = project.tasks.create(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlNameTask)
      wnt.description = "find the wsdl File name from the web service sub project name, as per the convention"
      wnt.group = WSDL_PLUGIN_TASK_GROUP
      wnt.conventionMapping.projectName = { project.name }
@@ -109,7 +109,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureResolveWsdlDependenciesTask(final Project project, Task wsdlNameTask) { 
-     Task resolveDeps = project.tasks.add(WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK, ResolveWsdlDependenciesTask)
+     Task resolveDeps = project.tasks.create(WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK, ResolveWsdlDependenciesTask)
      resolveDeps.description = "determine all the wsdl dependencies, expected via import/include statements"
      resolveDeps.group = WSDL_PLUGIN_TASK_GROUP
      resolveDeps.dependsOn(wsdlNameTask)
@@ -118,7 +118,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureGroupWsdlWarFilesTask(final Project project, Task dependenciesTask) { 
-     Task gwwf = project.tasks.add(WSDL_PLUGIN_GROUP_WSDL_WAR_FILES_TASK, GroupWsdlWarFilesTask)
+     Task gwwf = project.tasks.create(WSDL_PLUGIN_GROUP_WSDL_WAR_FILES_TASK, GroupWsdlWarFilesTask)
      gwwf.description = "group all the wsdl war dependency files by common direct parent Folder"
      gwwf.group = WSDL_PLUGIN_TASK_GROUP
      gwwf.dependsOn(dependenciesTask)
@@ -127,7 +127,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureCopyWsdlWarFilesTask(final Project project, Task groupWsdlWarFilesTask) {
-     Task cwwf = project.tasks.add(WSDL_PLUGIN_COPY_WSDL_WAR_FILES_TASK, CopyWsdlWarFilesTask)
+     Task cwwf = project.tasks.create(WSDL_PLUGIN_COPY_WSDL_WAR_FILES_TASK, CopyWsdlWarFilesTask)
      cwwf.description = "copies all WSDL war files into the build directory for packaging use in the war task"
      cwwf.group = WSDL_PLUGIN_TASK_GROUP
      cwwf.dependsOn(groupWsdlWarFilesTask)
