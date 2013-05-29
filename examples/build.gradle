@@ -10,7 +10,7 @@ buildscript {
 
   dependencies {
     classpath 'com.jacobo.gradle.plugins:gradle-jaxb-plugin:1.0'
-    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.5'
+    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.6'
   }
 }
 
