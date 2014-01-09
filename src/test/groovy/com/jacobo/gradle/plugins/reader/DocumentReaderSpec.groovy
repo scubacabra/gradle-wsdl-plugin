@@ -1,26 +1,26 @@
 package com.jacobo.gradle.plugins.reader
 
+import com.jacobo.gradle.plugins.BaseSpecification
 import com.jacobo.gradle.plugins.model.WsdlSlurper
 import com.jacobo.gradle.plugins.model.XsdSlurper
 
-import spock.lang.Specification
-
-class DocumentReaderSpec extends Specification {
+class DocumentReaderSpec extends BaseSpecification {
   
   def "slurp Document get the right type of slurper to return" () {
 
   when:
-  def result = DocumentReader.slurpDocument(new File(url.toURI()))
+  def file = getFileFromResourcePath(filePath)
+  def result = DocumentReader.slurpDocument(file)
 
   then:
   result.class in [clazz]
-  result.currentDir == dir.absoluteFile
-  result.documentName == name
+  result.slurpedDocument != null
+  result.documentFile == file
+  result.documentDependencies.isEmpty() == isEmpty // tested in WsdlSlurperSpec and XsdSlurperSpec
   
   where:
-  url | clazz | dir | name
-  this.getClass().getResource("/wsdl/noXsdImport.wsdl") | WsdlSlurper | new File("build/resources/test/wsdl") | "noXsdImport.wsdl"
-  this.getClass().getResource("/schema/PO/PurchaseOrder.xsd") | XsdSlurper | new File("build/resources/test/schema/PO") | "PurchaseOrder.xsd"
-
+  filePath				| clazz		| isEmpty
+  "/wsdl/noXsdImport.wsdl"		| WsdlSlurper	| true
+  "/schema/PO/PurchaseOrder.xsd"	| XsdSlurper	| true
   }
 }

@@ -60,16 +60,11 @@ class CopyWsdlWarFilesTaskSpec extends Specification {
   task.resolvedWsdlDir.exists()
   task.resolvedSchemaDir.exists()
   wsdlFiles.length == 2
-  wsdlFiles.name.contains("abstract.wsdl")
-  wsdlFiles.name.contains("noXsdImport.wsdl")
+  ["abstract.wsdl", "noXsdImport.wsdl"].each { wsdlFiles.name.contains(it) }
   schemaFolders.length == 3
-  schemaFolders.name.contains("Include")
-  schemaFolders.name.contains("Messages")
-  schemaFolders.name.contains("PO")
+  ["Include", "Messages", "PO"].each { schemaFolders.name.contains(it) }
   includeFiles.length == 3
-  includeFiles.name.contains("include.xsd")
-  includeFiles.name.contains("include2.xsd")
-  includeFiles.name.contains("Product.xsd")
+  ["include.xsd", "include2.xsd", "Product.xsd"].each { includeFiles.name.contains(it) }
   POFiles.length == 1
   POFiles.name.contains("PurchaseOrder.xsd")
   MessageFiles.length == 1

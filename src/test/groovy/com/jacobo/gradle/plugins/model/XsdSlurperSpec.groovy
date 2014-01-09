@@ -1,36 +1,32 @@
 package com.jacobo.gradle.plugins.model
 
-import spock.lang.Specification
+import com.jacobo.gradle.plugins.BaseSpecification
+import spock.lang.Unroll
 
-class XsdSlurperSpec extends Specification {
+class XsdSlurperSpec extends BaseSpecification {
   
   def slurper = new XsdSlurper()
-  
-  def "process xsd dependencies" () {
+
+  @Unroll("resolved Dependencies for #file is 'imports':'#imports' and 'includes':'#includes'")
+  def "resolve XSD Document Dependencies" () {
   setup:
-  def slurped = new XmlSlurper().parse(new File(file.toURI()))
+  def file = getFileFromResourcePath(filePath)
+  slurper.slurpedDocument = new XmlSlurper().parse(file)
+  slurper.documentFile = file
 
   when:
-  slurper.processXsdDependencyLocations(slurped.import)
+  slurper.resolveDocumentDependencies()
 
   then:
-  slurper.xsdImports == imports
-  
-  when: 
-  slurper.processXsdDependencyLocations(slurped.include)
-  
-  then:
-  slurper.xsdIncludes == includes
-
-  when: 
-  def result = slurper.gatherAllRelativeLocations()
-  
-  then: 
-  result == relativeLocations
+  slurper.xsdImports == imports as Set
+  slurper.xsdIncludes == includes as Set
+  slurper.documentDependencies == dependencyLocations.collect{ getFileFromResourcePath(it) } as Set
 
   where:
-  file | imports | includes | relativeLocations
-  this.getClass().getResource("/schema/Include/OrderNumber.xsd") | ["Product.xsd"] | ["include.xsd", "include2.xsd"] | ["Product.xsd", "include.xsd", "include2.xsd"]
-  this.getClass().getResource("/schema/Include/Product.xsd") | [] | [] | []
+  filePath				| imports		| includes				| dependencyLocations
+  "/schema/Include/OrderNumber.xsd"	| ["Product.xsd"]	| ["include.xsd", "include2.xsd"]	| ["/schema/Include/Product.xsd", "/schema/Include/include.xsd", "/schema/Include/include2.xsd"]
+  "/schema/Include/Product.xsd"		| []			| []					| []
+  "/schema/PO/PurchaseOrder.xsd"	| []			| []					| []
+
   }
 }

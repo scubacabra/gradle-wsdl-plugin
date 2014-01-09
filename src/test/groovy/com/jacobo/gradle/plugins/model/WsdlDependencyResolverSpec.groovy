@@ -1,62 +1,45 @@
 package com.jacobo.gradle.plugins.model
 
+import com.jacobo.gradle.plugins.BaseSpecification
 import com.jacobo.gradle.plugins.util.FileHelper
-
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
-import spock.lang.Specification
-
 /**
- * @author djmijares
+ * @author jacobono
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class WsdlDependencyResolverSpec extends Specification { 
+class WsdlDependencyResolverSpec extends BaseSpecification { 
 
   def WsdlDependencyResolver wdr = new WsdlDependencyResolver()
 
-  def "add schema to Parse to list"() {   
+  def "Resolve dependency file, if not resolved and stored in projectDependencies, need to add to unresolved Dependencies and parse -- unless it is already in the unresolvedDependencies data field"() {   
   
   when:
-  wdr.schemaLocationsToParse = [new File("test.wsdl")]
-  wdr.addSchemaLocationToParse(file)
+  wdr.unresolvedDependencies = [new File("test.wsdl")] as Set
+  wdr.projectDependencies = [new File("resolved.wsdl")] as Set
+  wdr.resolveDependency(file)
 
   then:
-  result == wdr.schemaLocationsToParse
+  result as Set == wdr.unresolvedDependencies
 
   where:
   file                    | result
-  new File("schema.xsd")  | [new File("test.wsdl"), new File("schema.xsd")]
-  new File("nothing.xsd") | [new File("test.wsdl"), new File("nothing.xsd")]
-  new File("test.wsdl")   | [new File("test.wsdl")]
-
-  }
-
-  def "add absolute path dependencies" () { 
-
-  when:
-  wdr.absolutePathDependencies = [new File("test.wsdl")]
-  wdr.addAbsolutePathDependencies(file)
-
-  then:
-  result == wdr.absolutePathDependencies
-
-  where:
-  file                    | result
-  new File("schema.xsd")  | [new File("test.wsdl"), new File("schema.xsd")]
-  new File("nothing.xsd") | [new File("test.wsdl"), new File("nothing.xsd")]
-  new File("test.wsdl")   | [new File("test.wsdl")]
+  new File("schema.xsd")  | [new File("test.wsdl"), new File("schema.xsd")] // new unresolved
+  new File("nothing.xsd") | [new File("test.wsdl"), new File("nothing.xsd")] // new unresolved
+  new File("test.wsdl")   | [new File("test.wsdl")] // same unresolved dependency, shouldn't add again
+  new File("resolved.wsdl")   | [new File("test.wsdl")] // don't add it's already resolved
 
   }
  
-  def "we have a list of absolute paths and parse Files, the slurper gets a file that is not in the parseFiles list, but is in the absolute paths list, it shouldn't add to the parse Files list, otherwise you get a circular dependency." () { 
+  def "project Dependencies are populated and the absolute File to an existing project Dependency is encountered, unresolved Dependencies should not add this file" () { 
   when: "set up everything"
-    wdr.absolutePathDependencies = absolutePaths
-    def absoluteFile = FileHelper.getAbsoluteSchemaLocation(location, parentDirectory)
-    wdr.addSchemaLocationToParse(absoluteFile)
+    wdr.projectDependencies = absolutePaths as Set
+    def absoluteFile = FileHelper.getAbsoluteSchemaLocation(location, parentDirectory) // would  come form slurpedDocuments documentDependencies
+    wdr.resolveDependency(absoluteFile)
 
-  then: "parse list should not change"
-    wdr.schemaLocationsToParse == []
+  then: "unresolved dependencies should be empty"
+    wdr.unresolvedDependencies.isEmpty() == true
 
   where: ""
     absolutePaths             | location        | parentDirectory
@@ -64,22 +47,19 @@ class WsdlDependencyResolverSpec extends Specification {
 
   }
 
-  def "process a list of relative locations from a slurper class" () { 
-  given:
-  def slurper = new WsdlSlurper()
-  slurper.currentDir = file
-  
-  and: "Partially mock the gatherAllRelativeLocations"
-  slurper.metaClass.gatherAllRelativeLocations = { locations }
+  def "add all Absolute File objects in documentDependencies, these haven't been processed yet" () { 
+  given: "set up Document Slurper"
+    def slurper = new WsdlSlurper()
+    slurper.documentFile = new File("some_file")
+    slurper.documentDependencies = locations.collect{ getFileFromResourcePath(it) } as Set 
 
-  when:
-  wdr.processRelativeLocations(slurper)
+  when: "resolving Dependencies from slurped Document"
+    wdr.resolveDocumentDependencies(slurper)
 
-  then:
-  wdr.schemaLocationsToParse == locations.collect{ new File(new File(file, it).canonicalPath) }
+  then: "unresolved Dependencies should be the absolute file locations"
+    wdr.unresolvedDependencies == locations.collect{ getFileFromResourcePath(it).absoluteFile } as Set
 
-  where:
-  file | locations
-  new File("./build/test/resources/wsdl").absoluteFile | ["abstract.wsdl", "../xsd/schema.xsd", "./importWsdl.wsdl"]
+  where: "resource locations for dependencies are"
+    locations =  ["/wsdl/abstract.wsdl", "/schema/Include/Product.xsd", "/schema/Include/OrderNumber.xsd"]
   }
 }
