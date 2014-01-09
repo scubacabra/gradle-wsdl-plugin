@@ -1,18 +1,15 @@
 package com.jacobo.gradle.plugins.model
 
-import com.jacobo.gradle.plugins.util.ListHelper
-import com.jacobo.gradle.plugins.util.FileHelper
 import com.jacobo.gradle.plugins.reader.DocumentReader
-
-import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
 
 /**
  * This class resolves all WSDL dependencies, gathering a list of all files (Absolute Paths) that the main wsdl entry point includes/imports. including other WSDLS and XSDs
  *
  * Basically, starts at the top, gets all the imports/includes, then recursively goes through that unprocessed imports/includes until there are no more and you end up with a List of all the absolute Files that this particular WSDL depends on
  *
- * @author Daniel Mijares
+ * @author jacobono
  * @version 1.0
  */
 class WsdlDependencyResolver { 
@@ -20,72 +17,56 @@ class WsdlDependencyResolver {
   private static final Logger log = Logging.getLogger(WsdlDependencyResolver.class)  
 
   /**
-   * List of any schema locations left to parse and go through, when this is empty, the processing can return
+   * List of File objects representing the unresolved Dependencies left to resolve before an exit is possible from #resolveProjectDependencies
    */
-  def schemaLocationsToParse = []
+  def unresolvedDependencies = [] as Set
 
   /**
-   * List of all absolute Path Dependencies to be returned to the caller
+   * Set with File object, containing aboslute Paths as entries
    */
-  def absolutePathDependencies = []
+  def projectDependencies = [] as Set
 
   /**
-   * resolves the wsdl dependencies starting at #startingWsdl . While there are files in
-   * @see #schemaLocationsToParse,
+   * resolves the wsdl dependencies starting at #projectWsdl . While there are files in
+   * @see #unresolvedDependencies,
    * keep slurping documents and gather dependencies for wsdl/xsd files
-   * @param startingWsdl the absolute path of the starting wsdl to go through and resolve
+   * @param projectWsdl the absolute path of the starting wsdl to go through and resolve
    * @return List of #absolutePathDependencies
    */
-  def List resolveWSDLDependencies(File startingWsdl) {
-    log.info("resolving wsdl dependencies starting at {}", startingWsdl)
-    schemaLocationsToParse << startingWsdl
-    def slurped
-    while(schemaLocationsToParse) { 
-      def document = schemaLocationsToParse.pop()
-      log.debug("popping {} from schemaLocationsToParse list", document)
-      slurped = DocumentReader.slurpDocument(document)
-      log.debug("adding {} to absolute Path List", document)
-      addAbsolutePathDependencies(document)
-      log.debug("processing relative Locations and adding them to the schema to Parse List")
-      processRelativeLocations(slurped)
+  def resolveProjectDependencies(File projectWsdl) {
+    log.info("Resolving project  dependencies -- starting point is '{}'", projectWsdl)
+    unresolvedDependencies.add(projectWsdl)
+    while(!this.unresolvedDependencies.isEmpty()) { 
+      def document = this.unresolvedDependencies.iterator().next()
+      def slurpedDocument = DocumentReader.slurpDocument(document)
+      this.projectDependencies.add(document)
+      this.resolveDocumentDependencies(slurpedDocument)
+      this.unresolvedDependencies.remove(document)
     }
-    log.debug("returning file list {}", absolutePathDependencies)
-    return absolutePathDependencies
+    log.debug("returning file list '{}'", this.projectDependencies)
+    return this.projectDependencies
   }
    
   /**
    * Takes a #XsdSlurper or #WsdlSurper class and process that classes relativeLocations relative to the current directory of that file.
-   * add to #schemaLocationsToParse
-   * @param slurped is the slurped class to process relative locations from
+   * add to #unresolvedDependencies
+   * @param slurpedDocument is the slurped class to process relative locations from
    */
-  def processRelativeLocations(slurped) { 
-    def currentDir = slurped.currentDir
-    log.debug("current Dir for absolute File reference is {}", currentDir)
-    log.debug("gathering Relative locations from slurped {}", slurped.documentName)
-    def relativeLocations = slurped.gatherAllRelativeLocations() 
-    relativeLocations.each { location ->
-      def absoluteFile = FileHelper.getAbsoluteSchemaLocation(location, currentDir)
-      log.debug("relative location is {}, absolute is {}", location, absoluteFile.path)
-      addSchemaLocationToParse(absoluteFile)
+  def resolveDocumentDependencies(DocumentSlurper slurpedDocument) { 
+    log.debug("Resolving document dependencies from document '{}' -- the current directory is '{}'", slurpedDocument.documentFile.name, slurpedDocument.documentFile.parentFile)
+    slurpedDocument.documentDependencies.each { location ->
+      resolveDependency(location)
     }
   }
   
   /**
-   * Add file to #schemaLocationsToParse
-   * @param file is the absolute file path to add to the @scheaLocationsToParse list
+   * Resolve This particular Dependency
+   * If it is already resolved, no sense in performing that task again -- skip
+   * @param file is the absolute file path check for resolution
    */
-  def addSchemaLocationToParse(File file) { 
-    if (!ListHelper.isAlreadyInList(absolutePathDependencies, file)) {
-      ListHelper.addElementToList(schemaLocationsToParse, file)
-    }
-  }
-
-  /**
-   * Add file to #absolutePathDependencies
-   * @param file is the absolute file path to add to the @abosluteFileDependencies
-   */
-  def addAbsolutePathDependencies(File file) { 
-    ListHelper.addElementToList(absolutePathDependencies, file)
+  def resolveDependency(File file) { 
+    if (projectDependencies.contains(file)) return // already resolved/parsed
+    unresolvedDependencies.add(file)
   }
 }
 
