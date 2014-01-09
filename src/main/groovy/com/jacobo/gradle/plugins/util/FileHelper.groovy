@@ -1,5 +1,8 @@
 package com.jacobo.gradle.plugins.util
 
+import org.gradle.api.logging.Logging
+import org.gradle.api.logging.Logger
+
 /**
  * File Helper utility class
  * User: djmijares
@@ -7,6 +10,8 @@ package com.jacobo.gradle.plugins.util
  * Time: 10:14 AM
  */
 class FileHelper {
+
+    private static final Logger log = Logging.getLogger(FileHelper.class)  
 
     /**
      * Figure out the ABSOLUTE schema location of the String relative to the parent/current directory
@@ -16,6 +21,7 @@ class FileHelper {
      */
     public static File getAbsoluteSchemaLocation(String schemaLocation, File parentDir) {
         def relPath = new File(parentDir, schemaLocation)
+	log.debug("Resolving Absolute Document Location -- Relative Path is '{}',  Full path is '{}'", schemaLocation, new File(relPath.canonicalPath).path)
         return new File(relPath.canonicalPath)
     }
 }
