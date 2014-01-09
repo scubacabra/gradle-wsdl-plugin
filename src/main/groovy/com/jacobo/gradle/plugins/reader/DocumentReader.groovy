@@ -20,19 +20,15 @@ class DocumentReader {
    * @return @see XsdSlurper
    */
   static slurpDocument(File document) { 
-    log.debug("file is {}", document)
-    log.debug("current Dir is {}", document.parentFile)
-    def slurped = new XmlSlurper().parse(document)
+    log.debug("slurping file '{}'", document)
     def slurper
-    if(document.name.split("\\.")[-1] == 'xsd') { // either xsd or wsdl
+    if(document.name.split("\\.")[-1] == 'xsd') // either xsd or wsdl
       slurper = new XsdSlurper()
-      slurper.grabXsdDependencies(slurped)	
-    } else {
+    else
       slurper = new WsdlSlurper()
-      slurper.grabWsdlDependencies(slurped)
-    }
-    slurper.currentDir = document.parentFile
-    slurper.documentName = document.name
+    slurper.documentFile = document
+    slurper.slurpedDocument = new XmlSlurper().parse(document)
+    slurper.resolveDocumentDependencies()
     return slurper
   }
 }
