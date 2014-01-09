@@ -1,7 +1,5 @@
 package com.jacobo.gradle.plugins.model
 
-import com.jacobo.gradle.plugins.util.ListHelper
-
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
@@ -12,32 +10,16 @@ import org.gradle.api.logging.Logger
 class WsdlSlurper extends XsdSlurper {
     private static final Logger log = Logging.getLogger(WsdlSlurper.class)
 
-    def wsdlImports = []
-
     /**
-     * gathers data from xsd import statments, and from wsdl import statements as well.
-     * @param wsdl the #XmlSlurper to gather data from
+     * Set of imports representing this WSDL (Document) depending on another WSDL (Document)
+     * Not representing any XSD (Document) dependencies
      */
-    def grabWsdlDependencies(wsdl) {
-        log.debug("starting to grab WSDL dependencies for {}", wsdl)
-        grabWsdlImportedDependencies(wsdl)
-        grabWsdlXsdDependencies(wsdl)
-        log.debug("grabbed all WSDL dependencies for {}", wsdl)
-    }
+    def wsdlImports = [] as Set
 
     /**
-     * gathers schema Locations from wsdl import statements (wsdl importing another wsdl)
-     * @param wsdl the #XmlSlurper to gather data from
-     */
-    def grabWsdlImportedDependencies(wsdl) {
-        log.debug("resolving this wsdl's 'imported' wsdl dependencies")
-        processWsdlDependencyLocations(wsdl?.import)
-        log.debug("resolved all wsdl 'imported wsdl dependencies")
-    }
-
-    /**
-     * grabs wsdl XSD dependencies (embedded in WSDL)
-     * Will be in
+     * grabs the dependencies of this Objects slurped document
+     * slurps import statements and include statements
+     * grabs wsdl XSD dependencies (embedded in WSDL) located at
      * <pre>
      *      <wsdl>
      *          <types>
@@ -48,37 +30,26 @@ class WsdlSlurper extends XsdSlurper {
      *          </types>
      *      </wsdl>
      * </pre>
-     * @param wsdl the #XmlSlurper class to gather data from
+     * return none
      */
-    def grabWsdlXsdDependencies(wsdl) {
-        log.debug("resolving this wsdls XSD Dependencies")
-        log.debug("resolving 'includes' XSD dependencies")
-        processXsdDependencyLocations(wsdl?.types?.schema?.include)
-        log.debug("resolving 'import'(ed) XSD dependencies")
-        processXsdDependencyLocations(wsdl?.types?.schema?.import)
+    @Override
+    public void resolveDocumentDependencies() {
+        log.debug("Getting WSDL Import  dependencies for '{}'", this.documentFile.name)
+	slurpDependencies(this.slurpedDocument?.import, this.wsdlImports)
+	super.slurpDependencies(this.slurpedDocument?.types?.schema?.import, this.xsdImports)
+	super.slurpDependencies(this.slurpedDocument?.types?.schema?.include, this.xsdIncludes)
+	this.resolveRelativePathDependencies([this.wsdlImports, this.xsdImports, this.xsdIncludes])
     }
 
     /**
-     * process wsdl import statements and populate the #wsdlImports list with the content of the dependent locations
-     * @param wsdlSlurperElement is the import Object taken from the #XmlSlurper
-     * @see #wsdlImports List
-     */
-    def processWsdlDependencyLocations = { wsdlSlurperElement ->
-        wsdlSlurperElement?.each { wsdlElement ->
-            log.debug("the XML slurper element is {}", wsdlElement.name())
-            def wsdlImportLocation = wsdlElement.@location.text()
-            log.debug("the location is {}", wsdlImportLocation)
-            ListHelper.addElementToList(wsdlImports, wsdlImportLocation)
-        }
-    }
-
-    /**
-     * Gathers all relative locations belonging to this instance and packages up into one list
-     * @return List of all locations from fields #xsdImports, #xsdIncludes and #wsdlImports
-     */
-    def gatherAllRelativeLocations() {
-        def returnList = super.gatherAllRelativeLocations()
-        returnList.addAll(wsdlImports)
-        return returnList
+     * dependentElements is the slurped elements needed, contains schemaLocation for either import/include data
+     * collection is the collection to put the paths in -- all of are Strings (that's what schema Location is)
+     **/
+    @Override
+    def slurpDependencies(dependentElements, elementCollection) { 
+      log.debug("Slurping Dependencies for '{}' elements of the '{}' type", dependentElements.size, dependentElements[0].name())
+      dependentElements?.each { wsdlImportElement ->
+	elementCollection.add(wsdlImportElement.@location.text())
+      }
     }
 }
