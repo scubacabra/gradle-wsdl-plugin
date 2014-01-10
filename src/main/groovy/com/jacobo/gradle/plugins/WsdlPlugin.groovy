@@ -12,9 +12,6 @@ import org.gradle.api.tasks.bundling.War
 
 import org.gradle.api.plugins.JavaPlugin
 
-import org.gradle.api.logging.Logging
-import org.gradle.api.logging.Logger
-
 import com.jacobo.gradle.plugins.tasks.WsdlName
 import com.jacobo.gradle.plugins.tasks.War
 import com.jacobo.gradle.plugins.tasks.ParseWsdl
@@ -27,15 +24,13 @@ import com.jacobo.gradle.plugins.tasks.GroupWarFiles
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
 class WsdlPlugin implements Plugin<Project> {
-  static final String WSDL_PLUGIN_TASK_GROUP = 'parse'
-  static final String WSDL_PLUGIN_PARSE_WSDL_TASK = 'parseWsdl'
-  static final String WSDL_PLUGIN_WSDL_NAME_TASK = 'wsdlName'
+  static final String WSDL_PLUGIN_TASK_GROUP			 = 'parse'
+  static final String WSDL_PLUGIN_PARSE_WSDL_TASK		 = 'parseWsdl'
+  static final String WSDL_PLUGIN_WSDL_NAME_TASK		 = 'wsdlName'
   static final String WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK = 'resolveWsdlDependencies'
-  static final String WSDL_PLUGIN_GROUP_WAR_FILES_TASK = 'groupWsdlWarFiles'
-  static final String WSDL_PLUGIN_COPY_WAR_FILES_TASK = 'copyWsdlWarFiles'
-  static final String WSDL_CONFIGURATION_NAME = 'jaxws'
-
-  static final Logger log = Logging.getLogger(WsdlPlugin.class)
+  static final String WSDL_PLUGIN_GROUP_WAR_FILES_TASK		 = 'groupWsdlWarFiles'
+  static final String WSDL_PLUGIN_COPY_WAR_FILES_TASK		 = 'copyWsdlWarFiles'
+  static final String WSDL_CONFIGURATION_NAME			 = 'jaxws'
 
   private WsdlPluginExtension extension
 
@@ -44,32 +39,33 @@ class WsdlPlugin implements Plugin<Project> {
      project.plugins.apply(WarPlugin)
      configureWsdlExtension(project)
      configureWsdlConfiguration(project)
-     Task nameTask = configureWsdlNameTask(project)
-     configureParseWsdlTask(project, nameTask)
-     def dependenciesTask = configureResolveWsdlDependenciesTask(project, nameTask)
-     def groupWsdlWarFilesTask = configureGroupWarFilesTask(project, dependenciesTask)
-     def copyWsdlWarFilesTask = configureCopyWarFilesTask(project, groupWsdlWarFilesTask)
+     def nameTask		= configureWsdlNameTask(project)
+     def dependenciesTask	= configureResolveWsdlDependenciesTask(project, nameTask)
+     def groupWsdlWarFilesTask	= configureGroupWarFilesTask(project, dependenciesTask)
+     def copyWsdlWarFilesTask	= configureCopyWarFilesTask(project, groupWsdlWarFilesTask)
      configureWarTask(project, copyWsdlWarFilesTask)
+     configureParseWsdlTask(project, nameTask)
    }
 
    private void configureWsdlExtension(final Project project) { 
      extension = project.extensions.create("wsdl", WsdlPluginExtension, project)
      extension.with { 
-       wsdlFolder = "wsdl"
-       schemaFolder = "schema"
-       episodeFolder = "schema/episodes"
-       webServiceCopyDir = "web-service"
+       wsdlFolder		= "wsdl"
+       schemaFolder		= "schema"
+       episodeFolder		= "schema/episodes"
+       webServiceCopyDir	= "web-service"
      }
+
      def wsimportExtension = project.wsdl.extensions.create("wsimport", WsImportExtension)
      wsimportExtension.with { 
-       sourceDestinationDirectory = "src/main/java"
-       verbose = true
-       keep = true
-       xnocompile = true
-       fork = false
-       xdebug = false
-       target = "2.1"
-       wsdlLocation = "FILL_IN_BY_SERVER"
+       sourceDestinationDirectory	= "src/main/java"
+       verbose				= true
+       keep				= true
+       xnocompile			= true
+       fork				= false
+       xdebug				= false
+       target				= "2.1"
+       wsdlLocation			= "FILL_IN_BY_SERVER"
      }
    }
 
@@ -103,7 +99,7 @@ class WsdlPlugin implements Plugin<Project> {
      Task wnt = project.tasks.create(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlName)
      wnt.description = "find the wsdl File name from the web service sub project name, as per the convention"
      wnt.group = WSDL_PLUGIN_TASK_GROUP
-     wnt.conventionMapping.projectName = { project.name }
+     wnt.conventionMapping.projectName   = { project.name }
      wnt.conventionMapping.wsdlDirectory = { project.file(new File(project.rootDir, project.wsdl.wsdlFolder)) }
      return wnt
    }
@@ -131,12 +127,11 @@ class WsdlPlugin implements Plugin<Project> {
      cwwf.description = "copies all WSDL war files into the build directory for packaging use in the war task"
      cwwf.group = WSDL_PLUGIN_TASK_GROUP
      cwwf.dependsOn(groupWsdlWarFilesTask)
-     cwwf.conventionMapping.projectRootDir = { project.rootDir }
-     cwwf.conventionMapping.warFiles = { project.wsdl.warFiles }
-     cwwf.conventionMapping.webServicesCopyDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir)) }
+     cwwf.conventionMapping.projectRootDir	= { project.rootDir }
+     cwwf.conventionMapping.warFiles		= { project.wsdl.warFiles }
+     cwwf.conventionMapping.webServicesCopyDir	= { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir)) }
      return cwwf
    }
-
 
    private void configureWarTask(final Project project, Task copyWsdlWarFilesTask) {
      Task oldWar = project.tasks.getByName('war')
@@ -144,10 +139,10 @@ class WsdlPlugin implements Plugin<Project> {
      wsdlWar.group = oldWar.group
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
      wsdlWar.dependsOn(copyWsdlWarFilesTask)
-     wsdlWar.conventionMapping.wsdlFolder    = { project.wsdl.wsdlFolder }
-     wsdlWar.conventionMapping.schemaFolder  = { project.wsdl.schemaFolder }
-     wsdlWar.conventionMapping.wsdl          = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.wsdlFolder)) }
-     wsdlWar.conventionMapping.schema        = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.schemaFolder)) }
+     wsdlWar.conventionMapping.wsdlFolder             = { project.wsdl.wsdlFolder }
+     wsdlWar.conventionMapping.schemaFolder           = { project.wsdl.schemaFolder }
+     wsdlWar.conventionMapping.wsdlDirectory          = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.wsdlFolder)) }
+     wsdlWar.conventionMapping.schemaDirectory        = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.schemaFolder)) }
      project.build.dependsOn(wsdlWar)
    }
 }
