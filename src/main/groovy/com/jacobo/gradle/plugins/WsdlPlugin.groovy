@@ -71,9 +71,9 @@ class WsdlPlugin implements Plugin<Project> {
 
    private void configureWsdlConfiguration(final Project project) { 
      project.configurations.create(WSDL_CONFIGURATION_NAME) { 
-       visible = true
-       transitive = true
-       description = "The JAXWS libraries to be used for parsing the WSDL"
+       visible		= true
+       transitive	= true
+       description	= "The JAXWS libraries to be used for parsing the WSDL"
      }
    }
 
@@ -82,17 +82,17 @@ class WsdlPlugin implements Plugin<Project> {
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
      pwt.dependsOn(wsdlNameTask)
-     pwt.conventionMapping.wsdl         = { project.wsdl.wsdlPath }
-     pwt.conventionMapping.destination  = { project.file(new File(project.projectDir, project.wsdl.wsimport.sourceDestinationDirectory)) }
-     pwt.conventionMapping.episode      = { project.file(new File(project.rootDir, project.wsdl.episodeFolder)) }
-     pwt.conventionMapping.episodes     = { project.wsdl.wsimport.episodes }
-     pwt.conventionMapping.target       = { project.wsdl.wsimport.target }
-     pwt.conventionMapping.wsdlLocation = { project.wsdl.wsimport.wsdlLocation }
-     pwt.conventionMapping.verbose      = { project.wsdl.wsimport.verbose }
-     pwt.conventionMapping.keep         = { project.wsdl.wsimport.keep }
-     pwt.conventionMapping.xnocompile   = { project.wsdl.wsimport.xnocompile }
-     pwt.conventionMapping.fork         = { project.wsdl.wsimport.fork }
-     pwt.conventionMapping.xdebug       = { project.wsdl.wsimport.xdebug }     
+     pwt.conventionMapping.wsdlFile		= { project.wsdl.wsdlPath }
+     pwt.conventionMapping.destinationDirectory	= { project.file(new File(project.projectDir, project.wsdl.wsimport.sourceDestinationDirectory)) }
+     pwt.conventionMapping.episodeDirectory     = { project.file(new File(project.rootDir, project.wsdl.episodeFolder)) }
+     pwt.conventionMapping.episodes		= { project.wsdl.wsimport.episodes }
+     pwt.conventionMapping.target		= { project.wsdl.wsimport.target }
+     pwt.conventionMapping.wsdlLocation		= { project.wsdl.wsimport.wsdlLocation }
+     pwt.conventionMapping.verbose		= { project.wsdl.wsimport.verbose }
+     pwt.conventionMapping.keep			= { project.wsdl.wsimport.keep }
+     pwt.conventionMapping.xnocompile		= { project.wsdl.wsimport.xnocompile }
+     pwt.conventionMapping.fork			= { project.wsdl.wsimport.fork }
+     pwt.conventionMapping.xdebug		= { project.wsdl.wsimport.xdebug }
    }
 
    private Task configureWsdlNameTask(final Project project) { 

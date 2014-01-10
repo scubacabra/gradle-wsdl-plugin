@@ -25,7 +25,7 @@ class ParseWsdl extends DefaultTask {
    * Wsdl file reference (absolute)
    */
   @InputFile
-  File wsdl
+  File wsdlFile
 
   /**
    * ant wsimport parameter flags
@@ -46,13 +46,13 @@ class ParseWsdl extends DefaultTask {
    * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
    */
   @OutputDirectory
-  File destination
+  File destinationDirectory
 
   /**
    * Directory where to find episode files
    */
   @InputDirectory
-  File episode
+  File episodeDirectory
 
   /**
    * list of specific episode file NAMES ONLY, to get from episode directory
@@ -69,7 +69,7 @@ class ParseWsdl extends DefaultTask {
     ant.wsimport (
     wsdl            : getWsdl().path,
     verbose         : getVerbose(),
-    sourcedestdir   : getDestination().path,
+    sourcedestdir   : getDestinationDirectory().path,
     keep            : getKeep(),
     wsdlLocation    : getWsdlLocation(),
     xnocompile      : getXnocompile(),
@@ -77,8 +77,8 @@ class ParseWsdl extends DefaultTask {
     xdebug          : getXdebug(),
     target          : getTarget()) {
       getEpisodes().each { episode ->
-	log.debug("binding with file {}.episode in path {}", episode, getEpisode().path)
-	binding(dir : getEpisode().path, includes : "${episode}.episode")
+	log.debug("binding with file {}.episode in path {}", episode, getEpisodeDirectory().path)
+	binding(dir : getEpisodeDirectory().path, includes : "${episode}.episode")
       }
     }
   }
