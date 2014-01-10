@@ -1,6 +1,6 @@
 package com.jacobo.gradle.plugins.extension
 
-import com.jacobo.gradle.plugins.model.GroupedWsdlWarFiles
+import com.jacobo.gradle.plugins.model.GroupedWarFiles
 
 import org.gradle.api.Project
 
@@ -58,7 +58,7 @@ class WsdlPluginExtension {
    * War files grouped by common folder
    * @note again, at the minimum, this has at least one object, the web service must depend on it's WSDL
    */
-  List<GroupedWsdlWarFiles> warFiles
+  List<GroupedWarFiles> warFiles
 
   /**
    * Name rules to convert project name to an appropriate wsdl name
