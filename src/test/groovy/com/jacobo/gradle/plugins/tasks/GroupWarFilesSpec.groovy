@@ -1,4 +1,4 @@
-package com.jacobo.gradle.plugins.util
+package com.jacobo.gradle.plugins.tasks
 
 import com.jacobo.gradle.plugins.ProjectTaskSpecification
 import com.jacobo.gradle.plugins.tasks.GroupWarFiles
