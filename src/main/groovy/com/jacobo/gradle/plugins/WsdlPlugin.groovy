@@ -15,12 +15,12 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
-import com.jacobo.gradle.plugins.tasks.WsdlNameTask
-import com.jacobo.gradle.plugins.tasks.WsdlWarTask
-import com.jacobo.gradle.plugins.tasks.ParseWsdlTask
-import com.jacobo.gradle.plugins.tasks.CopyWsdlWarFilesTask
-import com.jacobo.gradle.plugins.tasks.ResolveWsdlDependenciesTask
-import com.jacobo.gradle.plugins.tasks.GroupWsdlWarFilesTask
+import com.jacobo.gradle.plugins.tasks.WsdlName
+import com.jacobo.gradle.plugins.tasks.War
+import com.jacobo.gradle.plugins.tasks.ParseWsdl
+import com.jacobo.gradle.plugins.tasks.CopyWarFiles
+import com.jacobo.gradle.plugins.tasks.ResolveWsdlDependencies
+import com.jacobo.gradle.plugins.tasks.GroupWarFiles
 
 /**
  * @author djmijares
@@ -82,7 +82,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private configureParseWsdlTask(final Project project, Task wsdlNameTask) { 
-     Task pwt = project.tasks.create(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdlTask)
+     Task pwt = project.tasks.create(WSDL_PLUGIN_PARSE_WSDL_TASK, ParseWsdl)
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
      pwt.dependsOn(wsdlNameTask)
@@ -100,7 +100,7 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureWsdlNameTask(final Project project) { 
-     Task wnt = project.tasks.create(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlNameTask)
+     Task wnt = project.tasks.create(WSDL_PLUGIN_WSDL_NAME_TASK, WsdlName)
      wnt.description = "find the wsdl File name from the web service sub project name, as per the convention"
      wnt.group = WSDL_PLUGIN_TASK_GROUP
      wnt.conventionMapping.projectName = { project.name }
@@ -109,16 +109,16 @@ class WsdlPlugin implements Plugin<Project> {
    }
 
    private Task configureResolveWsdlDependenciesTask(final Project project, Task wsdlNameTask) { 
-     Task resolveDeps = project.tasks.create(WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK, ResolveWsdlDependenciesTask)
+     Task resolveDeps = project.tasks.create(WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK, ResolveWsdlDependencies)
      resolveDeps.description = "determine all the wsdl dependencies, expected via import/include statements"
      resolveDeps.group = WSDL_PLUGIN_TASK_GROUP
      resolveDeps.dependsOn(wsdlNameTask)
-     resolveDeps.conventionMapping.wsdl = { project.wsdl.wsdlPath }
+     resolveDeps.conventionMapping.wsdlDocument = { project.wsdl.wsdlPath }
      return resolveDeps
    }
 
-   private Task configureGroupWsdlWarFilesTask(final Project project, Task dependenciesTask) { 
-     Task gwwf = project.tasks.create(WSDL_PLUGIN_GROUP_WSDL_WAR_FILES_TASK, GroupWsdlWarFilesTask)
+   private Task configureGroupWarFilesTask(final Project project, Task dependenciesTask) { 
+     Task gwwf = project.tasks.create(WSDL_PLUGIN_GROUP_WAR_FILES_TASK, GroupWarFiles)
      gwwf.description = "group all the wsdl war dependency files by common direct parent Folder"
      gwwf.group = WSDL_PLUGIN_TASK_GROUP
      gwwf.dependsOn(dependenciesTask)
@@ -126,8 +126,8 @@ class WsdlPlugin implements Plugin<Project> {
      return gwwf
    }
 
-   private Task configureCopyWsdlWarFilesTask(final Project project, Task groupWsdlWarFilesTask) {
-     Task cwwf = project.tasks.create(WSDL_PLUGIN_COPY_WSDL_WAR_FILES_TASK, CopyWsdlWarFilesTask)
+   private Task configureCopyWarFilesTask(final Project project, Task groupWsdlWarFilesTask) {
+     Task cwwf = project.tasks.create(WSDL_PLUGIN_COPY_WAR_FILES_TASK, CopyWarFiles)
      cwwf.description = "copies all WSDL war files into the build directory for packaging use in the war task"
      cwwf.group = WSDL_PLUGIN_TASK_GROUP
      cwwf.dependsOn(groupWsdlWarFilesTask)
@@ -141,7 +141,7 @@ class WsdlPlugin implements Plugin<Project> {
 
    private void configureWarTask(final Project project, Task copyWsdlWarFilesTask) {
      Task oldWar = project.tasks.getByName('war')
-     Task wsdlWar = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWarTask)
+     Task wsdlWar = project.tasks.replace(WarPlugin.WAR_TASK_NAME, War)
      wsdlWar.group = oldWar.group
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
      wsdlWar.dependsOn(copyWsdlWarFilesTask)
