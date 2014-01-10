@@ -34,7 +34,7 @@ class WsdlDependencyResolver {
    * @return List of #absolutePathDependencies
    */
   def resolveProjectDependencies(File projectWsdl) {
-    log.info("Resolving project  dependencies -- starting point is '{}'", projectWsdl)
+    log.info("Resolving project dependencies -- starting point is '{}'", projectWsdl)
     unresolvedDependencies.add(projectWsdl)
     while(!this.unresolvedDependencies.isEmpty()) { 
       def document = this.unresolvedDependencies.iterator().next()
@@ -43,7 +43,7 @@ class WsdlDependencyResolver {
       this.resolveDocumentDependencies(slurpedDocument)
       this.unresolvedDependencies.remove(document)
     }
-    log.debug("returning file list '{}'", this.projectDependencies)
+    log.debug("Resolved project Dependencies! -- '{}'", this.projectDependencies)
     return this.projectDependencies
   }
    
