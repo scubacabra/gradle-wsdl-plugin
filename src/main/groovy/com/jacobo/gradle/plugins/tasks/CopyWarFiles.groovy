@@ -1,6 +1,6 @@
 package com.jacobo.gradle.plugins.tasks
 
-import com.jacobo.gradle.plugins.model.GroupedWsdlWarFiles
+import com.jacobo.gradle.plugins.model.GroupedWarFiles
 
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.OutputDirectory
@@ -23,14 +23,14 @@ import com.google.common.annotations.VisibleForTesting
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class CopyWsdlWarFilesTask extends DefaultTask {
-    static final Logger log = Logging.getLogger(CopyWsdlWarFilesTask.class)
+class CopyWarFiles extends DefaultTask {
+    static final Logger log = Logging.getLogger(CopyWarFiles.class)
 
     @Input
     File rootDir
 
     @Input
-    List<GroupedWsdlWarFiles> warFiles
+    List<GroupedWarFiles> warFiles
 
     @OutputDirectory
     File resolvedSchemaDir

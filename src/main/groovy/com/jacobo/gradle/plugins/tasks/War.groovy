@@ -18,9 +18,9 @@ import org.gradle.api.logging.Logger
  *
  * @author djmijares
  */
-class WsdlWarTask extends War {
+class War extends War {
 
-    static final Logger log = Logging.getLogger(WsdlWarTask.class)
+    static final Logger log = Logging.getLogger(War.class)
 
     @Input
     String wsdlFolder
@@ -34,7 +34,7 @@ class WsdlWarTask extends War {
     @InputDirectory
     File schema
 
-    WsdlWarTask() {
+    War() {
         super()
         log.debug("Calling war constructor")
 

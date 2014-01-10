@@ -18,8 +18,8 @@ import com.jacobo.gradle.plugins.util.WsdlNameHelper
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class WsdlNameTask extends DefaultTask { 
-  static final Logger log = Logging.getLogger(WsdlNameTask.class)
+class WsdlName extends DefaultTask { 
+  static final Logger log = Logging.getLogger(WsdlName.class)
 
   final WsdlPluginExtension extension = project.wsdl
   

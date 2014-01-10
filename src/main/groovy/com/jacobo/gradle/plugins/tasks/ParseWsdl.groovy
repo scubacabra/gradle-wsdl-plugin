@@ -18,26 +18,47 @@ import org.gradle.api.tasks.OutputDirectory
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class ParseWsdlTask extends DefaultTask { 
-  static final Logger log = Logging.getLogger(ParseWsdlTask.class)
+class ParseWsdl extends DefaultTask { 
+  static final Logger log = Logging.getLogger(ParseWsdl.class)
 
+  /**
+   * Wsdl file reference (absolute)
+   */
   @InputFile
   File wsdl
 
+  /**
+   * ant wsimport parameter flags
+   * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
+   */
   @Input
   boolean verbose, keep, xnocompile, fork, xdebug
 
+  /**
+   * ant wsimport parameters
+   * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
+   */
   @Input
   String target, wsdlLocation
 
+  /**
+   * ant wsimport parameter -- where to place generated source
+   * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
+   */
+  @OutputDirectory
+  File destination
+
+  /**
+   * Directory where to find episode files
+   */
   @InputDirectory
   File episode
 
+  /**
+   * list of specific episode file NAMES ONLY, to get from episode directory
+   */
   @Input
   List episodes
-
-  @OutputDirectory
-  File destination
 
   @TaskAction
   void parseWsdl() { 
