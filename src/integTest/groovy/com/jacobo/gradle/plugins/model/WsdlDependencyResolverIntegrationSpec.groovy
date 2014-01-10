@@ -13,15 +13,15 @@ class WsdlDependencyResolverIntegrationSpec extends BaseSpecification {
   def result = wdr.resolveProjectDependencies(wsdlFile)
 
   then:
-  expected*.absoluteFile.each{ result.contains(it) }
+  expected.collect{ getFileFromResourcePath(it) }*.absoluteFile.each{ result.contains(it) }
   expected.size == result.size()
 
   where:
-  path | expected
-  "/wsdl/noXsdImport.wsdl" | [new File("build/resources/test/wsdl/noXsdImport.wsdl")]
-  "/wsdl/OneXsdImport.wsdl" | [new File("build/resources/test/wsdl/OneXsdImport.wsdl"), new File("build/resources/test/schema/Messages/Messages.xsd")]
-  "/wsdl/TwoXsdImports.wsdl" | [new File("build/resources/test/wsdl/TwoXsdImports.wsdl"), new File("build/resources/test/schema/PO/PurchaseOrder.xsd"), new File("build/resources/test/schema/Messages/Messages.xsd")]
-  "/wsdl/XsdImportXsdAndIncludesXsd.wsdl" | [new File("build/resources/test/wsdl/XsdImportXsdAndIncludesXsd.wsdl"), new File("build/resources/test/schema/Include/OrderNumber.xsd"), new File("build/resources/test/schema/Include/include2.xsd"), new File("build/resources/test/schema/Include/include.xsd"), new File("build/resources/test/schema/Include/Product.xsd"), new File("build/resources/test/schema/Messages/Messages.xsd")]
-  "/wsdl/ImportsAnotherWsdl.wsdl" | [new File("build/resources/test/wsdl/ImportsAnotherWsdl.wsdl"), new File("build/resources/test/wsdl/abstract.wsdl"), new File("build/resources/test/schema/Messages/Messages.xsd")] 
+  path						| expected
+  "/wsdl/noXsdImport.wsdl"			| ["/wsdl/noXsdImport.wsdl"]
+  "/wsdl/OneXsdImport.wsdl"			| ["/wsdl/OneXsdImport.wsdl", "/schema/Messages/Messages.xsd"]
+  "/wsdl/TwoXsdImports.wsdl"			| ["/wsdl/TwoXsdImports.wsdl", "/schema/PO/PurchaseOrder.xsd", "/schema/Messages/Messages.xsd"]
+  "/wsdl/XsdImportXsdAndIncludesXsd.wsdl"	| ["/wsdl/XsdImportXsdAndIncludesXsd.wsdl", "/schema/Include/OrderNumber.xsd", "/schema/Include/include2.xsd", "/schema/Include/include.xsd", "/schema/Include/Product.xsd", "/schema/Messages/Messages.xsd"]
+  "/wsdl/ImportsAnotherWsdl.wsdl"		| ["/wsdl/ImportsAnotherWsdl.wsdl", "/wsdl/abstract.wsdl", "/schema/Messages/Messages.xsd"] 
   }
 }
