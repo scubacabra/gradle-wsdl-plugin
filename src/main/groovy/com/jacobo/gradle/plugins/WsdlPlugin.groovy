@@ -131,10 +131,9 @@ class WsdlPlugin implements Plugin<Project> {
      cwwf.description = "copies all WSDL war files into the build directory for packaging use in the war task"
      cwwf.group = WSDL_PLUGIN_TASK_GROUP
      cwwf.dependsOn(groupWsdlWarFilesTask)
-     cwwf.conventionMapping.rootDir = { project.rootDir }
+     cwwf.conventionMapping.projectRootDir = { project.rootDir }
      cwwf.conventionMapping.warFiles = { project.wsdl.warFiles }
-     cwwf.conventionMapping.resolvedWebServicesDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir)) }
-     cwwf.conventionMapping.resolvedSchemaDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir + File.separator + project.wsdl.schemaFolder)) }
+     cwwf.conventionMapping.webServicesCopyDir = { project.file(new File(project.buildDir, project.wsdl.webServiceCopyDir)) }
      return cwwf
    }
 

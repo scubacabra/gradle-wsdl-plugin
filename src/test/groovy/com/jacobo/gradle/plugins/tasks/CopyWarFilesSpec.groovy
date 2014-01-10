@@ -31,10 +31,8 @@ class CopyWarFilesSpec extends ProjectTaskSpecification {
   def "Copy Grouped War Files out to the webServicesOutDir" () {
   given: "a task with these parameters"
     task.with { 
-      resolvedWebServicesDir	= webServicesOutDir
-      resolvedWsdlDir		= wsdlFilesOutDir
-      resolvedSchemaDir		= schemaFilesOutDir
-      rootDir			= rootDir
+      webServicesCopyDir	= webServicesOutDir
+      projectRootDir		= rootDir
       warFiles			= groupedWarFiles
     }
   
@@ -48,7 +46,7 @@ class CopyWarFilesSpec extends ProjectTaskSpecification {
     def messageFiles = new File(schemaFilesOutDir, "Messages").listFiles()
   
   then: "Each of the directories exist, because the ant task populated them"
-    [task.resolvedWebServicesDir, task.resolvedWsdlDir, task.resolvedSchemaDir].each { it.exists() == true }
+    [task.webServicesCopyDir, new File(task.webServicesCopyDir, "wsdl"), new File(task.webServicesCopyDir, "schema")].each { it.exists() == true }
   
 
   then: "WSDL Files are copied correctly"

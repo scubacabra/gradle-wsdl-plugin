@@ -24,43 +24,64 @@ import com.google.common.annotations.VisibleForTesting
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
 class CopyWarFiles extends DefaultTask {
-    static final Logger log = Logging.getLogger(CopyWarFiles.class)
+  static final Logger log = Logging.getLogger(CopyWarFiles.class)
 
-    @Input
-    File rootDir
+  /**
+   * Project Root Dir, NOT Project Directory, unless they are one in the same
+   */
+  @Input
+  File projectRootDir
 
-    @Input
-    List<GroupedWarFiles> warFiles
+  /**
+   * Files grouped by GroupWarFiles task
+   */
+  @Input
+  List<GroupedWarFiles> warFiles
 
-    @OutputDirectory
-    File resolvedSchemaDir
+  /**
+   * Output directory for all files to copied into
+   * This folder will be in the 'build' folder for the project
+   */
+  @OutputDirectory
+  File webServicesCopyDir
 
-    @OutputDirectory
-    File resolvedWebServicesDir
+  @TaskAction
+  void resolveRelativeWarFiles() {
+    copyWarFilesToOutputDir()
+  }
 
-    @TaskAction
-    void resolveRelativeWarFiles() {
-      copyWarFilesToOutputDir()
+  /**
+   * Iterate over all grouped war files, find the correct relative Path to copy into the the webServicesCopyDir
+   */
+  @VisibleForTesting
+  void copyWarFilesToOutputDir() {
+    log.info("Copying all web service dependent documents into '{}'", getWebServicesCopyDir())
+    getWarFiles().each { warFile ->
+      log.debug("Copying '{}' from '{}'", warFile.groupedFiles, warFile.groupedFolder)
+      def outDir = getWebServicesCopyDir().path + File.separator + findRelativePath(warFile.groupedFolder, getProjectRootDir())
+      log.debug("copying into {}", outDir)
+
+      ant.copy(toDir: outDir) { //copy to
+	fileset(dir: warFile.groupedFolder.canonicalPath) { // from
+	  warFile.groupedFiles.each { fileName -> //include files
+	    include(name: fileName)
+	  }
+	}
+      }
+
     }
+  }
 
-    @VisibleForTesting
-    void copyWarFilesToOutputDir() { 
-        log.info("copying all web service dependent documents into {}", getResolvedWebServicesDir())
-        getWarFiles().each { warFile ->
-            log.debug("copying from {} and including these file(s) {}", warFile.groupedFolder, warFile.groupedFiles)
-	    log.debug("root directory is {}", getRootDir().canonicalPath)
-	    log.debug("war File canonical Path is {}", warFile.groupedFolder.canonicalPath)
-	    def fileRelativeToRoot = warFile.groupedFolder.canonicalPath - (getRootDir().canonicalPath + File.separator)
-	    log.debug("file relative to root is {}", fileRelativeToRoot)
-	    def outDir = getResolvedWebServicesDir().path + File.separator + fileRelativeToRoot
-            log.debug("copying into {}", outDir)
-            ant.copy(toDir: outDir) { //copy to
-                fileset(dir: warFile.groupedFolder.canonicalPath) { // from
-                    warFile.groupedFiles.each { fileName -> //include files
-                        include(name: fileName)
-                    }
-                }
-            }
-        }
-    }
+  /**
+   * Finds the Relative file path
+   * Input - from (the longer Path)
+   * Input - relativeTo (the shorter Path to find the relative path against)
+   * Output - string of the relative path
+   * File separator is necessary, because Java files don't put these at the end of paths for directories, and this is dealing with directories
+   */
+  def findRelativePath(File from, File relativeTo) {
+    def relativePath = from.canonicalPath.replaceFirst(relativeTo.canonicalPath + File.separator, "")
+    log.debug("'{}' is the relative path of '{}' relative to '{}'", relativePath, from.canonicalPath, relativeTo.canonicalPath + File.separator)
+    return relativePath
+  }
 } 
