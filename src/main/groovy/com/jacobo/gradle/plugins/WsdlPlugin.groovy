@@ -31,8 +31,8 @@ class WsdlPlugin implements Plugin<Project> {
   static final String WSDL_PLUGIN_PARSE_WSDL_TASK = 'parseWsdl'
   static final String WSDL_PLUGIN_WSDL_NAME_TASK = 'wsdlName'
   static final String WSDL_PLUGIN_RESOLVE_WSDL_DEPENDENCIES_TASK = 'resolveWsdlDependencies'
-  static final String WSDL_PLUGIN_GROUP_WSDL_WAR_FILES_TASK = 'groupWsdlWarFiles'
-  static final String WSDL_PLUGIN_COPY_WSDL_WAR_FILES_TASK = 'copyWsdlWarFiles'
+  static final String WSDL_PLUGIN_GROUP_WAR_FILES_TASK = 'groupWsdlWarFiles'
+  static final String WSDL_PLUGIN_COPY_WAR_FILES_TASK = 'copyWsdlWarFiles'
   static final String WSDL_CONFIGURATION_NAME = 'jaxws'
 
   static final Logger log = Logging.getLogger(WsdlPlugin.class)
@@ -47,8 +47,8 @@ class WsdlPlugin implements Plugin<Project> {
      Task nameTask = configureWsdlNameTask(project)
      configureParseWsdlTask(project, nameTask)
      def dependenciesTask = configureResolveWsdlDependenciesTask(project, nameTask)
-     def groupWsdlWarFilesTask = configureGroupWsdlWarFilesTask(project, dependenciesTask)
-     def copyWsdlWarFilesTask = configureCopyWsdlWarFilesTask(project, groupWsdlWarFilesTask)
+     def groupWsdlWarFilesTask = configureGroupWarFilesTask(project, dependenciesTask)
+     def copyWsdlWarFilesTask = configureCopyWarFilesTask(project, groupWsdlWarFilesTask)
      configureWarTask(project, copyWsdlWarFilesTask)
    }
 
