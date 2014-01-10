@@ -18,8 +18,8 @@ import org.gradle.api.logging.Logger
  *      groupedFiles = [one.xsd, test.xsd]
  *  </code>
  */
-class GroupedWsdlWarFiles implements Serializable {
-    private static final Logger log = Logging.getLogger(GroupedWsdlWarFiles.class)
+class GroupedWarFiles implements Serializable {
+    private static final Logger log = Logging.getLogger(GroupedWarFiles.class)
 
     private static final long serialVersionUID = -2785173570257175145L
 
