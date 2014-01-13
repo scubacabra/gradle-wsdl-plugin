@@ -6,7 +6,7 @@ import org.gradle.api.Project
 
 /**
  * Contains @see WsdlPlugin default settings
- * @author djmijares
+ * @author jacobono
  * Created: Tue Dec 04 09:01:34 EST 2012
  */
 class WsdlPluginExtension {

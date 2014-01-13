@@ -6,8 +6,8 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.GradleException
 
 /**
- * Class that takes the project name of the web service project and parses it to generate the associated wsdl file name per the convention
- * @author djmijares
+ * Bunch of static methods that operate on a project name to get the result of the correct wsdl name
+ * @author jacobono
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
 class WsdlNameHelper {
@@ -21,17 +21,20 @@ class WsdlNameHelper {
      * @throws GradleException
      */
    public static String generateWsdlName(String projectName, Map nameRules = null) throws GradleException { 
-    if (!projectName.contains("-ws")) {
+
+    if (!projectName.contains("-ws"))
       throw new GradleException("${projectName} is not conforming to the convention, needs to be suffixed with '-ws' at the end at the very least.  Double check")
-    }
+
+    log.debug("Generating the WSDL name for project '{}'", projectName)
     def wsdlName = removeSuffix(projectName)
-    if(nameRules) { 
+
+    if(nameRules) // if there are any name rules, process them here
       wsdlName = applyNameRules(wsdlName, nameRules)
-    }
+
     wsdlName = convertDashedToCamelCase(wsdlName)
     wsdlName = appendService(wsdlName)
     wsdlName = capitalizeFirstLetter(wsdlName)
-
+    
     return wsdlName
   }
 
@@ -84,9 +87,9 @@ class WsdlNameHelper {
      */
   private static String applyNameRules(String wsdlName,Map nameRules) { 
     nameRules.each { abbrev, expansion ->
-      log.debug("applying rule {} -> {} on {}", abbrev, expansion, wsdlName)
+      log.debug("Applying rule '{}' -> '{}' on '{}'", abbrev, expansion, wsdlName)
       wsdlName = wsdlName.replace(abbrev, expansion)
-      log.debug("applying rule generates {}", wsdlName)
+      log.debug("Applying rule yields name of '{}'", wsdlName)
     }
     return wsdlName
   }

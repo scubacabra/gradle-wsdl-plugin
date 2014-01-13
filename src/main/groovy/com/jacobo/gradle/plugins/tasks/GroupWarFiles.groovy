@@ -26,11 +26,14 @@ import com.google.common.annotations.VisibleForTesting
 class GroupWarFiles extends DefaultTask {
   static final Logger log = Logging.getLogger(GroupWarFiles.class)
 
+  /**
+   * All dependencies for the WSDL of this project
+   */
   @Input
   List wsdlDependencies
 
   @TaskAction
-  void groupWsdlWarFiles() {
+  void groupWarFiles() {
     log.info("Grouping all WAR files by their common, shared, directories")
     project.wsdl.warFiles = this.groupWarFilesByCommonDirectories(getWsdlDependencies())
   }

@@ -45,14 +45,10 @@ class CopyWarFiles extends DefaultTask {
   @OutputDirectory
   File webServicesCopyDir
 
-  @TaskAction
-  void resolveRelativeWarFiles() {
-    copyWarFilesToOutputDir()
-  }
-
   /**
    * Iterate over all grouped war files, find the correct relative Path to copy into the the webServicesCopyDir
    */
+  @TaskAction
   @VisibleForTesting
   void copyWarFilesToOutputDir() {
     log.info("Copying all web service dependent documents into '{}'", getWebServicesCopyDir())
