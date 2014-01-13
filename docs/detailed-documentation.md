@@ -91,26 +91,47 @@ Slurp the document with Groovy's `XmlSlurper`
 *ALL* xsd dependencies are found under the root element of the document
 ```xsd
 <xsd>
-<xsd:import schemaLocation="some_RELATIVE_location"/>
-<xsd:include schemaLocation="some_RELATIVE_location_2"/>
-<other stuff after>
+   <xsd:import schemaLocation="some_RELATIVE_location"/>
+   <xsd:include schemaLocation="some_RELATIVE_location_2"/>
+   <other stuff after>
 </xsd>
 ```
 The only important parts are the `schemaLocation`'s. :)
-
+Slurp with doc.[import|include]
 ### Slurping WSDL Documents
 Wsdl documents find their wsdl imports at
 
 ```wsdl
-
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:tns="urn:helloWorld/sample/ibm/com"
+      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="HelloWorld"
+      targetNamespace="urn:helloWorld/sample/ibm/com">
+	  <wsdl:import namespace="urn:www.example.org:abstract" location="./abstract.wsdl" importType="wsdl"/>
+</wsdl:definitions>
 ```
-
-they find their xsd imports at
+Slurp with doc.import
+they find their xsd imports / includes
 
 ```wsdl
-
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:tns="urn:helloWorld/sample/ibm/com"
+      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="HelloWorld"
+      targetNamespace="urn:helloWorld/sample/ibm/com">
+	  <wsdl:types>
+         <xsd:schema targetNamespace="urn:helloWorld/sample/ibm/com"
+         xmlns:tns="urn:helloWorld/sample/ibm/com"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		   xmlns:hw="urn:helloWorld/sample/ibm/HelloWorld">
+		   <xsd:import namespace="urn:helloWorld/sample/ibm/HelloWorld" schemaLocation="../schema/HelloWorld/HelloWorld.xsd"/>
+		   <xsd:element name="hello" type="hw:helloType"/>
+		   <xsd:element name="helloResponse" type="hw:helloResponseType"/>
+	     </xsd:schema>
+	 </wsdl:types>
+</wsdl:definitions>
 ```
-
+So you would slurp these with doc.types.schema.[import|include]
 **XSD imports** are the same as for the xsd files themselves, but the parent container is not the root document, but deeper in the wsdl document.
 
 ## Slurper Objects
