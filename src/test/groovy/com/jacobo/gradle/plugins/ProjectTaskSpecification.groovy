@@ -10,8 +10,13 @@ class ProjectTaskSpecification extends BaseSpecification {
   def project
   def task
 
-  def setup() { 
-    project = ProjectBuilder.builder().build()
-    project.apply(plugin: "wsdl")
+  def projectAtDir(File dir, String applyPlugin) {
+    return ProjectBuilder.builder().withProjectDir(dir).build()
+    project.apply(plugin: applyPlugin)
+  }
+
+  def buildProject(String applyPlugin) {
+    return ProjectBuilder.builder().build()
+    project.apply(plugin: applyPlugin)
   }
 }
