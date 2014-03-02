@@ -1,6 +1,6 @@
 package com.jacobo.gradle.plugins.convert
 
-interface ProjectNameConverter {
+interface NameConverter {
   
   /**
    * Project Name is converted in a specific way to an appropriate string
