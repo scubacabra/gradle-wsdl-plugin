@@ -12,6 +12,8 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 
+import com.jacobo.gradle.plugins.ant.AntWsImport
+
 /**
  * Parses the wsdl file with wsimport ant task, version 2.1, implementation 2.1.5
  * Can access jaxb episode binding folders and user listed episode bindings bound at task execution time
@@ -28,20 +30,6 @@ class ParseWsdl extends DefaultTask {
   File wsdlFile
 
   /**
-   * ant wsimport parameter flags
-   * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
-   */
-  @Input
-  boolean verbose, keep, xnocompile, fork, xdebug
-
-  /**
-   * ant wsimport parameters
-   * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
-   */
-  @Input
-  String target, wsdlLocation
-
-  /**
    * ant wsimport parameter -- where to place generated source
    * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
    */
@@ -55,31 +43,12 @@ class ParseWsdl extends DefaultTask {
   File episodeDirectory
 
   /**
-   * list of specific episode file NAMES ONLY, to get from episode directory
+   * wsimport service executor
    */
-  @Input
-  List episodes
+  AntExecutor wsimport
 
   @TaskAction
-  void parseWsdl() { 
-    log.info("parsing wsdl...\n wsdl path is {} ...\n destination directory is {}", getWsdl(), getDestination())
-    
-    ant.taskdef (name : 'wsimport', classname: 'com.sun.tools.ws.ant.WsImport', classpath: project.configurations[WsdlPlugin.WSDL_CONFIGURATION_NAME].asPath)
-
-    ant.wsimport (
-    wsdl            : getWsdl().path,
-    verbose         : getVerbose(),
-    sourcedestdir   : getDestinationDirectory().path,
-    keep            : getKeep(),
-    wsdlLocation    : getWsdlLocation(),
-    xnocompile      : getXnocompile(),
-    fork            : getFork(),
-    xdebug          : getXdebug(),
-    target          : getTarget()) {
-      getEpisodes().each { episode ->
-	log.debug("binding with file {}.episode in path {}", episode, getEpisodeDirectory().path)
-	binding(dir : getEpisodeDirectory().path, includes : "${episode}.episode")
-      }
-    }
+  void start() {
+    wsimport.execute()
   }
 }
