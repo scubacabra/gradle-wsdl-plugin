@@ -11,12 +11,12 @@ class ProjectTaskSpecification extends BaseSpecification {
   def task
 
   def projectAtDir(File dir, String applyPlugin) {
-    return ProjectBuilder.builder().withProjectDir(dir).build()
+    project = ProjectBuilder.builder().withProjectDir(dir).build()
     project.apply(plugin: applyPlugin)
   }
 
   def buildProject(String applyPlugin) {
-    return ProjectBuilder.builder().build()
+    project = ProjectBuilder.builder().build()
     project.apply(plugin: applyPlugin)
   }
 }
