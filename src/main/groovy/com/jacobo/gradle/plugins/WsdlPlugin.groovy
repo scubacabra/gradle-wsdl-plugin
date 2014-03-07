@@ -12,7 +12,7 @@ import org.gradle.api.tasks.bundling.War
 
 import org.gradle.api.plugins.JavaPlugin
 
-import com.jacobo.gradle.plugins.tasks.War
+import com.jacobo.gradle.plugins.tasks.WsdlWar
 import com.jacobo.gradle.plugins.tasks.WsdlWsImport
 
 /**
@@ -20,9 +20,9 @@ import com.jacobo.gradle.plugins.tasks.WsdlWsImport
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
 class WsdlPlugin implements Plugin<Project> {
-  static final String WSDL_PLUGIN_TASK_GROUP			 = 'jaxws'
-  static final String WSIMPORT_TASK_NAME		 = 'wsimport'
-  static final String WSDL_CONFIGURATION_NAME			 = 'jaxws'
+  static final String WSDL_PLUGIN_TASK_GROUP = 'jaxws'
+  static final String WSIMPORT_TASK_NAME = 'wsimport'
+  static final String WSDL_CONFIGURATION_NAME = 'jaxws'
 
   private WsdlPluginExtension extension
 
@@ -75,7 +75,7 @@ class WsdlPlugin implements Plugin<Project> {
 
    private void configureWarTask(final Project project) {
      Task oldWar = project.tasks.getByName('war')
-     Task wsdlWar = project.tasks.replace(WarPlugin.WAR_TASK_NAME, War)
+     Task wsdlWar = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWar)
      wsdlWar.group = oldWar.group
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
      wsdlWar.conventionMapping.wsdlFolder             = { project.wsdl.wsdlFolder }
