@@ -57,7 +57,7 @@ class WsdlWsImport extends DefaultTask {
 
     wsdlFile = converter.convert(project.name,
 				 new File(project.rootDir,
-					  project.wsdl.episodeFolder))
+					  project.wsdl.wsdlFolder))
     wsimport.execute(ant,
 		     ["wsdl":wsdlFile, "extension":project.wsdl.wsimport,
 		      "classpath": wsdlConfiguration.asPath])

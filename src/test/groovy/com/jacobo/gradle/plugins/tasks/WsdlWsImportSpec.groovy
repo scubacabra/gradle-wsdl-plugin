@@ -13,7 +13,6 @@ class WsdlWsImportSpec extends ProjectTaskSpecification {
   def antExecutor = Mock(AntExecutor)
   def someWsdl = new File("some-wsdl.wsdl")
   
-
   def setup() {
     buildProject("wsdl")
     task = project.tasks[WsdlPlugin.WSIMPORT_TASK_NAME] as WsdlWsImport
@@ -33,7 +32,7 @@ class WsdlWsImportSpec extends ProjectTaskSpecification {
     then:
     1 * nameConverter.convert(project.name,
 			  new File(project.rootDir,
-				   project.wsdl.episodeFolder)) >> someWsdl
+				   project.wsdl.wsdlFolder)) >> someWsdl
     1 * antExecutor.execute(_ as AntBuilder, ["wsdl": someWsdl,
 					      "extension": project.wsdl.wsimport,
 					      "classpath": classpath.asPath])
