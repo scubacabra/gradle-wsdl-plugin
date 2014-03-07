@@ -1,18 +1,16 @@
 package com.jacobo.gradle.plugins.tasks
 
-import com.jacobo.gradle.plugins.WsdlPlugin
-
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 
-import com.jacobo.gradle.plugins.ant.AntWsImport
+import com.jacobo.gradle.plugins.WsdlPlugin
+import com.jacobo.gradle.plugins.ant.AntExecutor
+import com.jacobo.gradle.plugins.convert.NameToFileConverter
 
 /**
  * Parses the wsdl file with wsimport ant task, version 2.1, implementation 2.1.5
@@ -20,13 +18,12 @@ import com.jacobo.gradle.plugins.ant.AntWsImport
  * @author djmijares
  * Created: Mon Jan 07 18:08:42 EST 2013
  */
-class ParseWsdl extends DefaultTask { 
-  static final Logger log = Logging.getLogger(ParseWsdl.class)
+class WsdlWsImport extends DefaultTask { 
+  static final Logger log = Logging.getLogger(WsdlWsImport.class)
 
   /**
    * Wsdl file reference (absolute)
    */
-  @InputFile
   File wsdlFile
 
   /**
@@ -43,12 +40,26 @@ class ParseWsdl extends DefaultTask {
   File episodeDirectory
 
   /**
+   * project name to wsdl file converter service
+   */
+  NameToFileConverter converter
+
+  /**
    * wsimport service executor
    */
   AntExecutor wsimport
 
   @TaskAction
   void start() {
-    wsimport.execute()
+    def wsdlConfiguration = project.configurations[
+      WsdlPlugin.WSDL_CONFIGURATION_NAME
+    ]
+
+    wsdlFile = converter.convert(project.name,
+				 new File(project.rootDir,
+					  project.wsdl.episodeFolder))
+    wsimport.execute(ant,
+		     ["wsdl":wsdlFile, "extension":project.wsdl.wsimport,
+		      "classpath": wsdlConfiguration.asPath])
   }
 }
