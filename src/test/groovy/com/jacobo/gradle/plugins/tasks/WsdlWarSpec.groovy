@@ -21,7 +21,7 @@ class WsdlWarSpec extends ProjectTaskSpecification {
   def setup() {
     buildProject("wsdl")
     task = project.tasks[WarPlugin.WAR_TASK_NAME] as WsdlWar
-    task.with { 
+    task.with {
       converter = nameConverter
       dependencyResolver = depResolver
       childrenPathResolver = pathResolver
