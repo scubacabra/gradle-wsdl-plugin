@@ -24,15 +24,13 @@ class WsdlWsImportSpec extends ProjectTaskSpecification {
     task.with { 
       converter = nameConverter
       wsimport = antExecutor
+      wsdlFile = someWsdl
     }
 
     when:
     task.start()
 
     then:
-    1 * nameConverter.convert(project.name,
-			  new File(project.rootDir,
-				   project.wsdl.wsdlFolder)) >> someWsdl
     1 * antExecutor.execute(_ as AntBuilder, ["wsdl": someWsdl,
 					      "extension": project.wsdl.wsimport,
 					      "classpath": classpath.asPath])

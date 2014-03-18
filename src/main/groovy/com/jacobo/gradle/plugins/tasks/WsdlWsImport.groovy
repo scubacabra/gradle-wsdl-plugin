@@ -5,12 +5,13 @@ import org.gradle.api.logging.Logger
 
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.DefaultTask
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.OutputDirectory
 
 import com.jacobo.gradle.plugins.WsdlPlugin
 import com.jacobo.gradle.plugins.ant.AntExecutor
-import com.jacobo.gradle.plugins.convert.NameToFileConverter
 
 /**
  * Parses the wsdl file with wsimport ant task, version 2.1, implementation 2.1.5
@@ -24,7 +25,17 @@ class WsdlWsImport extends DefaultTask {
   /**
    * Wsdl file reference (absolute)
    */
+  @InputFile
   File wsdlFile
+
+  /**
+   * user episode Files to bind to
+   */
+  @InputFiles
+  def episodeFiles
+
+  @InputFiles
+  def wsdlDependencies
 
   /**
    * ant wsimport parameter -- where to place generated source
@@ -32,17 +43,6 @@ class WsdlWsImport extends DefaultTask {
    */
   @OutputDirectory
   File destinationDirectory
-
-  /**
-   * Directory where to find episode files
-   */
-  @InputDirectory
-  File episodeDirectory
-
-  /**
-   * project name to wsdl file converter service
-   */
-  NameToFileConverter converter
 
   /**
    * wsimport service executor
@@ -54,12 +54,10 @@ class WsdlWsImport extends DefaultTask {
     def wsdlConfiguration = project.configurations[
       WsdlPlugin.WSDL_CONFIGURATION_NAME
     ]
-
-    wsdlFile = converter.convert(project.name,
-				 new File(project.rootDir,
-					  project.wsdl.wsdlFolder))
+    
+    log.info("doing it on '{}'", getWsdlFile())
     wsimport.execute(ant,
-		     ["wsdl":wsdlFile, "extension":project.wsdl.wsimport,
-		      "classpath": wsdlConfiguration.asPath])
+    		     ["wsdl":wsdlFile, "extension":project.wsdl.wsimport,
+    		      "classpath": wsdlConfiguration.asPath])
   }
 }

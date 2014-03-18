@@ -36,9 +36,9 @@ class WsdlPlugin implements Plugin<Project> {
      configureWsdlExtension(project)
      configureWsdlConfiguration(project)
      configureWarTask(project)
-     configureWsImportTask(project)
      def convertTask = configureConversionTask(project)
      def resolverTask = configureResolverTask(project, convertTask)
+     configureWsImportTask(project, resolverTask)
    }
 
    private void configureWsdlExtension(final Project project) { 
@@ -91,11 +91,17 @@ class WsdlPlugin implements Plugin<Project> {
      resolver.conventionMapping.wsdlFile = { project.wsdl.wsdlFile }
      return resolver
    }
+
+   private configureWsImportTask(final Project project, final Task resolverTask) {
      Task pwt = project.tasks.create(WSIMPORT_TASK_NAME, WsdlWsImport)
+     pwt.dependsOn(resolverTask)
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
-     pwt.conventionMapping.destinationDirectory	= { project.file(new File(project.projectDir, project.wsdl.wsimport.sourceDestinationDirectory)) }
-     pwt.conventionMapping.episodeDirectory     = { project.file(new File(project.rootDir, project.wsdl.episodeFolder)) }
+     pwt.conventionMapping.wsdlFile	= { project.wsdl.wsdlFile }
+     pwt.conventionMapping.wsdlDependencies  = { project.wsdl.wsdlDependencies }
+     pwt.conventionMapping.destinationDirectory	= { project.file(project.wsdl.wsimport.sourceDestinationDirectory) }
+     pwt.conventionMapping.episodeFiles	= { project.files(project.wsdl.wsimport.episodes) }
+     // pwt.conventionMapping.episodeDirectory     = { project.file(new File(project.rootDir, project.wsdl.episodeFolder)) }
    }
 
    private void configureWarTask(final Project project) {
