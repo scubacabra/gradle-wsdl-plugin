@@ -2,7 +2,6 @@ buildscript{
   apply from: 'buildscript.gradle'
 }
 
-apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'groovy'
 apply from: 'cobertura.gradle'
@@ -14,9 +13,6 @@ repositories {
     url 'http://dl.bintray.com/content/djmijares/gradle-plugins/'
   }
 }
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
 
 group = 'com.jacobo.gradle'
 
