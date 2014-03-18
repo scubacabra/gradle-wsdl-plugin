@@ -1,8 +1,8 @@
 package com.jacobo.gradle.plugins.extension
 
-import com.jacobo.gradle.plugins.model.GroupedWarFiles
-
 import org.gradle.api.Project
+
+import org.gradle.api.file.FileCollection
 
 /**
  * Contains @see WsdlPlugin default settings
@@ -18,47 +18,20 @@ class WsdlPluginExtension {
    */
   WsImportExtension wsImport = new WsImportExtension()
 
-    /**
-     *  wsdl folder name, under root Directory
-     */
+  /**
+   *  wsdl folder name, under root Directory
+   */
   String wsdlFolder
 
-    /**
-     *  schema folder name, under root Directory
-     */
+  /**
+   *  schema folder name, under root Directory
+   */
   String schemaFolder
 
-    /**
-     *  episodes folder name, under root Directory
-     */
+  /**
+   *  episodes folder name, under root Directory
+   */
   String episodeFolder
-
-    /**
-     * Output dir, in build directory for wsdl and schema dependencies to be copied to
-     */
-  String webServiceCopyDir
-
-    /**
-     *  wsdl file name, no path
-     */
-  String wsdlFileName
-
-    /**
-     *  wsdl file, full path
-     */
-  File wsdlPath
-
-  /**
-   * Absolute Files of all wsdl dependencies
-   * @note even having a wsdl with no dependencies, the Web Service is still dependnent on it's sole WSDL
-   */
-  List wsdlDependencies
-
-  /**
-   * War files grouped by common folder
-   * @note again, at the minimum, this has at least one object, the web service must depend on it's WSDL
-   */
-  List<GroupedWarFiles> warFiles
 
   /**
    * Name rules to convert project name to an appropriate wsdl name
@@ -67,16 +40,19 @@ class WsdlPluginExtension {
   Map<String, String> nameRules
 
   /**
+   * projects wsdl file
+   */
+  File wsdlFile
+
+  /**
+   * Wsdl dependencies files (including projects WSDL itself)
+   */
+  FileCollection wsdlDependencies
+
+  /**
    * Constructor
    */
   WsdlPluginExtension(Project project) {
     this.project = project
-  }
-
-  /**
-   * set wsdl Path
-   */
-  void setWsdlPath() { 
-    this.wsdlPath = new File(project.rootDir, wsdlFolder + File.separator + wsdlFileName + ".wsdl")
   }
 }
