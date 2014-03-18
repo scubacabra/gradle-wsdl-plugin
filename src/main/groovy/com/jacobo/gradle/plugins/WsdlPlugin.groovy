@@ -12,6 +12,7 @@ import org.gradle.api.tasks.bundling.War
 
 import org.gradle.api.plugins.JavaPlugin
 
+import com.jacobo.gradle.plugins.tasks.ConvertProjNameToWsdl
 import com.jacobo.gradle.plugins.tasks.WsdlWar
 import com.jacobo.gradle.plugins.tasks.WsdlWsImport
 
@@ -22,6 +23,7 @@ import com.jacobo.gradle.plugins.tasks.WsdlWsImport
 class WsdlPlugin implements Plugin<Project> {
   static final String WSDL_PLUGIN_TASK_GROUP = 'jaxws'
   static final String WSIMPORT_TASK_NAME = 'wsimport'
+  static final String CONVERSION_TASK_NAME = 'convertProjNameToWsdlFile'
   static final String WSDL_CONFIGURATION_NAME = 'jaxws'
 
   private WsdlPluginExtension extension
@@ -33,6 +35,7 @@ class WsdlPlugin implements Plugin<Project> {
      configureWsdlConfiguration(project)
      configureWarTask(project)
      configureWsImportTask(project)
+     def convertTask = configureConversionTask(project)
    }
 
    private void configureWsdlExtension(final Project project) { 
@@ -65,7 +68,15 @@ class WsdlPlugin implements Plugin<Project> {
      }
    }
 
-   private configureWsImportTask(final Project project) {
+   private configureConversionTask(final Project project) {
+     Task convert = project.tasks.create(CONVERSION_TASK_NAME, ConvertProjNameToWsdl)
+     convert.description = "convert the project name via convention to the projects wsdl file"
+     convert.group = WSDL_PLUGIN_TASK_GROUP
+     convert.conventionMapping.projectName	= { project.name }
+     convert.conventionMapping.wsdlDirectory	= { project.file([project.rootDir.path, project.wsdl.wsdlFolder].join(File.separator)) }
+     convert.conventionMapping.converter	= { new ProjectToWsdlFileConverter() }
+     return convert
+   }
      Task pwt = project.tasks.create(WSIMPORT_TASK_NAME, WsdlWsImport)
      pwt.description = "parse the wsdl with jaxws and wsimport"
      pwt.group = WSDL_PLUGIN_TASK_GROUP
