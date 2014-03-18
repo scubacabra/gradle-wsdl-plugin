@@ -35,9 +35,9 @@ class WsdlPlugin implements Plugin<Project> {
      project.plugins.apply(WarPlugin)
      configureWsdlExtension(project)
      configureWsdlConfiguration(project)
-     configureWarTask(project)
      def convertTask = configureConversionTask(project)
      def resolverTask = configureResolverTask(project, convertTask)
+     configureWarTask(project, resolverTask)
      configureWsImportTask(project, resolverTask)
    }
 
@@ -104,15 +104,17 @@ class WsdlPlugin implements Plugin<Project> {
      // pwt.conventionMapping.episodeDirectory     = { project.file(new File(project.rootDir, project.wsdl.episodeFolder)) }
    }
 
-   private void configureWarTask(final Project project) {
+   private void configureWarTask(final Project project, final Task resolverTask) {
      Task oldWar = project.tasks.getByName('war')
      Task wsdlWar = project.tasks.replace(WarPlugin.WAR_TASK_NAME, WsdlWar)
      wsdlWar.group = oldWar.group
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
-     wsdlWar.conventionMapping.wsdlFolder             = { project.wsdl.wsdlFolder }
-     wsdlWar.conventionMapping.schemaFolder           = { project.wsdl.schemaFolder }
-     wsdlWar.conventionMapping.wsdlDirectory          = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.wsdlFolder)) }
-     wsdlWar.conventionMapping.schemaDirectory        = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.schemaFolder)) }
-     project.build.dependsOn(wsdlWar)
+     wsdlWar.dependsOn(resolverTask)
+     wsdlWar.conventionMapping.wsdlDependencies  = { project.wsdl.wsdlDependencies }
+     // wsdlWar.conventionMapping.wsdlFolder             = { project.wsdl.wsdlFolder }
+     // wsdlWar.conventionMapping.schemaFolder           = { project.wsdl.schemaFolder }
+     // wsdlWar.conventionMapping.wsdlDirectory          = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.wsdlFolder)) }
+     // wsdlWar.conventionMapping.schemaDirectory        = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.schemaFolder)) }
+     // project.build.dependsOn(wsdlWar)
    }
 }
