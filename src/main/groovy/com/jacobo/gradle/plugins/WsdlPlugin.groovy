@@ -13,6 +13,7 @@ import org.gradle.api.tasks.bundling.War
 import org.gradle.api.plugins.JavaPlugin
 
 import com.jacobo.gradle.plugins.tasks.ConvertProjNameToWsdl
+import com.jacobo.gradle.plugins.tasks.WsdlResolveDependencies
 import com.jacobo.gradle.plugins.tasks.WsdlWar
 import com.jacobo.gradle.plugins.tasks.WsdlWsImport
 
@@ -24,6 +25,7 @@ class WsdlPlugin implements Plugin<Project> {
   static final String WSDL_PLUGIN_TASK_GROUP = 'jaxws'
   static final String WSIMPORT_TASK_NAME = 'wsimport'
   static final String CONVERSION_TASK_NAME = 'convertProjNameToWsdlFile'
+  static final String RESOLVE_DEPENDENCIES_TASK_NAME = 'resolveWsdlDependencies'
   static final String WSDL_CONFIGURATION_NAME = 'jaxws'
 
   private WsdlPluginExtension extension
@@ -36,6 +38,7 @@ class WsdlPlugin implements Plugin<Project> {
      configureWarTask(project)
      configureWsImportTask(project)
      def convertTask = configureConversionTask(project)
+     def resolverTask = configureResolverTask(project, convertTask)
    }
 
    private void configureWsdlExtension(final Project project) { 
@@ -76,6 +79,17 @@ class WsdlPlugin implements Plugin<Project> {
      convert.conventionMapping.wsdlDirectory	= { project.file([project.rootDir.path, project.wsdl.wsdlFolder].join(File.separator)) }
      convert.conventionMapping.converter	= { new ProjectToWsdlFileConverter() }
      return convert
+   }
+
+   private configureResolverTask(final Project project, final Task convertTask) {
+     Task resolver = project.tasks.create(RESOLVE_DEPENDENCIES_TASK_NAME,
+					  WsdlResolveDependencies)
+     resolver.description = "resolve all the wsdl dependencies for this project"
+     resolver.group = WSDL_PLUGIN_TASK_GROUP
+     resolver.dependsOn(convertTask)
+     resolver.conventionMapping.dependencyResolver = { null }
+     resolver.conventionMapping.wsdlFile = { project.wsdl.wsdlFile }
+     return resolver
    }
      Task pwt = project.tasks.create(WSIMPORT_TASK_NAME, WsdlWsImport)
      pwt.description = "parse the wsdl with jaxws and wsimport"
