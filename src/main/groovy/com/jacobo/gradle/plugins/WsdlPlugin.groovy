@@ -1,6 +1,9 @@
 package com.jacobo.gradle.plugins
 
 import com.jacobo.gradle.plugins.extension.WsdlPluginExtension
+import com.google.inject.Guice
+import com.google.inject.Injector
+import com.gradle.plugins.jacobo.schema.DocSlurperModule
 import com.jacobo.gradle.plugins.extension.WsImportExtension
 
 import org.gradle.api.Project
@@ -12,6 +15,7 @@ import org.gradle.api.tasks.bundling.War
 
 import org.gradle.api.plugins.JavaPlugin
 
+import com.jacobo.gradle.plugins.guice.WsdlPluginModule
 import com.jacobo.gradle.plugins.tasks.ConvertProjNameToWsdl
 import com.jacobo.gradle.plugins.tasks.WsdlResolveDependencies
 import com.jacobo.gradle.plugins.tasks.WsdlWar
@@ -33,6 +37,7 @@ class WsdlPlugin implements Plugin<Project> {
    void apply (Project project) {
      project.plugins.apply(JavaPlugin)
      project.plugins.apply(WarPlugin)
+     Injector injector = Guice.createInjector([new WsdlPluginModule(), new DocSlurperModule()])
      configureWsdlExtension(project)
      configureWsdlConfiguration(project)
      def convertTask = configureConversionTask(project)
