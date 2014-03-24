@@ -16,6 +16,9 @@ configurations {
 task integTest(type: Test, dependsOn: 'test') {
   testClassesDir = sourceSets.integTest.output.classesDir
   classpath = sourceSets.integTest.runtimeClasspath
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
 }
 
 check.dependsOn(integTest)
