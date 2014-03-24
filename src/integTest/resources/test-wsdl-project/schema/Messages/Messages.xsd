@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.example.org"
+            targetNamespace="http://www.example.org"
+            elementFormDefault="qualified">
+  <xsd:complexType name="sigRequestMessage">
+    <xsd:sequence>
+      <xsd:element name="publicKey" type="string"/>
+      <xsd:element name="privateKey" type="string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="complexType1">
+    <xsd:sequence>
+      <xsd:element name="Signature" type="string"/>
+      <xsd:element name="expiration" type="timeDate"/>
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>
