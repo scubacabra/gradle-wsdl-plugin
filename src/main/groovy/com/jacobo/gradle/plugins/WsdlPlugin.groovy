@@ -118,10 +118,7 @@ class WsdlPlugin implements Plugin<Project> {
      wsdlWar.description = oldWar.description + " Also bundles the xsd and wsdl files this service depends on"
      wsdlWar.dependsOn(resolverTask)
      wsdlWar.conventionMapping.wsdlDependencies  = { project.wsdl.wsdlDependencies }
-     // wsdlWar.conventionMapping.wsdlFolder             = { project.wsdl.wsdlFolder }
-     // wsdlWar.conventionMapping.schemaFolder           = { project.wsdl.schemaFolder }
-     // wsdlWar.conventionMapping.wsdlDirectory          = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.wsdlFolder)) }
-     // wsdlWar.conventionMapping.schemaDirectory        = { project.file(new File(new File(project.buildDir, project.wsdl.webServiceCopyDir), project.wsdl.schemaFolder)) }
-     // project.build.dependsOn(wsdlWar)
+     wsdlWar.conventionMapping.wsdlFolder = { project.file(new File(project.rootDir, project.wsdl.wsdlFolder)) }
+     wsdlWar.conventionMapping.schemaFolder = { project.file(new File(project.rootDir, project.wsdl.schemaFolder)) }
    }
 }
