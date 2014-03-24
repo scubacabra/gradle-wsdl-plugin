@@ -1,10 +1,14 @@
 package com.jacobo.gradle.plugins.ant
 
+import org.gradle.api.logging.Logging
+import org.gradle.api.logging.Logger
+
 import groovy.util.AntBuilder
 
 import com.jacobo.gradle.plugins.extension.WsImportExtension
 
 class AntWsImport implements AntExecutor {
+  static final Logger log = Logging.getLogger(AntWsImport.class)
 
   /**
    * run the ant wsimport task an #wsdl
@@ -12,15 +16,19 @@ class AntWsImport implements AntExecutor {
    * @param arguments a map of arguments to use in the ant file
    *   "wsdl"=> the file to parse with wsimport
    *   "extension" => WsImportExtension wsdl plugins wsimport extension for configuration
+   *   "destinationDir" => destinationDirectory for the wsimport output to go
    *   "classpath" => configuration path as String classpath for the ant task def as defined by the wsdl-configuration.asPath
+   *   "episodeFiles" => set of episode files (absolute paths) to bind to this wsimport action
    */
   public void execute(AntBuilder ant, Map<String, Object> arguments) {
     def wsdl = arguments["wsdl"]
     def extension = arguments["extension"]
+    def destinationDir = arguments["destinationDir"]
     def classpath = arguments["classpath"]
+    def episodeFiles = arguments["episodeFiles"]
 
     log.info("parsing wsdl '{}' with destination directory of '{}'",
-	     wsdl, extension.destinationDirectory)
+	     wsdl, destinationDir)
     
     ant.taskdef (name : 'wsimport',
 		 classname: 'com.sun.tools.ws.ant.WsImport',
@@ -28,18 +36,19 @@ class AntWsImport implements AntExecutor {
 
     ant.wsimport ( wsdl            : wsdl.path,
 		   verbose         : extension.verbose,
-		   sourcedestdir   : extenstion.destinationDirectory.path,
+		   sourcedestdir   : destinationDir.path,
 		   keep            : extension.keep,
 		   wsdlLocation    : extension.wsdlLocation,
 		   xnocompile      : extension.xnocompile,
 		   fork            : extension.fork,
 		   xdebug          : extension.xdebug,
 		   target          : extension.target
-		 ) { extension.episodes.each { episode ->
-		   log.debug("binding  '{}.episode' at location '{}'", episode,
-			     extension.episodeDirectory.path)
-		   binding(dir : extension.episodeDirectory.path,
-			   includes : "${episode}.episode") }
+		 )
+    { episodeFiles.each { episode ->
+      log.debug("binding with '{}' at location '{}'", episode.name, episode.path)
+      binding(dir : episode.parent, includes : "${episode.name}")
+      }
     }
+
   }
 }
