@@ -76,7 +76,7 @@ class WsdlPlugin implements Plugin<Project> {
      }
    }
 
-   private configureConversionTask(final Project project, def injector) {
+   private configureConversionTask(final Project project) {
      Task convert = project.tasks.create(CONVERSION_TASK_NAME,
 					 ConvertProjNameToWsdl)
      convert.description = "convert the project name via convention to the projects wsdl file"
