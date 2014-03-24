@@ -1,5 +1,7 @@
 package com.jacobo.gradle.plugins.resolve
 
+import com.google.inject.Inject
+
 import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 
@@ -12,6 +14,7 @@ class WsdlDependencyResolver implements DependencyResolver {
   Set<File> unresolvedFiles = [] as Set
   DocumentFactory documentFactory
 
+  @Inject
   WsdlDependencyResolver(DocumentFactory docFactory) {
     documentFactory = docFactory
   }
