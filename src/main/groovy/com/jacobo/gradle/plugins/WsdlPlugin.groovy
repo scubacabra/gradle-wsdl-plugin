@@ -76,12 +76,13 @@ class WsdlPlugin implements Plugin<Project> {
      }
    }
 
-   private configureConversionTask(final Project project) {
-     Task convert = project.tasks.create(CONVERSION_TASK_NAME, ConvertProjNameToWsdl)
+   private configureConversionTask(final Project project, def injector) {
+     Task convert = project.tasks.create(CONVERSION_TASK_NAME,
+					 ConvertProjNameToWsdl)
      convert.description = "convert the project name via convention to the projects wsdl file"
      convert.group = WSDL_PLUGIN_TASK_GROUP
      convert.conventionMapping.projectName	= { project.name }
-     convert.conventionMapping.wsdlDirectory	= { project.file([project.rootDir.path, project.wsdl.wsdlFolder].join(File.separator)) }
+     convert.conventionMapping.wsdlDirectory	= { project.file(new File(project.rootDir, project.wsdl.wsdlFolder)) }
      convert.conventionMapping.converter	= { new ProjectToWsdlFileConverter() }
      return convert
    }
