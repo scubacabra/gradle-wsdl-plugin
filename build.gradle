@@ -51,6 +51,12 @@ task('uninstallPlugin', type: Delete) {
   delete("/${gradleInstallDir}/lib/plugins/${unversionedJar.archiveName}")
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 uploadArchives {
   repositories {
     mavenDeployer {
