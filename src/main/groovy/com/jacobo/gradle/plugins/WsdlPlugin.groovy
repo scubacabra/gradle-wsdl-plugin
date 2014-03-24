@@ -41,7 +41,7 @@ class WsdlPlugin implements Plugin<Project> {
      configureWsdlExtension(project)
      configureWsdlConfiguration(project)
      def convertTask = configureConversionTask(project)
-     def resolverTask = configureResolverTask(project, convertTask)
+     def resolverTask = configureResolverTask(project, convertTask, injector)
      configureWarTask(project, resolverTask)
      configureWsImportTask(project, resolverTask)
    }
@@ -87,14 +87,15 @@ class WsdlPlugin implements Plugin<Project> {
      return convert
    }
 
-   private configureResolverTask(final Project project, final Task convertTask) {
+   private configureResolverTask(final Project project, final Task convertTask,
+				 def injector) {
      Task resolver = project.tasks.create(RESOLVE_DEPENDENCIES_TASK_NAME,
 					  WsdlResolveDependencies)
      resolver.description = "resolve all the wsdl dependencies for this project"
      resolver.group = WSDL_PLUGIN_TASK_GROUP
      resolver.dependsOn(convertTask)
-     resolver.conventionMapping.dependencyResolver = { null }
      resolver.conventionMapping.wsdlFile = { project.wsdl.wsdlFile }
+     resolver.conventionMapping.dependencyResolver = { injector.getInstance(WsdlDependencyResolver.class) }
      return resolver
    }
 

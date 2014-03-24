@@ -1,12 +1,9 @@
 package com.jacobo.gradle.plugins.tasks
 
-import org.gradle.api.tasks.bundling.War
-
-import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.InputFile
-
-import org.gradle.api.logging.Logging
+import org.gradle.api.DefaultTask
 import org.gradle.api.logging.Logger
+import org.gradle.api.logging.Logging
+import org.gradle.api.tasks.TaskAction
 
 import com.jacobo.gradle.plugins.resolve.DependencyResolver
 
@@ -15,13 +12,12 @@ import com.jacobo.gradle.plugins.resolve.DependencyResolver
  *
  * @author djmijares
  */
-class WsdlResolveDependencies extends War {
-  static final Logger log = Logging.getLogger(War.class)
+class WsdlResolveDependencies extends DefaultTask {
+  static final Logger log = Logging.getLogger(WsdlResolveDependencies.class)
 
   /**
    * wsdl file (absolute path)
    */
-  @InputFile
   File wsdlFile
 
   /**
@@ -31,7 +27,7 @@ class WsdlResolveDependencies extends War {
 
   @TaskAction
   void start() {
-    def wsdlDependencies = dependencyResolver.resolveDependencies(getWsdlFile())
+    def wsdlDependencies = getDependencyResolver().resolveDependencies(getWsdlFile())
     project.wsdl.wsdlDependencies = project.files(wsdlDependencies)
   }
 }
