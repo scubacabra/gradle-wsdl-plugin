@@ -108,7 +108,7 @@ class WsdlPlugin implements Plugin<Project> {
      pwt.conventionMapping.wsdlDependencies  = { project.wsdl.wsdlDependencies }
      pwt.conventionMapping.destinationDirectory	= { project.file(project.wsdl.wsimport.sourceDestinationDirectory) }
      pwt.conventionMapping.episodeFiles	= { project.files(project.wsdl.wsimport.episodes) }
-     // pwt.conventionMapping.episodeDirectory     = { project.file(new File(project.rootDir, project.wsdl.episodeFolder)) }
+     pwt.conventionMapping.antExecutor	= { new AntWsImport() }
    }
 
    private void configureWarTask(final Project project, final Task resolverTask) {
