@@ -4,8 +4,7 @@ dependencies {
   compile project(":hello-world-import-schema")
 }
 
-wsdl { 
-  wsimport { 
-    episodes = ["urn-helloWorld-sample-ibm-HelloWorldImport", "urn-helloWorld-sample-ibm-TestImport"]
-  }
+wsdl {
+  episodes = ["urn-helloWorld-sample-ibm-HelloWorldImport.episode",
+	      "urn-helloWorld-sample-ibm-TestImport.episode"]
 }
