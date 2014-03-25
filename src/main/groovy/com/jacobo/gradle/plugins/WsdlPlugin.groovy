@@ -52,6 +52,7 @@ class WsdlPlugin implements Plugin<Project> {
        schemaFolder  = "schema"
        episodeFolder = "schema/episodes"
        nameRules     = [:]
+       episodes      = []
      }
 
      def wsimportExtension = project.wsdl.extensions.create("wsimport", WsImportExtension)

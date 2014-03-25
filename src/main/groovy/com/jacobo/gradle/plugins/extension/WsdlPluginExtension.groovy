@@ -54,7 +54,7 @@ class WsdlPluginExtension {
    * Using these files means that already generated schema artifacts previously done with xjc.
    * examples: ["some-episode.episode", "another.episode"]
    */
-  List episodes = []
+  List episodes
 
   /**
    * Constructor
