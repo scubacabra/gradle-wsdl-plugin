@@ -48,9 +48,10 @@ class WsdlPlugin implements Plugin<Project> {
    private void configureWsdlExtension(final Project project) { 
      extension = project.extensions.create("wsdl", WsdlPluginExtension, project)
      extension.with { 
-       wsdlFolder		= "wsdl"
-       schemaFolder		= "schema"
-       episodeFolder		= "schema/episodes"
+       wsdlFolder    = "wsdl"
+       schemaFolder  = "schema"
+       episodeFolder = "schema/episodes"
+       nameRules     = [:]
      }
 
      def wsimportExtension = project.wsdl.extensions.create("wsimport", WsImportExtension)
@@ -81,6 +82,7 @@ class WsdlPlugin implements Plugin<Project> {
      convert.group = WSDL_PLUGIN_TASK_GROUP
      convert.conventionMapping.projectName	= { project.name }
      convert.conventionMapping.wsdlDirectory	= { project.file(new File(project.rootDir, project.wsdl.wsdlFolder)) }
+     convert.conventionMapping.nameRules	= { project.wsdl.nameRules }
      convert.conventionMapping.converter	= { new ProjectToWsdlFileConverter() }
      return convert
    }

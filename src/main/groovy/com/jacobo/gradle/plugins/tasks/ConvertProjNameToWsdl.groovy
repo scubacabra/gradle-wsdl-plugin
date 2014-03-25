@@ -14,6 +14,8 @@ class ConvertProjNameToWsdl extends DefaultTask {
 
   File wsdlDirectory
 
+  Map<String, String> nameRules
+  
   /**
    * project name to wsdl file converter service
    */
@@ -23,8 +25,9 @@ class ConvertProjNameToWsdl extends DefaultTask {
   void start() {
     def projectName = getProjectName()
     def wsdlDir = getWsdlDirectory()
+    def nameRules = getNameRules()
     log.info("looking for wsdl in directory '{}'", wsdlDir)
-    def wsdlFile = getConverter().convert(projectName, wsdlDir)
+    def wsdlFile = getConverter().convert(projectName, wsdlDir, nameRules)
     log.info("converted '{}' to wsdl file '{}'", projectName, wsdlFile)
     project.wsdl.wsdlFile = wsdlFile
   }

@@ -25,7 +25,22 @@ class ConvertProjNameToWsdlSpec extends ProjectTaskSpecification {
     task.start()
 
     then:
-    1 * nameConverter.convert(project.name, new File("wsdlDir")) >> wsdlFile
+    1 * nameConverter.convert(project.name, new File("wsdlDir"), [:]) >> wsdlFile
+    project.wsdl.wsdlFile == wsdlFile
+  }
+
+  def "convert project name to wsdl File, with applied name rules"() {
+    given: "set up project's name rules"
+    def nameRules = ['rule1':'expansion1', 'rule2':'expansion2',
+		     'rule3':'expansion3']
+    project.wsdl.nameRules = nameRules
+
+    when:
+    task.start()
+
+    then:
+    1 * nameConverter.convert(project.name, new File("wsdlDir"),
+			      nameRules) >> wsdlFile
     project.wsdl.wsdlFile == wsdlFile
   }
 }
