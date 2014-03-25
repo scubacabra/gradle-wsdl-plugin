@@ -24,6 +24,35 @@ class ProjectToWsdlFileConverterSpec extends BaseSpecification {
   }
 
   @Unroll
+  def "apply name rule '#abbreviation' -> '#expansion' on '#projectName' -- '#result'" () {
+    given:
+    def nameRules = [(abbreviation) : expansion]
+
+    expect:
+    result == converter.convert(projectName, nameRules)
+
+    where:
+    abbreviation | expansion	    | projectName	      || result
+    "-dm"	 | "DataManagement" | "spock-star-trek-dm-ws" || "SpockStarTrekDataManagementService"
+    "-tj"	 | "TraderJoes"	    | "srv-legend-tj-ws"      || "SrvLegendTraderJoesService"
+    "-wf"	 | "WholeFoods"	    | "boy-band-wf-ws"	      || "BoyBandWholeFoodsService"
+  }
+
+  @Unroll
+  def "apply name rules '#nameRules' on '#projectName' -- '#result'" () {
+    expect:
+    result == converter.convert(projectName, nameRules)
+
+    where:
+    projectName			  || result
+    "spock-tj-star-trek-dm-wf-ws" || "SpockTraderJoesStarTrekDataManagementWholeFoodsService"
+    "spock-star-trek-dm-ty-ws"	  || "SpockStarTrekDataManagementTyService"
+    "spock-star-trek-ws"	  || "SpockStarTrekService"
+    "whole-foods-tj-ws"		  || "WholeFoodsTraderJoesService"
+    nameRules = ["-dm": "DataManagement", "-tj" : "TraderJoes", "-wf" : "WholeFoods"]
+  }
+
+  @Unroll
   def "project name '#projectName' is lacking -ws suffix, cannot be converted" () { 
     when:
     result = converter.convert(projectName)
@@ -40,7 +69,7 @@ class ProjectToWsdlFileConverterSpec extends BaseSpecification {
     def wsdlDir = getFileFromResourcePath("/wsdl")
 
     when:
-    def result = converter.convert('existing-ws', wsdlDir)
+    def result = converter.convert('existing-ws', wsdlDir, [:])
 
     then:
     result == getFileFromResourcePath("/wsdl/ExistingService.wsdl")
@@ -51,7 +80,7 @@ class ProjectToWsdlFileConverterSpec extends BaseSpecification {
     def wsdlDir = getFileFromResourcePath("/wsdl")
 
     when:
-    def result = converter.convert('non-existing-ws', wsdlDir)
+    def result = converter.convert('non-existing-ws', wsdlDir, [:])
 
     then:
     thrown(GradleException)

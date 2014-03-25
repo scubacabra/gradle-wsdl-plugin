@@ -19,7 +19,7 @@ class ProjectToWsdlFileConverter implements NameToFileConverter {
 			  "MUST be suffixed with a '-ws'"]
       throw new GradleException(errorStrings.sum())
     }
-    
+
     log.debug("converting '{}' to its WSDL name", projectName)
     def sansSuffix = projectName[0..-4] // remvoe suffix
 
@@ -41,12 +41,27 @@ class ProjectToWsdlFileConverter implements NameToFileConverter {
    * @param wsdlDirectory directory file resides in
    */
   @Override
-  public File convert(String projectName, File wsdlDirectory) {
-    def wsdlName = convert(projectName)
+  public File convert(String projectName, File wsdlDirectory, Map nameRules) {
+    def wsdlName = convert(projectName, nameRules)
     def wsdlFile = new File(wsdlDirectory, "${wsdlName}.wsdl")
     if (wsdlFile.exists()) return wsdlFile
     def exceptionMessage = ["File ${wsdlName}.wsdl does not exist at at default ",
 			    "location of '$wsdlDirectory'"]
     throw new GradleException(exceptionMessage.sum())
+  }
+
+  /**
+   * Converts a name to a file, applying user input name rules
+   * @param name name to convert
+   * @param nameRules map of name rules, containing abbreviations to find
+   *   the expansion to convert them to
+   */
+  @Override
+  public String convert(String projectName, Map nameRules) {
+    nameRules.each { abbrev, expansion ->
+      log.debug("Applying rule '{}' -> '{}' on '{}'", abbrev, expansion, projectName)
+      projectName = projectName.replace(abbrev, expansion)
+    }
+    return convert(projectName)
   }
 }
