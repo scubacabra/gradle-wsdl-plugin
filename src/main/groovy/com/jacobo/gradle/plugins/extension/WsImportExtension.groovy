@@ -50,15 +50,4 @@ class WsImportExtension {
      * argument for wsimport ant task, this value is populated in the generated code from wsimport.
      */
   String wsdlLocation
-
-    /**
-     * argument for wsimport ant task, contains the directory in the project structure where to find episode files
-     */
-  File episodeDirectory
-
-    /**
-     * argument for wsimport ant task, contains the specifc episodes to bind with, so that the wsimport task need not regenerate
-     * already generated schema artifacts previously done with jaxb and xjc.
-     */
-  List episodes = []
 }

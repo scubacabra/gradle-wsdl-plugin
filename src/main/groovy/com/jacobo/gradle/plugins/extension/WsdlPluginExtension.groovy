@@ -50,6 +50,13 @@ class WsdlPluginExtension {
   FileCollection wsdlDependencies
 
   /**
+   * List of episodes files (under the epiosde Folder) to bind into the wsimport task
+   * Using these files means that already generated schema artifacts previously done with xjc.
+   * examples: ["some-episode.episode", "another.episode"]
+   */
+  List episodes = []
+
+  /**
    * Constructor
    */
   WsdlPluginExtension(Project project) {
