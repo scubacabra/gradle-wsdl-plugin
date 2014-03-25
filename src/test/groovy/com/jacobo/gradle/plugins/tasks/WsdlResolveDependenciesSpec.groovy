@@ -27,7 +27,7 @@ class WsdlResolveDependenciesSpec extends ProjectTaskSpecification {
     projectDir.deleteDir()
   }
 
-  def "resolve dependencies for #someWsdl"() {
+  def "resolve dependencies for a wsdl file"() {
     when:
     task.start()
 

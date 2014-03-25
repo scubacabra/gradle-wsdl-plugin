@@ -20,7 +20,7 @@ class ConvertProjNameToWsdlSpec extends ProjectTaskSpecification {
     }
   }
 
-  def "convert project name #project.name to wsdl File #wsdlFile"() {
+  def "convert project name to wsdl File"() {
     when:
     task.start()
 
