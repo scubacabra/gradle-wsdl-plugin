@@ -5,6 +5,7 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 
@@ -21,8 +22,9 @@ class WsdlWar extends War {
 
   /**
    * wsdl dependencies (absolute files) that need to be copied into the archive
+   * Could contain nothing, in which case, return an empty collection
    */
-  @InputFiles
+  @InputFiles @Optional
   FileCollection wsdlDependencies
 
   /**
@@ -44,8 +46,11 @@ class WsdlWar extends War {
     webInf.into( {getWsdlFolder().name} ) {
       from {
 	def dependencies = getWsdlDependencies()
-	def wsdlFiles = dependencies.filter { File file ->
-	  file.name.endsWith('.wsdl') }
+	def wsdlFiles = dependencies ? dependencies.filter { File file ->
+	  file.name.endsWith('.wsdl')
+	} : []
+	// in case there are no wsdl files in dependencies, return empty collection
+	if (wsdlFiles.isEmpty()) return project.files()
 	// workaround because atree.matching{include{it.file in files.files}}
 	// doesn't loop over all elements
 	// get relative paths to the folder to pass as include params
@@ -60,8 +65,11 @@ class WsdlWar extends War {
     webInf.into( {getSchemaFolder().name } ) {
       from {
 	def dependencies = getWsdlDependencies()
-	def schemaFiles = dependencies.filter { File file ->
-	  file.name.endsWith('.xsd') }
+	def schemaFiles = dependencies ? dependencies.filter { File file ->
+	  file.name.endsWith('.xsd')
+	} : []
+	// in case there are no xsd files in dependencies, return empty collection
+	if (schemaFiles.isEmpty()) return project.files()
 	// workaround because atree.matching{include{it.file in files.files}}
 	// doesn't loop over all elements
 	// get relative paths to the folder to pass as include params
