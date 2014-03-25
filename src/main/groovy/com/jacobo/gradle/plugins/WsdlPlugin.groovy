@@ -51,7 +51,6 @@ class WsdlPlugin implements Plugin<Project> {
        wsdlFolder		= "wsdl"
        schemaFolder		= "schema"
        episodeFolder		= "schema/episodes"
-       webServiceCopyDir	= "web-service"
      }
 
      def wsimportExtension = project.wsdl.extensions.create("wsimport", WsImportExtension)
@@ -106,7 +105,13 @@ class WsdlPlugin implements Plugin<Project> {
      pwt.conventionMapping.wsdlFile	= { project.wsdl.wsdlFile }
      pwt.conventionMapping.wsdlDependencies  = { project.wsdl.wsdlDependencies }
      pwt.conventionMapping.destinationDirectory	= { project.file(project.wsdl.wsimport.sourceDestinationDirectory) }
-     pwt.conventionMapping.episodeFiles	= { project.files(project.wsdl.wsimport.episodes) }
+     pwt.conventionMapping.episodeFiles	= {
+       // empty filecollection if no episodes listed, so that
+       // files.files == empty set
+       project.wsdl.episodes.isEmpty() ? project.files() :
+       project.fileTree(dir:new File(project.rootDir, project.wsdl.episodeFolder),
+			include: project.wsdl.episodes)
+     }
      pwt.conventionMapping.antExecutor	= { new AntWsImport() }
    }
 
