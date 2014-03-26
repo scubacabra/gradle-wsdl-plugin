@@ -3,14 +3,12 @@ buildscript {
     maven { 
       url 'http://dl.bintray.com/content/djmijares/gradle-plugins/'
     }
-    ivy { 
-      url 'http://dl.bintray.com/content/djmijares/gradle-plugins/'
-    }
+    mavenCentral()
   }
 
   dependencies {
-    classpath 'com.jacobo.gradle.plugins:gradle-jaxb-plugin:1.0'
-    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.6'
+    classpath 'com.jacobo.gradle.plugins:gradle-jaxb-plugin:1.2'
+    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.7'
   }
 }
 
