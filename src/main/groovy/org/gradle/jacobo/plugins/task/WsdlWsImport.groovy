@@ -57,14 +57,8 @@ class WsdlWsImport extends DefaultTask {
       WsdlPlugin.WSDL_CONFIGURATION_NAME
     ]
     
-    getAntExecutor().execute(ant,
-			     ["wsdl": getWsdlFile(),
-			      "extension": project.wsdl.wsimport,
-			      "destinationDir": getDestinationDirectory(),
-			      "classpath": wsdlConfiguration.asPath,
-			      "episodeFiles": getEpisodeFiles().files
-			     ]
-			    )
-
+    getAntExecutor().execute(ant, getWsdlFile(), project.wsdl.wsimport,
+			     getDestinationDirectory(),
+			     wsdlConfiguration.asPath, getEpisodeFiles())
   }
 }

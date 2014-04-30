@@ -1,5 +1,6 @@
 package org.gradle.jacobo.plugins.ant
 
+import org.gradle.api.file.FileCollection
 import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 
@@ -20,12 +21,12 @@ class AntWsImport implements AntExecutor {
    *   "classpath" => configuration path as String classpath for the ant task def as defined by the wsdl-configuration.asPath
    *   "episodeFiles" => set of episode files (absolute paths) to bind to this wsimport action
    */
-  public void execute(AntBuilder ant, Map<String, Object> arguments) {
-    def wsdl = arguments["wsdl"]
-    def extension = arguments["extension"]
-    def destinationDir = arguments["destinationDir"]
-    def classpath = arguments["classpath"]
-    def episodeFiles = arguments["episodeFiles"]
+  public void execute(AntBuilder ant, Object... arguments) {
+    def wsdl = arguments[0]
+    def extension = arguments[1]
+    def destinationDir = arguments[2]
+    def classpath = arguments[3]
+    def episodes = arguments[4]
 
     log.info("parsing wsdl '{}' with destination directory of '{}'",
 	     wsdl, destinationDir)
@@ -44,10 +45,8 @@ class AntWsImport implements AntExecutor {
 		   xdebug          : extension.xdebug,
 		   target          : extension.target
 		 )
-    { episodeFiles.each { episode ->
-      log.debug("binding with '{}' at location '{}'", episode.name, episode.path)
-      binding(dir : episode.parent, includes : "${episode.name}")
-      }
+    { 
+      episodes.addToAntBuilder(ant, 'binding', FileCollection.AntType.FileSet)
     }
 
   }

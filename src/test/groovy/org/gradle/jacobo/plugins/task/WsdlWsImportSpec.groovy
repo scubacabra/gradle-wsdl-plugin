@@ -45,11 +45,9 @@ class WsdlWsImportSpec extends ProjectTaskSpecification {
     task.start()
 
     then:
-    1 * executor.execute(_ as AntBuilder, ["wsdl": someWsdl,
-					   "extension": project.wsdl.wsimport,
-					   "destinationDir": destinationDir,
-					   "episodeFiles": episodes.files,
-					   "classpath": classpath.asPath])
+    1 * executor.execute(_ as AntBuilder, someWsdl, project.wsdl.wsimport,
+			 destinationDir, classpath.asPath,
+			 { it.files == episodes.files })
     where:
     episodeFiles << [[],
 		     ["fake-episode.episode", "another-fake-episode.episode"]]
