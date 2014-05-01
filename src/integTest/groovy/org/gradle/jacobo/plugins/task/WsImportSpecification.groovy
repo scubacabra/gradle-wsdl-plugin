@@ -1,32 +1,27 @@
 package org.gradle.jacobo.plugins.task
 
 import spock.lang.Unroll
-import spock.lang.Ignore
+
+import org.gradle.jacobo.plugins.ant.AntWsImport
 
 import org.gradle.jacobo.plugins.ProjectIntegrationSpec
 
+
 class WsImportSpecification extends ProjectIntegrationSpec {
+
+  def wsimport = Mock(AntWsImport)
 
   def setup() {
     def rootDir = getFileFromResourcePath("/test-wsdl-project")
     setRootProject(rootDir)
+    setSubProject(rootProject, "integration-test-ws", "wsdl")
+    setupProjectTasks()
   }
 
   @Unroll
-  @Ignore
   def "run task wsimport for project '#projectName'"() {
     given: "setup sub project and tasks"
-    setSubProject(rootProject, projectName, "wsdl")
-    setupProjectTasks()
-    
-    and: "set up project dependencies and repositories to download jars"
-    project.dependencies { 
-      jaxws 'com.sun.xml.ws:jaxws-tools:2.2.8'
-      jaxws 'com.sun.xml.ws:jaxws-rt:2.2.8'
-    }
-    project.repositories { 
-      mavenCentral()
-    }
+    wsImportTask.antExecutor = wsimport
 
     // simulate what gradle would do here, dependent Tasks need to run first    
     and: "dependent tasks are executed"
@@ -35,14 +30,8 @@ class WsImportSpecification extends ProjectIntegrationSpec {
     when: "ws import is executed"
     wsImportTask.execute()
 
-    and: "src output directory is"
-    def outputDir = getFileFromResourcePath("/test-wsdl-project/integration-test-ws/src/main/java")
-
-    then: "these files should be in outputDir and an episode file is created"
-    outputDir.exists()
-    outputDir.isDirectory()
+    then: "ant exeutor should only be called once"
+    1 * wsimport.execute(*_)
     
-    where:
-    projectName = "integration-test-ws"
   }
 }
