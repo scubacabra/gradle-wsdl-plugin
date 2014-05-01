@@ -11,7 +11,7 @@ buildscript {
 
   // dependencies {
   //   classpath 'com.jacobo.gradle.plugins:gradle-jaxb-plugin:1.2'
-  //   classpath ':gradle-wsdl-plugin-1.7'
+  //   classpath ':gradle-wsdl-plugin-1.7.1'
   //   classpath 'org.gradle.jacobo:gradle-xsd-wsdl-slurping:1.0.3'
   // }
   //************************************************
@@ -27,7 +27,7 @@ buildscript {
 
   dependencies {
     classpath 'com.jacobo.gradle.plugins:gradle-jaxb-plugin:1.2'
-    classpath 'com.jacobo.gradle:gradle-wsdl-plugin:1.7'
+    classpath 'org.gradle.jacobo.plugins:gradle-wsdl-plugin:1.7.1'
     classpath 'org.gradle.jacobo:gradle-xsd-wsdl-slurping:1.0.3'
   }
 }
