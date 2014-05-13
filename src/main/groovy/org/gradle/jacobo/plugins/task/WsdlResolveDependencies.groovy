@@ -8,23 +8,24 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.jacobo.plugins.resolver.DependencyResolver
 
 /**
- * Resolves WSDL dependencies starting with the WSDL file
- *
- * @author djmijares
+ * Resolves this projects WSDL dependencies.
  */
 class WsdlResolveDependencies extends DefaultTask {
   static final Logger log = Logging.getLogger(WsdlResolveDependencies.class)
 
   /**
-   * wsdl file (absolute path)
+   * Absolute path WSDL file.
    */
   File wsdlFile
 
   /**
-   * Resolves all wsdl Dependencies through XmlSlurping
+   * Resolves all the WSDL's dependencies.
    */
   DependencyResolver dependencyResolver
 
+  /**
+   * Executes this task.
+   */
   @TaskAction
   void start() {
     def wsdlDependencies = getDependencyResolver().resolveDependencies(getWsdlFile())

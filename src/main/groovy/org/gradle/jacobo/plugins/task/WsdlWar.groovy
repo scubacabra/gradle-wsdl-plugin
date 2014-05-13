@@ -10,35 +10,47 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.War
 
 /**
- * Assembles a WAR archive for the wsdl plugin, adds extra functionality to war
- * Populates the WAR with the wsdl folder defined in the build directory
- * Populates the WAR with the schema folder defined in the build directory
- *
- * @author djmijares
+ * Assembles a WAR archive for the wsdl plugin.
+ * Adds extra functionality to war by populating the WAR with the WSDL
+ * dependencies as seen on the projects file system.
+ * <p>
+ * The root of the war will contain folders
+ * <ul>
+ * <li> value of {@link org.gradle.jacobo.plugins.extension.WsdlPluginExtension#wsdlFolder}
+ * <li> value of {@link org.gradle.jacobo.plugins.extension.WsdlPluginExtension#schemaFolder}
+ * </ul>
+ * These folders will be populated where a matching entry in the WSDL's dependencies are located.
+ * For small wsdl projects, this might not sound so cool, but for really huge projects, it is awesome.
  */
 class WsdlWar extends War {
 
   static final Logger log = Logging.getLogger(War.class)
 
   /**
-   * wsdl dependencies (absolute files) that need to be copied into the archive
-   * Could contain nothing, in which case, return an empty collection
+   * Absolute path WSDL dependencies that are copied into the WAR archive
    */
   @InputFiles @Optional
   FileCollection wsdlDependencies
 
   /**
-   * Top Folder location (absolute) that contains wsdl files for this project
+   * Root folder location for the Wsdl files in the file system.
+   * @see org.gradle.jacobo.plugins.extension.WsdlPluginExtension#wsdlFolder
    */
   @Input
   File wsdlFolder
 
   /**
-   * Top Folder location (absolute) that contains schema files for this project
+   * Root folder location for the schema(xsd) files in the file system.
+   * @see org.gradle.jacobo.plugins.extension.WsdlPluginExtension#schemaFolder
    */
   @Input
   File schemaFolder
 
+  /**
+   * Constructor to set up lazy loaded closures used to configure the WAR.
+   * Setting these up in an annoted {@code @TaskAction} method, didn't yield
+   * the correct results.
+   */
   WsdlWar() {
     super()
     // in a closure for lazy loading only executing at runtime

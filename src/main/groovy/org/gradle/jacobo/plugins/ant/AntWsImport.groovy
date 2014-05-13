@@ -8,18 +8,29 @@ import groovy.util.AntBuilder
 
 import org.gradle.jacobo.plugins.extension.WsImportExtension
 
+/**
+ * Defines and executes the {@code wsimport} ant task.
+ */
 class AntWsImport implements AntExecutor {
   static final Logger log = Logging.getLogger(AntWsImport.class)
 
   /**
-   * run the ant wsimport task an #wsdl
-   * @param ant the ant builder to build and execute
-   * @param arguments a map of arguments to use in the ant file
-   *   "wsdl"=> the file to parse with wsimport
-   *   "extension" => WsImportExtension wsdl plugins wsimport extension for configuration
-   *   "destinationDir" => destinationDirectory for the wsimport output to go
-   *   "classpath" => configuration path as String classpath for the ant task def as defined by the wsdl-configuration.asPath
-   *   "episodeFiles" => set of episode files (absolute paths) to bind to this wsimport action
+   * Defines and executes the ant {@code wsimport} task.
+   * A variable list of arguments is passed in containing data
+   * to configure this task. In order, they are:
+   * <ul>
+   * <li> {@code wsdl} => WSDL file to parse in {@code wsimport} task
+   * <li> {@code extension} => This plugins extension {@code WsImportExtension}
+   * <li> {@code destinationDir} => where to send the wsimport generated code
+   * <li> {@code classpath} => String of classpath to set up via this plugins
+   *      configuration dependencies
+   * <li> {@code episodes} => {@code FileCollection} holding the episode files
+   *      to bind with Uses {@code addToAntBuilder} to make this binding super easy.
+   * </ul>
+   * @param ant  {@code AntBuilder} to configure and execute
+   * @param arguments  variable arguments to configure the {@code wsimport} task
+   * @see org.gradle.jacobo.plugins.extension.WsImportExtension
+   * @see org.gradle.api.file.FileCollection
    */
   public void execute(AntBuilder ant, Object... arguments) {
     def wsdl = arguments[0]

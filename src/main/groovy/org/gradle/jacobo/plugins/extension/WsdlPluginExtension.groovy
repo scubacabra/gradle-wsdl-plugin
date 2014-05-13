@@ -5,60 +5,63 @@ import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 
 /**
- * Contains @see WsdlPlugin default settings
- * @author jacobono
- * Created: Tue Dec 04 09:01:34 EST 2012
+ * {@code WsdlPlugin} default settings and conventions.
  */
 class WsdlPluginExtension {
 
   private Project project
 
   /**
-   * wsimport default settings for now
+   * WsImport default ant task settings and conventions
    */
   WsImportExtension wsImport = new WsImportExtension()
 
   /**
-   *  wsdl folder name, under root Directory
+   * Folder name (under {@link org.gradle.api.Project#getRootDir()}), containing the WSDL file.
    */
   String wsdlFolder
 
   /**
-   *  schema folder name, under root Directory
+   * Folder name (under {@link org.gradle.api.Project#getRootDir()}), containing xsd files for wsdl
+   * processing.
    */
   String schemaFolder
 
   /**
-   *  episodes folder name, under root Directory
+   * Folder name (under {@link org.gradle.api.Project#getRootDir()}), containing episodes files for
+   * wsdl binding during the {@code wsimport} task.
    */
   String episodeFolder
 
   /**
-   * Name rules to convert project name to an appropriate wsdl name
-   * For example, "-dm" -> "DataManagement", in project-dm-name, becomes "ProjectDataManagementName"
+   * Name rules to convert project name to an appropriate wsdl name.
+   * <p>
+   * For example, an entry {@code "-dm" -> "DataManagement"}, in
+   * {@code project-dm-name}, yields an expansion to
+   * {@code project-DataManagement-name}
    */
   Map<String, String> nameRules
 
   /**
-   * projects wsdl file
+   * WSDL file for this project.
    */
   File wsdlFile
 
   /**
-   * Wsdl dependencies files (including projects WSDL itself)
+   * Dependencies for this WSDL project (including the {@link #wsdlFile} itself).
    */
   FileCollection wsdlDependencies
 
   /**
-   * List of episodes files (under the epiosde Folder) to bind into the wsimport task
-   * Using these files means that already generated schema artifacts previously done with xjc.
-   * examples: ["some-episode.episode", "another.episode"]
+   * User defined episodes files (names only, with extension) to bind into the
+   * wsimport task.
+   * <p>
+   * Using these files means that already generated schema artifacts previously
+   * done with xjc are bound at runtime instead of re-generated.
+   * examples: {@code ["some-episode.episode", "another.episode"]}
    */
   List episodes
 
-  /**
-   * Constructor
-   */
   WsdlPluginExtension(Project project) {
     this.project = project
   }

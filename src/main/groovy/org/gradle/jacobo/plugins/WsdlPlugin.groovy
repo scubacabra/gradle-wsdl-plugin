@@ -21,8 +21,7 @@ import org.gradle.api.plugins.WarPlugin
 import org.gradle.api.tasks.bundling.War
 
 /**
- * @author djmijares
- * Created: Mon Jan 07 18:08:42 EST 2013
+ * Defines and configures the tasks and configurations for this plugin
  */
 class WsdlPlugin implements Plugin<Project> {
   static final String WSDL_PLUGIN_TASK_GROUP = 'jaxws'

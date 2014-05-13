@@ -3,51 +3,57 @@ package org.gradle.jacobo.plugins.extension
 import org.gradle.api.Project
 
 /**
- * customizable fields passed into the wsimport ant task in #ParseWsdlTask
- * @author djmijares
- * Created: Tue Dec 04 09:01:34 EST 2012
+ * WsImport default ant task settings and conventions
  */
 class WsImportExtension { 
 
-    /**
-     * destination directory for the generated java code output from wsimport task @see ParseWsdlTask
-     */
+  /**
+   * Destination directory for the generated wsimport java output.
+   * Path is relative to the projects directory, <b>not</b> the rootDirectory.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   String sourceDestinationDirectory
 
-    /**
-     * Boolean argument for wsimport ant task in @see ParseWsdlTask
-     * @see <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>
-     */
+  /**
+   * Boolean argument for wsimport ant task.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   boolean verbose
 
-    /**
-     * Boolean argument for wsimport ant task in @see ParseWsdlTask
-     */
+  /**
+   * Boolean argument for wsimport ant task.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   boolean keep
 
-    /**
-     * Boolean argument for wsimport ant task in @see ParseWsdlTask
-     */
+  /**
+   * Boolean argument for wsimport ant task.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   boolean xnocompile
 
-    /**
-     * Boolean argument for wsimport ant task in @see ParseWsdlTask
-     */
+  /**
+   * Boolean argument for wsimport ant task.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   boolean fork
 
-    /**
-     * Boolean argument for wsimport ant task in @see ParseWsdlTask
-     */
+  /**
+   * Boolean argument for wsimport ant task.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   boolean xdebug
 
-    /**
-     * argument for wsimport ant task, defines the specification version to generate code against.
-     * specifically, "2.0" will generate version 2.0 compliant code. Will default to 2.2 when Java 7 is in more use
-     */
+  /**
+   * Argument for wsimport ant task.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   String target
 
-    /**
-     * argument for wsimport ant task, this value is populated in the generated code from wsimport.
-     */
+  /**
+   * Argument for wsimport ant task.
+   * Defaults to "FILL_IN_BY_SERVER".
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   String wsdlLocation
 }

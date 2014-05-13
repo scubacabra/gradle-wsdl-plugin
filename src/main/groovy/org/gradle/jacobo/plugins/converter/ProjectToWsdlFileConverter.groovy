@@ -4,13 +4,26 @@ import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
 import org.gradle.api.GradleException
 
+/**
+ *  Converts a wsdl projects Name to its corresponding WSDL file.
+ */
 class ProjectToWsdlFileConverter implements NameToFileConverter {
   static final Logger log = Logging.getLogger(ProjectToWsdlFileConverter.class)
   
   /**
-   * Project Name is converted to the  WSDL name it is associated with
-   * @param projectName - the project name
-   * @return converted project name
+   * Converts a project Name that is possibly expanded with name Rules, to
+   * the projects corresponding WSDL file name (sans extension).
+   * <p>
+   * Project name must conform to specific conventions, else errors are thrown.
+   * <ul>
+   * <li> contains suffix {@code -ws}
+   * <li> all lower case, words separated by hyphen i.e. {@code hello-you-ws}
+   * </ul>
+   * <p>
+   * 
+   * @param projectName  project name with possible nameRules applied
+   * @return WSDL file name (sans extension)
+   * @throws {@link org.gradle.api.GradleException} when conventions aren't present
    */
   @Override
   public String convert(String projectName) {
@@ -36,9 +49,14 @@ class ProjectToWsdlFileConverter implements NameToFileConverter {
   }
 
   /**
-   * Converts wsdl project name to wsdl file residing in directory
-   * @param projectName name to convert
-   * @param wsdlDirectory directory file resides in
+   * Converts a name (String) to a file that resides in the directory, applying
+   *   certain rules to the conversion.
+   *   
+   * @param name  string to convert
+   * @param directory  where the file resides
+   * @param nameRules  map of rules to apply when converting
+   * @return corresponding WSDL file
+   * @throws {@link org.gradle.api.GradleException} when WSDL file does not exist
    */
   @Override
   public File convert(String projectName, File wsdlDirectory, Map nameRules) {
@@ -51,10 +69,11 @@ class ProjectToWsdlFileConverter implements NameToFileConverter {
   }
 
   /**
-   * Converts a name to a file, applying user input name rules
-   * @param name name to convert
-   * @param nameRules map of name rules, containing abbreviations to find
-   *   the expansion to convert them to
+   * Converts a string to another string, applying certain rules during conversion.
+   * 
+   * @param name  string to convert
+   * @param nameRules  map of rules to apply when converting the string
+   * @return new string with applied rules to convert
    */
   @Override
   public String convert(String projectName, Map nameRules) {

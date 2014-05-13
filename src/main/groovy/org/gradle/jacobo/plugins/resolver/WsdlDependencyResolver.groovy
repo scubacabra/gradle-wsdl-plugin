@@ -7,27 +7,47 @@ import org.gradle.api.logging.Logging
 
 import org.gradle.jacobo.schema.factory.DocumentFactory
 
+/**
+ * Resolves a WSDL files dependencies.
+ * @see org.gradle.jacobo.plugins.extension.WsdlPluginExtension#wsdlFile
+ */
 class WsdlDependencyResolver implements DependencyResolver {
   private static final Logger log = Logging.getLogger(WsdlDependencyResolver.class)
-
+  
+  /**
+   * Resolved WSDL dependencies
+   */
   Set<File> resolvedDependencies = [] as Set
+
+  /**
+   * Unresolved WSDL dependencies
+   */
   Set<File> unresolvedFiles = [] as Set
+  
+  /**
+   * Generates {@code BaseSchemaDocument}'s.
+   * @see org.gradle.jacobo.schema.BaseSchemaDocument
+   */
   DocumentFactory documentFactory
 
+  /**
+   * Construct this resolver with a {@code DocumentFactory}.
+   */
   @Inject
   WsdlDependencyResolver(DocumentFactory docFactory) {
     documentFactory = docFactory
   }
 
   /**
-   * Recursively scan WSDL document and find the Files it depends on
-   * #unresolvedFiles is used to temporarily store the files that this
-   * document depends on, that haven't been parsed and resolved yet
+   * Resolves dependencies of {@code File}.
+   * Slurp WSDL file's dependencies and recursively slurp the dependencies
+   * of those dependencies until all dependencies have been found.
+   * <p>
+   * Newest slurped dependencies are classified as <i>unresolved</i> until they
+   * are slurped themselves.
    *
-   * As long as this structure contains elements, the resolving will continue
-   * 
-   * @param wsdlDocument the wsdl document to resolve
-   * @return Set of Files this document depends on
+   * @param wsdlDocument  WSDL file to resolve
+   * @return Set of files this document depends on
    */
   public Set<File> resolveDependencies(File wsdlDocument){
     this.unresolvedFiles.add(wsdlDocument)

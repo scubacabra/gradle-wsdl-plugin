@@ -13,44 +13,44 @@ import org.gradle.jacobo.plugins.WsdlPlugin
 import org.gradle.jacobo.plugins.ant.AntExecutor
 
 /**
- * Parses the wsdl file with wsimport ant task, version 2.1, implementation 2.1.5
- * Can access jaxb episode binding folders and user listed episode bindings bound at task execution time
- * @author djmijares
- * Created: Mon Jan 07 18:08:42 EST 2013
+ * Parses the wsdl file with {@code wsimport} ant task.
+ * Can bind with user provided episode bindings, reducing duplicated code.
  */
 class WsdlWsImport extends DefaultTask { 
   static final Logger log = Logging.getLogger(WsdlWsImport.class)
 
   /**
-   * Wsdl file reference (absolute)
+   * Absolute path WSDL file.
    */
   @InputFile
   File wsdlFile
 
   /**
-   * user supplied episode Files to bind with this ant action
+   * User supplied episode Files to bind with this ant task.
    */
   @InputFiles
   FileCollection episodeFiles
 
   /**
-   * The dependencies of the wsdl, used to see if this task is up to date or not
+   * Absolute path WSDL Dependencies.
    */
   @InputFiles
   FileCollection wsdlDependencies
 
   /**
-   * ant wsimport parameter -- where to place generated source
-   * see #https://jax-ws.java.net/${jaxws-version}/docs/wsimportant.html#
+   * Destination directory for the generated wsimport java output.
    */
   @OutputDirectory
   File destinationDirectory
 
   /**
-   * wsimport service executor
+   * Executes the {@code wsimport} ant task.
    */
   AntExecutor antExecutor
 
+  /**
+   * Executes this task.
+   */
   @TaskAction
   void start() {
     def wsdlConfiguration = project.configurations[
