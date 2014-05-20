@@ -10,12 +10,12 @@ gradle-wsdl-plugin
 Gradle plugin that defines some conventions for web service Projects.
 Eases the manual configuration of web service project by: 
 
-      * Hooking in ant tasks to parse the wsdl with wsimport
-      * Defining a convention to generate a correct WSDL name for the project,
-        by parsing the project-name itself
-      * Automatically finding web Service dependencies in the WSDL and
-        associated schema it imports/includes
-      * Populating a WAR file with all dependent Web Service Files (WSDL, XSD).
+* Hooking in ant tasks to parse the wsdl with wsimport
+* Defining a convention to generate a correct WSDL name for the project,
+  by parsing the project-name itself
+* Automatically finding web Service dependencies in the WSDL and
+  associated schema it imports/includes
+* Populating a WAR file with all dependent Web Service Files (WSDL, XSD).
 
 Using The Plugin
 ================
@@ -157,10 +157,10 @@ location convention.
 
 These conventions are not definable -- the WSDL file **MUST**:
 
-    * Begin with a capitalized letter
-    * Use camel case (every word has their first letter capitalized)
-    * End with "Service"
-    * Have a .wsdl extension
+* Begin with a capitalized letter
+* Use camel case (every word has their first letter capitalized)
+* End with "Service"
+* Have a .wsdl extension
 
 i.e.
 	`ChuckNorrisRoundhouseKickToTheFaceService.wsdl`
@@ -169,9 +169,9 @@ i.e.
 
 The project name **MUST** also follow these conventions to find the WSDL file correctly:
 
-    * project name is all lower case
-    * every word in project name has a '-' (hyphen) to divide the words
-    * must end in '-ws' (signifying that this is a web-service project)
+* project name is all lower case
+* every word in project name has a '-' (hyphen) to divide the words
+* must end in '-ws' (signifying that this is a web-service project)
 
 i.e.
 	`chuck-norris-roundhouse-kick-to-the-face-ws`
@@ -216,33 +216,33 @@ script.
 There are 4 overridable defaults that declare the location defaults above.
 These defaults are changed via the `wsdl` closure.
 
-    * wsdlFolder
-	    * **ALWAYS** relative to `project.rootDir
-		* i.e. "wsdl" or "WSDL", or "web-services" etc.
-    * schemaFolder
-	    * **ALWAYS** relative to `project.rootDir
-		* i.e "schema", "XMLSchema", "xsd"
-    * episodeFolder
-	    * **ALWAYS** relative to `project.rootDir
-		* All episode files go directly under here, no subfolders.
-		* i.e. "episodes", "schema/episodes", "xsd/episodes", "XMLSchema/epiosdes"
+* wsdlFolder
+  * **ALWAYS** relative to `project.rootDir
+	* i.e. "wsdl" or "WSDL", or "web-services" etc.
+* schemaFolder
+  * **ALWAYS** relative to `project.rootDir
+ 	* i.e "schema", "XMLSchema", "xsd"
+* episodeFolder
+  * **ALWAYS** relative to `project.rootDir
+	* All episode files go directly under here, no subfolders.
+	* i.e. "episodes", "schema/episodes", "xsd/episodes", "XMLSchema/epiosdes"
 
 ### ws-import Conventions
 
 These defaults are changed via the nested `wsimport` closure.
 Several boolean sensible defaults are defined to be passed into the wsimport task:
 
-	* verbose
-	* keep
-	* xnocompile
-	* fork
-	* xdebug
+* verbose
+* keep
+* xnocompile
+* fork
+* xdebug
  
 And a few other String defaults
     
-	* sourceDestionationDirectory
-	* target
-	* wsdlLocation
+* sourceDestionationDirectory
+* target
+* wsdlLocation
 
 `sourceDestionationDirectory` is relative to `project.projectDir`.  It is
 defaulted to `src/main/java`, but can be set to anywhere in the `project.projectDir`.
@@ -286,7 +286,7 @@ it, you could have a WSDL file
 
 With a corresponding project name of
 
-     `project-name-is-so-long-data-management-ws`
+   `project-name-is-so-long-data-management-ws`
 
 This is just too long of a project name for me (the WSDL can be that long if
 that is how it is named, but not the project name)!
