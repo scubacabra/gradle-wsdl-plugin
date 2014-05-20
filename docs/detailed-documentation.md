@@ -90,3 +90,4 @@ the parent container is not the root document.
 # Class Diagrams
 
 Class diagrams showing their relationships.
+[class-diagram](./img/class-diagram.jpg "wsdl plugin classes")]
