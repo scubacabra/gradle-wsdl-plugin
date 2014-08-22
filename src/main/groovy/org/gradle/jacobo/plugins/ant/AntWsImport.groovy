@@ -1,13 +1,7 @@
 package org.gradle.jacobo.plugins.ant
-
 import org.gradle.api.file.FileCollection
-import org.gradle.api.logging.Logging
 import org.gradle.api.logging.Logger
-
-import groovy.util.AntBuilder
-
-import org.gradle.jacobo.plugins.extension.WsImportExtension
-
+import org.gradle.api.logging.Logging
 /**
  * Defines and executes the {@code wsimport} ant task.
  */
@@ -46,18 +40,22 @@ class AntWsImport implements AntExecutor {
 		 classname: 'com.sun.tools.ws.ant.WsImport',
 		 classpath: classpath)
 
-    ant.wsimport ( wsdl            : wsdl.path,
-		   verbose         : extension.verbose,
-		   sourcedestdir   : destinationDir.path,
-		   keep            : extension.keep,
-		   wsdlLocation    : extension.wsdlLocation,
-		   xnocompile      : extension.xnocompile,
-		   fork            : extension.fork,
-		   xdebug          : extension.xdebug,
-		   target          : extension.target
-		 )
-    { 
-      episodes.addToAntBuilder(ant, 'binding', FileCollection.AntType.FileSet)
+    def params = [
+              wsdl            : wsdl.path,
+              verbose         : extension.verbose,
+              sourcedestdir   : destinationDir.path,
+              keep            : extension.keep,
+              wsdlLocation    : extension.wsdlLocation,
+              xnocompile      : extension.xnocompile,
+              fork            : extension.fork,
+              xdebug          : extension.xdebug,
+              target          : extension.target
+    ]
+    if (extension.targetPackage) {
+        params['package'] = extension.targetPackage
+    }
+    ant.wsimport (params) {
+        episodes.addToAntBuilder(ant, 'binding', FileCollection.AntType.FileSet)
     }
 
   }

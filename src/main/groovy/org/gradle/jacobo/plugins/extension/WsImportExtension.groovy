@@ -1,7 +1,4 @@
 package org.gradle.jacobo.plugins.extension
-
-import org.gradle.api.Project
-
 /**
  * WsImport default ant task settings and conventions
  */
@@ -56,4 +53,9 @@ class WsImportExtension {
    * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
    */
   String wsdlLocation
+
+    /**
+     * The target package name for the generated classes.
+     */
+  String targetPackage
 }
