@@ -10,8 +10,8 @@ buildscript {
   // }
 
   // dependencies {
-  //   classpath 'com.jacobo.gradle.plugins:gradle-jaxb-plugin:1.2'
-  //   classpath ':gradle-wsdl-plugin-1.7.1'
+    // classpath 'org.gradle.jacobo.plugins:gradle-jaxb-plugin:1.3.1'
+  //   classpath ':gradle-wsdl-plugin-1.7.3'
   //   classpath 'org.gradle.jacobo:gradle-xsd-wsdl-slurping:1.0.3'
   // }
   //************************************************
@@ -26,8 +26,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.jacobo.gradle.plugins:gradle-jaxb-plugin:1.3.1'
-    classpath 'org.gradle.jacobo.plugins:gradle-wsdl-plugin:1.7.2'
+    classpath 'org.gradle.jacobo.plugins:gradle-jaxb-plugin:1.3.1'
+    classpath 'org.gradle.jacobo.plugins:gradle-wsdl-plugin:1.7.3'
   }
 }
 
