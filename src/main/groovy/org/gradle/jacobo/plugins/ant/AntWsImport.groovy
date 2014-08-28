@@ -54,8 +54,11 @@ class AntWsImport implements AntExecutor {
     if (extension.targetPackage) {
         params['package'] = extension.targetPackage
     }
-    ant.wsimport (params) {
-        episodes.addToAntBuilder(ant, 'binding', FileCollection.AntType.FileSet)
+    if (extension.encoding) {
+      params['encoding'] = extension.encoding
+    }
+    ant.wsimport(params) {
+      episodes.addToAntBuilder(ant, 'binding', FileCollection.AntType.FileSet)
     }
 
   }

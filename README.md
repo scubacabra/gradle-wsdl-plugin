@@ -232,20 +232,26 @@ These defaults are changed via the `wsdl` closure.
 These defaults are changed via the nested `wsimport` closure.
 Several boolean sensible defaults are defined to be passed into the wsimport task:
 
-* verbose
-* keep
-* xnocompile
-* fork
-* xdebug
+* `verbose`
+* `keep`
+* `xnocompile`
+* `fork`
+* `xdebug`
  
 And a few other String defaults
     
-* sourceDestionationDirectory
-* target
-* wsdlLocation
+* `sourceDestionationDirectory`
+* `target`
+* `wsdlLocation`
 
-`sourceDestionationDirectory` is relative to `project.projectDir`.  It is
-defaulted to `src/main/java`, but can be set to anywhere in the `project.projectDir`.
+`sourceDestionationDirectory` is relative to `project.projectDir`.  It defaults to `src/main/java`, but can be set to anywhere in the `project.projectDir`.
+
+Optional Parameters
+
+* `encoding`: Set the encoding name for generated sources, such as `UTF-8`.
+   Default value is the platform default (which you really really really don't want if you have developers with different OSs, trust me).
+* `package`: The target package name for the generated classes. If left empty, the package name will be derived from the WSDL file.
+
 
 For more information on the jaxws wsimport ant task options, visit [here](http://jax-ws.java.net/2.2.3/docs/wsimportant.html)
 

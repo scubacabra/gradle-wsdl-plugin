@@ -58,4 +58,9 @@ class WsImportExtension {
      * The target package name for the generated classes.
      */
   String targetPackage
+  /**
+   * Set the encoding name for generated sources, such as UTF-8.
+   * Default value is the platform default (which you really really really don't want if you have developers with different OSs, trust me).
+   */
+  String encoding
 }
