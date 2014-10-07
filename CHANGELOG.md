@@ -1,5 +1,17 @@
 # Gradle WSDL Plugin Changelog
 
+## 1.7.5
+
+Backwards compatibility with java 1.6
+
+## 1.7.4
+
+Support for generated source encoding property
+
+## 1.7.3
+
+Specifiy target package name of generated class
+
 ## 1.7.2
 
 Fully updated groovydoc and detailed documentation
