@@ -7,6 +7,9 @@ apply plugin: 'groovy'
 apply from: 'cobertura.gradle'
 apply from: 'integTest.gradle'
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
 repositories {
   mavenCentral()
   maven { 
