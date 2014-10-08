@@ -2,7 +2,8 @@
 
 ## 1.7.5
 
-Backwards compatibility with java 1.6
+- Backwards compatibility with java 1.6
+- Available on bintray's jcenter
 
 ## 1.7.4
 

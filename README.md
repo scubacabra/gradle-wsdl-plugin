@@ -23,14 +23,12 @@ Using The Plugin
 ```groovy
 buildscript {
   repositories { 
-    maven { 
-      url 'http://dl.bintray.com/content/djmijares/gradle-plugins/'
-    }
+    jcenter()
     mavenCentral()
   }
 
   dependencies {
-    classpath 'org.gradle.jacobo.plugins:gradle-wsdl-plugin:1.7.4'
+    classpath 'org.gradle.jacobo.plugins:gradle-wsdl-plugin:1.7.5'
   }
 }
 
