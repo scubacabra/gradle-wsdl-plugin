@@ -12,9 +12,7 @@ targetCompatibility = 1.6
 
 repositories {
   mavenCentral()
-  maven { 
-    url 'http://dl.bintray.com/content/djmijares/gradle-plugins/'
-  }
+  jcenter()
 }
 
 group = 'org.gradle.jacobo.plugins'
