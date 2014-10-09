@@ -14,7 +14,7 @@ class WsdlWarSpecification extends ProjectIntegrationSpec {
   @Unroll
   def "run task wsimport for project '#projectName'"() {
     given: "setup sub project and tasks"
-    setSubProject(rootProject, projectName, "wsdl")
+    setSubProject(rootProject, projectName, "com.github.jacobono.wsdl")
     setupProjectTasks()
 
     // simulate what gradle would do here, dependent Tasks need to run first    

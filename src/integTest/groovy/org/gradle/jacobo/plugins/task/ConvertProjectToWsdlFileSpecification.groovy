@@ -17,7 +17,7 @@ class ConvertProjectToWsdlFileSpecification extends ProjectIntegrationSpec {
   @Unroll
   def "convert '#projectName' to its WSDL file, bad project naming structure"() {
     given: "setup sub project and tasks"
-    setSubProject(rootProject, projectName, "wsdl")
+    setSubProject(rootProject, projectName, "com.github.jacobono.wsdl")
     setupProjectTasks()
 
     when: "convert task is executed"
@@ -38,7 +38,7 @@ class ConvertProjectToWsdlFileSpecification extends ProjectIntegrationSpec {
 project based on convention'''() {
 
     given: "setup sub project and tasks"
-    setSubProject(rootProject, projectName, "wsdl")
+    setSubProject(rootProject, projectName, "com.github.jacobono.wsdl")
     setupProjectTasks()
 
     when: "convert task is executed"

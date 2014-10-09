@@ -10,7 +10,7 @@ class WsdlWarSpec extends ProjectTaskSpecification {
   def someWsdl = new File("some-wsdl.wsdl")
   
   def setup() {
-    buildProject("wsdl")
+    buildProject("com.github.jacobono.wsdl")
     task = project.tasks[WarPlugin.WAR_TASK_NAME] as WsdlWar
     task.with {
       wsdlDependencies = project.files([new File("some-wsdl.wsdl"),

@@ -14,7 +14,7 @@ class WsImportSpecification extends ProjectIntegrationSpec {
   def setup() {
     def rootDir = getFileFromResourcePath("/test-wsdl-project")
     setRootProject(rootDir)
-    setSubProject(rootProject, "integration-test-ws", "wsdl")
+    setSubProject(rootProject, "integration-test-ws", "com.github.jacobono.wsdl")
     setupProjectTasks()
   }
 

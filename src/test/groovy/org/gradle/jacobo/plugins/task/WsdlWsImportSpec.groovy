@@ -18,7 +18,7 @@ class WsdlWsImportSpec extends ProjectTaskSpecification {
   def projectDir = getFileFromResourcePath("/fake-project")
   
   def setup() {
-    projectAtDir(projectDir, "wsdl")
+    projectAtDir(projectDir, "com.github.jacobono.wsdl")
     task = project.tasks[WsdlPlugin.WSIMPORT_TASK_NAME] as WsdlWsImport
   }
 

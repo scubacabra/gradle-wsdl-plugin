@@ -15,7 +15,7 @@ class WsdlResolveDependenciesSpec extends ProjectTaskSpecification {
   } as Set
   
   def setup() {
-    projectAtDir(projectDir, "wsdl")
+    projectAtDir(projectDir, "com.github.jacobono.wsdl")
     task = project.tasks[WsdlPlugin.RESOLVE_DEPENDENCIES_TASK_NAME] as WsdlResolveDependencies
     task.with {
       wsdlFile = someWsdl

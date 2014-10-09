@@ -11,7 +11,7 @@ class ConvertProjNameToWsdlSpec extends ProjectTaskSpecification {
   def wsdlFile = new File("wsdlDir/some-wsdl.wsdl")
 
   def setup() {
-    buildProject("wsdl")
+    buildProject("com.github.jacobono.wsdl")
     task = project.tasks[WsdlPlugin.CONVERSION_TASK_NAME] as ConvertProjNameToWsdl
     task.with {
       converter = nameConverter
