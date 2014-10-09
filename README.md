@@ -7,6 +7,18 @@ gradle-wsdl-plugin
 [ ![Download](https://api.bintray.com/packages/djmijares/gradle-plugins/gradle-wsdl-plugin/images/download.png)
 ](https://bintray.com/djmijares/gradle-plugins/gradle-wsdl-plugin/_latestVersion)
 
+:boom: :collision:
+
+:exclamation:IMPORTANT PLUGIN ID CHANGES:exclamation:
+
+In compliance with the gradle plugin submission guidelines, this
+plugin's id is now *fully* qualified.
+
+It changed from `wsdl` to `com.github.jacobono.wsdl`.  This affects
+how you apply the plugin (`apply plugin: 'com.github.jacobono.wsdl`)
+
+:boom: :collision:
+
 Gradle plugin that defines some conventions for web service Projects.
 Eases the manual configuration of web service project by: 
 
