@@ -31,6 +31,9 @@ bintray {
     issueTrackerUrl = 'https://github.com/jacobono/gradle-wsdl-plugin/issues'
     vcsUrl = 'https://github.com/jacobono/gradle-wsdl-plugin.git'
     labels = ['xsd', 'wsdl', 'gradle', 'plugin', 'jaxws']
+    version {
+      attributes = [ 'gradle-plugin': 'com.github.jacobono.wsdl:org.gradle.jacobo.plugins:gradle-wdl-plugin' ]
+    }
   }
   dryRun = true // whether to run this as dry-run, without deploying
   publish = true //If version should be auto published after an upload
