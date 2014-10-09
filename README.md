@@ -28,11 +28,11 @@ buildscript {
   }
 
   dependencies {
-    classpath 'org.gradle.jacobo.plugins:gradle-wsdl-plugin:1.7.5'
+    classpath 'org.gradle.jacobo.plugins:gradle-wsdl-plugin:1.7.6'
   }
 }
 
-apply plugin: 'wsdl'
+apply plugin: 'com.github.jacobono.wsdl'
 ```
 
 Setting Up The jaxws Configurations
@@ -181,7 +181,7 @@ Applying this plugin to all projects with the `-ws` suffix.
 ```groovy
 subprojects { project ->
   if(project.name.endsWith("-ws")) { 
-    apply plugin: 'wsdl'
+    apply plugin: 'com.github.jacobono.wsdl'
 
     dependencies { 
       jaxws 'com.sun.xml.ws:jaxws-tools:2.2.8-promoted-b131'

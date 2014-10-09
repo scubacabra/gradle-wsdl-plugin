@@ -1,5 +1,10 @@
 # Gradle WSDL Plugin Changelog
 
+## 1.7.6
+
+- Plugin id changed fram 'wsdl' to 'com.github.jacobono.wsdl'
+- Included in gradle plugin repo
+
 ## 1.7.5
 
 - Backwards compatibility with java 1.6
