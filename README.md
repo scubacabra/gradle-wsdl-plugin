@@ -40,7 +40,7 @@ Now in the [gradle plugins repo](http://plugins.gradle.org/) :exclamation:
 ## Using Gradle 2.1 plugins script block
 ```groovy
 plugins {
-    id 'com.github.jacobono.jaxb version '1.7.6'
+    id 'com.github.jacobono.wsdl' version '1.7.6'
 }
 ```
 
