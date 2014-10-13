@@ -31,7 +31,20 @@ Eases the manual configuration of web service project by:
 
 Using The Plugin
 ================
+:boom: :collision:
 
+Now in the [gradle plugins repo](http://www.plugins.gradle.org) :exclamation:
+
+:boom: :collision:
+
+## Using Gradle 2.1 plugins script block
+```groovy
+plugins {
+    id 'com.github.jacobono.jaxb version '1.7.6'
+}
+```
+
+## Using Straight-Up JCenter
 ```groovy
 buildscript {
   repositories { 
