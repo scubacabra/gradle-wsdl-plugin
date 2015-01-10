@@ -1,5 +1,9 @@
 # Gradle WSDL Plugin Changelog
 
+## 1.7.7
+- Group id in jcenter changed from `org.gradle.jacobo.plugins` to
+'com.github.jacobono' to match the gradle plugin id.
+
 ## 1.7.6
 
 - Plugin id changed fram 'wsdl' to 'com.github.jacobono.wsdl'
