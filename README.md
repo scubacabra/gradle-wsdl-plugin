@@ -260,6 +260,7 @@ Several boolean sensible defaults are defined to be passed into the wsimport tas
 * `xnocompile`
 * `fork`
 * `xdebug`
+* `xadditionalHeaders`
  
 And a few other String defaults
     
@@ -295,6 +296,7 @@ wsdl {
     keep		= true	
     xnocompile	= true
     fork		= false
+    xadditionalHeaders  = false
     xdebug		= false
     target		= "2.1"
     wsdlLocation = "FILL_IN_BY_SERVER"
