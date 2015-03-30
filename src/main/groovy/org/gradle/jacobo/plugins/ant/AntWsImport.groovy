@@ -49,7 +49,8 @@ class AntWsImport implements AntExecutor {
               xnocompile      : extension.xnocompile,
               fork            : extension.fork,
               xdebug          : extension.xdebug,
-              target          : extension.target
+              target          : extension.target,
+              xadditionalHeaders : extension.xadditionalHeaders
     ]
     if (extension.targetPackage) {
         params['package'] = extension.targetPackage

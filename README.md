@@ -40,7 +40,7 @@ Now in the [gradle plugins repo](http://plugins.gradle.org/) :exclamation:
 ## Using Gradle 2.1 plugins script block
 ```groovy
 plugins {
-    id 'com.github.jacobono.wsdl' version '1.7.7'
+    id 'com.github.jacobono.wsdl' version '1.7.8'
 }
 ```
 
@@ -53,7 +53,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.github.jacobono:gradle-wsdl-plugin:1.7.7'
+    classpath 'com.github.jacobono:gradle-wsdl-plugin:1.7.8'
   }
 }
 
@@ -260,6 +260,7 @@ Several boolean sensible defaults are defined to be passed into the wsimport tas
 * `xnocompile`
 * `fork`
 * `xdebug`
+* `xadditionalHeaders`
  
 And a few other String defaults
     
@@ -295,6 +296,7 @@ wsdl {
     keep		= true	
     xnocompile	= true
     fork		= false
+    xadditionalHeaders  = false
     xdebug		= false
     target		= "2.1"
     wsdlLocation = "FILL_IN_BY_SERVER"

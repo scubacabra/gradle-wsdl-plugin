@@ -8,10 +8,10 @@ buildscript {
   // }
 
   // dependencies {
-    // classpath 'com.github.jacobono:gradle-jaxb-plugin:1.3.5'
-  //   classpath ':gradle-wsdl-plugin-1.7.7'
+  //   classpath 'com.github.jacobono:gradle-jaxb-plugin:1.3.6'
+  //   classpath ':gradle-wsdl-plugin-1.7.8'
   //   classpath 'com.github.jacobono:gradle-xsd-wsdl-slurping:1.1.2'
-  // }
+  }
   //************************************************
 
   // use this block for running the examples from bintray artifacts
@@ -22,8 +22,8 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.github.jacobono:gradle-jaxb-plugin:1.3.5'
-    classpath 'com.github.jacobono:gradle-wsdl-plugin:1.7.7'
+    classpath 'com.github.jacobono:gradle-jaxb-plugin:1.3.6'
+    classpath 'com.github.jacobono:gradle-wsdl-plugin:1.7.8'
   }
 }
 

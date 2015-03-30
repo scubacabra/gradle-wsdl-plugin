@@ -61,6 +61,7 @@ class WsdlPlugin implements Plugin<Project> {
        keep				= true
        xnocompile			= true
        fork				= false
+       xadditionalHeaders               = false
        xdebug				= false
        target				= "2.1"
        wsdlLocation			= "FILL_IN_BY_SERVER"

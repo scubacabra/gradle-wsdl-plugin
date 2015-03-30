@@ -39,6 +39,12 @@ class WsImportExtension {
    * Boolean argument for wsimport ant task.
    * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
    */
+  boolean xadditionalHeaders
+
+  /**
+   * Boolean argument for wsimport ant task.
+   * See <a href="https://jax-ws.java.net/2.1.5/docs/wsimportant.html">wsimport ant task</a>.
+   */
   boolean xdebug
 
   /**

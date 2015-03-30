@@ -1,5 +1,8 @@
 # Gradle WSDL Plugin Changelog
 
+## 1.7.8
+- `WsImport` `boolean xadditionalHeaders` with default Value `false` added.
+
 ## 1.7.7
 - Group id in jcenter changed from `org.gradle.jacobo.plugins` to
 'com.github.jacobono' to match the gradle plugin id.
