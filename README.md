@@ -40,7 +40,7 @@ Now in the [gradle plugins repo](http://plugins.gradle.org/) :exclamation:
 ## Using Gradle 2.1 plugins script block
 ```groovy
 plugins {
-    id 'com.github.jacobono.wsdl' version '1.7.7'
+    id 'com.github.jacobono.wsdl' version '1.7.8'
 }
 ```
 
@@ -53,7 +53,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.github.jacobono:gradle-wsdl-plugin:1.7.7'
+    classpath 'com.github.jacobono:gradle-wsdl-plugin:1.7.8'
   }
 }
 
