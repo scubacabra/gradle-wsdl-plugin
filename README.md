@@ -274,7 +274,7 @@ Optional Parameters
 
 * `encoding`: Set the encoding name for generated sources, such as `UTF-8`.
    Default value is the platform default (which you really really really don't want if you have developers with different OSs, trust me).
-* `package`: The target package name for the generated classes. If left empty, the package name will be derived from the WSDL file.
+* `targetPackage`: The target package name for the generated classes. If left empty, the package name will be derived from the WSDL file.
 
 
 For more information on the jaxws wsimport ant task options, visit [here](http://jax-ws.java.net/2.2.3/docs/wsimportant.html)
