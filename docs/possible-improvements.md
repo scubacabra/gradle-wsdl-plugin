@@ -57,3 +57,7 @@ wsdl {
  automateEpisodeBinding = true
 }
 ```
+
+Automatic adding of generated sources to the compiler
+=====================================================
+When using the plugin in order to generate the sources under the build/ subdirectory (BTW: for my opinion, this should be the default. Why is the plugin writing at the src/-folder???) - which is accomplished using the sourceDestinationDirectory option - this directory should be automatically added for the compile-task. Currently, I must configure that manually, which should not be necessary.
